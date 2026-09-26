@@ -284,338 +284,592 @@ function CourseCard({
     onRequest: (course: CatalogCourse) => void;
     onTopics: (course: CatalogCourse) => void;
 }) {
-    const rotateX = useMotionValue(0);
-    const rotateY = useMotionValue(0);
-
-    const springX =
-        useSpring(rotateX, {
-            stiffness: 180,
-            damping: 22,
-        });
-
-    const springY =
-        useSpring(rotateY, {
-            stiffness: 180,
-            damping: 22,
-        });
-
-
-    function move(
-        event: React.MouseEvent<HTMLElement>
-    ) {
-        if (window.innerWidth < 1024) {
-            return;
-        }
-
-        const rect =
-            event.currentTarget.getBoundingClientRect();
-
-        const x =
-            (event.clientX - rect.left) / rect.width;
-
-        const y =
-            (event.clientY - rect.top) / rect.height;
-
-        rotateY.set((x - 0.5) * 5);
-        rotateX.set((0.5 - y) * 3);
-    }
-
-
     const image =
         course.image ||
         getTechnicalImage(course, index);
 
-
     return (
-        <div
-            style={{
-                perspective: "1200px",
+        <motion.article
+            initial={{ opacity: 0, y: 28 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.08 }}
+            transition={{
+                duration: 0.45,
+                delay: Math.min(index * 0.025, 0.18),
             }}
-            className="h-full"
-        >
-            <motion.article
-                initial={{
-                    opacity: 0,
-                    y: 45,
-                    scale: 0.96,
-                }}
-                whileInView={{
-                    opacity: 1,
-                    y: 0,
-                    scale: 1,
-                }}
-                viewport={{
-                    once: true,
-                    amount: 0.1,
-                }}
-                whileHover={{
-                    y: -5,
-                }}
-                onMouseMove={move}
-                onMouseLeave={() => {
-                    rotateX.set(0);
-                    rotateY.set(0);
-                }}
-                style={{
-                    rotateX: springX,
-                    rotateY: springY,
-                    transformStyle: "preserve-3d",
-                }}
-                className={`
-          group
-          flex
-          h-full
-          min-h-[400px]
-          flex-col
-          overflow-hidden
-          rounded-[28px]
-          border
-          backdrop-blur-xl
-          transition
-
-          ${oman
-                        ? `
-                border-cyan-300/[0.10]
-                bg-[#09263A]/85
-                hover:border-cyan-300/30
-              `
-                        : `
-                border-white/[0.09]
-                bg-[#0B2137]/85
-                hover:border-orange-400/25
-              `
-                    }
-        `}
-            >
-                <div
-                    className="
-            relative
-            h-[205px]
-            overflow-hidden
-          "
-                >
-                    <Image
-                        src={image}
-                        alt={course.title}
-                        fill
-                        sizes="(max-width:768px) 100vw, 33vw"
-                        className="
-              object-cover
-              transition
-              duration-700
-              group-hover:scale-[1.055]
-            "
-                    />
-
-                    <div
-                        className="
-              absolute
-              inset-0
-              bg-gradient-to-t
-              from-[#0B2137]
-              via-transparent
-              to-transparent
-            "
-                    />
-
-                    <div
-                        className="
-              absolute
-              left-4
-              right-4
-              top-4
-              flex
-              justify-between
-              gap-2
-            "
-                    >
-                        <span
-                            className="
-                max-w-[70%]
-                truncate
-                rounded-full
+            className={`
+                group
+                relative
+                flex
+                h-full
+                flex-col
+                overflow-hidden
+                rounded-[26px]
                 border
-                border-white/10
-                bg-[#0B2239]/70
-                px-3
-                py-2
-                text-[10px]
-                font-bold
-                backdrop-blur-xl
-              "
-                        >
-                            {course.group}
-                        </span>
-
-                        <span
-                            className={`
-                rounded-full
-                border
-                px-3
-                py-2
-                text-[10px]
-                font-black
-                backdrop-blur-xl
+                bg-[#0B2137]/90
+                shadow-[0_18px_55px_rgba(0,0,0,0.16)]
+                transition-all
+                duration-300
+                hover:-translate-y-1
 
                 ${oman
-                                    ? `
-                      border-cyan-300/20
-                      bg-cyan-300/[0.08]
-                      text-cyan-200
-                    `
-                                    : `
-                      border-orange-300/20
-                      bg-orange-300/[0.08]
-                      text-orange-200
-                    `
-                                }
-              `}
+                    ? `
+                            border-cyan-300/[0.10]
+                            hover:border-cyan-300/30
+                        `
+                    : `
+                            border-white/[0.08]
+                            hover:border-orange-300/25
+                        `
+                }
+            `}
+        >
+            <div
+                className="
+                    relative
+                    h-[175px]
+                    overflow-hidden
+                    sm:h-[190px]
+                    lg:h-[205px]
+                "
+            >
+                <Image
+                    src={image}
+                    alt={course.title}
+                    fill
+                    sizes="(max-width: 768px) 100vw, (max-width: 1280px) 50vw, 33vw"
+                    className="
+                        object-cover
+                        transition-transform
+                        duration-700
+                        group-hover:scale-[1.045]
+                    "
+                />
+
+                <div
+                    className="
+                        absolute
+                        inset-0
+                        bg-gradient-to-t
+                        from-[#0B2137]
+                        via-[#0B2137]/15
+                        to-transparent
+                    "
+                />
+
+                <div
+                    className="
+                        absolute
+                        right-3
+                        top-3
+                        flex
+                        max-w-[72%]
+                        items-center
+                        gap-2
+                        rounded-full
+                        border
+                        border-white/10
+                        bg-[#06192E]/75
+                        px-3
+                        py-2
+                        text-[9px]
+                        font-black
+                        text-white
+                        backdrop-blur-xl
+                    "
+                >
+                    <span
+                        className={`
+                            h-1.5
+                            w-1.5
+                            shrink-0
+                            rounded-full
+                            ${oman ? "bg-cyan-300" : "bg-orange-400"}
+                        `}
+                    />
+                    <span className="truncate">
+                        {course.group}
+                    </span>
+                </div>
+
+                {course.source && (
+                    <div
+                        className="
+                            absolute
+                            bottom-3
+                            left-3
+                            rounded-full
+                            border
+                            border-white/10
+                            bg-[#06192E]/70
+                            px-3
+                            py-1.5
+                            text-[9px]
+                            font-bold
+                            text-slate-200
+                            backdrop-blur-xl
+                        "
+                    >
+                        {course.source}
+                    </div>
+                )}
+            </div>
+
+            <div
+                className="
+                    flex
+                    flex-1
+                    flex-col
+                    p-4
+                    sm:p-5
+                "
+            >
+                {course.englishTitle && (
+                    <p
+                        dir="ltr"
+                        className={`
+                            mb-2
+                            truncate
+                            text-left
+                            text-[9px]
+                            font-bold
+                            uppercase
+                            tracking-[1.2px]
+                            ${oman ? "text-cyan-200/65" : "text-orange-300/65"}
+                        `}
+                    >
+                        {course.englishTitle}
+                    </p>
+                )}
+
+                <h2
+                    className="
+                        min-h-[58px]
+                        text-[17px]
+                        font-black
+                        leading-7
+                        text-white
+                        sm:text-[18px]
+                    "
+                >
+                    {course.title}
+                </h2>
+
+                <div
+                    className="
+                        mt-4
+                        flex
+                        flex-wrap
+                        items-center
+                        gap-2
+                    "
+                >
+                    {course.duration && (
+                        <span
+                            className="
+                                inline-flex
+                                items-center
+                                gap-1.5
+                                rounded-full
+                                border
+                                border-white/[0.07]
+                                bg-white/[0.035]
+                                px-3
+                                py-2
+                                text-[10px]
+                                font-bold
+                                text-slate-300
+                            "
+                        >
+                            <span className="text-xs">◷</span>
+                            {course.duration}
+                        </span>
+                    )}
+
+                    <span
+                        className={`
+                            inline-flex
+                            rounded-full
+                            border
+                            px-3
+                            py-2
+                            text-[10px]
+                            font-black
+                            ${oman
+                                ? `
+                                        border-cyan-300/15
+                                        bg-cyan-300/[0.06]
+                                        text-cyan-200
+                                    `
+                                : `
+                                        border-orange-300/15
+                                        bg-orange-300/[0.06]
+                                        text-orange-200
+                                    `
+                            }
+                        `}
+                    >
+                        دوره تخصصی
+                    </span>
+                </div>
+
+                <div className="flex-1" />
+
+                <div
+                    className="
+                        mt-5
+                        grid
+                        grid-cols-[0.9fr_1.1fr]
+                        gap-2
+                    "
+                >
+                    <button
+                        type="button"
+                        onClick={() => onTopics(course)}
+                        className="
+                            flex
+                            min-h-[46px]
+                            items-center
+                            justify-center
+                            gap-2
+                            rounded-[15px]
+                            border
+                            border-white/[0.08]
+                            bg-white/[0.035]
+                            px-3
+                            text-[11px]
+                            font-bold
+                            text-slate-200
+                            transition
+                            hover:bg-white/[0.07]
+                        "
+                    >
+                        <ListIcon />
+                        سرفصل‌ها
+                    </button>
+
+                    <button
+                        type="button"
+                        onClick={() => onRequest(course)}
+                        className={`
+                            flex
+                            min-h-[46px]
+                            items-center
+                            justify-center
+                            gap-2
+                            rounded-[15px]
+                            px-3
+                            text-[11px]
+                            font-black
+                            transition-all
+                            duration-300
+
+                            ${oman
+                                ? `
+                                        bg-cyan-300
+                                        text-[#06192E]
+                                        hover:bg-cyan-200
+                                    `
+                                : `
+                                        bg-orange-400
+                                        text-[#06192E]
+                                        shadow-[0_10px_25px_rgba(251,146,60,0.12)]
+                                        hover:bg-orange-300
+                                    `
+                            }
+                        `}
+                    >
+                        درخواست دوره
+                        <ArrowIcon />
+                    </button>
+                </div>
+            </div>
+        </motion.article>
+    );
+}
+
+
+
+/* =========================================================
+   COMPACT TECHNICAL CARD
+========================================================= */
+
+function CompactCatalogCard({
+    course,
+    index,
+    onRequest,
+    onTopics,
+    onPreview,
+    oman,
+}: {
+    course: CatalogCourse;
+    index: number;
+    onRequest: (course: CatalogCourse) => void;
+    onTopics: (course: CatalogCourse) => void;
+    onPreview: (course: CatalogCourse) => void;
+    oman: boolean;
+}) {
+    const image =
+        course.image ||
+        getTechnicalImage(course, index);
+
+    return (
+        <motion.article
+            initial={{
+                opacity: 0,
+                y: 20,
+            }}
+            whileInView={{
+                opacity: 1,
+                y: 0,
+            }}
+            viewport={{
+                once: true,
+                amount: 0.08,
+            }}
+            transition={{
+                duration: 0.4,
+                delay: Math.min(index * 0.02, 0.14),
+            }}
+            className="
+                group
+                overflow-hidden
+                rounded-[22px]
+                border
+                border-white/[0.08]
+                bg-white/[0.03]
+                transition
+                duration-300
+                hover:-translate-y-1
+                hover:border-orange-300/20
+                hover:bg-white/[0.045]
+            "
+        >
+            <button
+                type="button"
+                onClick={() => onPreview(course)}
+                className="
+                    relative
+                    block
+                    aspect-[16/10]
+                    w-full
+                    overflow-hidden
+                    bg-[#0B2137]
+                    text-right
+                "
+            >
+                <Image
+                    src={image}
+                    alt={course.title}
+                    fill
+                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+                    className="
+                        object-contain
+                        transition
+                        duration-500
+                        group-hover:scale-[1.02]
+                    "
+                />
+
+                <div
+                    className="
+                        pointer-events-none
+                        absolute
+                        inset-0
+                        bg-gradient-to-t
+                        from-[#06192E]/35
+                        via-transparent
+                        to-transparent
+                    "
+                />
+
+                <span
+                    className="
+                        absolute
+                        right-3
+                        top-3
+                        max-w-[72%]
+                        truncate
+                        rounded-full
+                        border
+                        border-white/10
+                        bg-[#06192E]/78
+                        px-3
+                        py-1.5
+                        text-[8px]
+                        font-black
+                        text-white
+                        backdrop-blur-md
+                    "
+                >
+                    {course.group}
+                </span>
+
+                <span
+                    className="
+                        absolute
+                        bottom-3
+                        left-3
+                        rounded-full
+                        border
+                        border-white/10
+                        bg-[#06192E]/78
+                        px-3
+                        py-1.5
+                        text-[8px]
+                        font-black
+                        text-white
+                        backdrop-blur-md
+                    "
+                >
+                    مشاهده کامل
+                </span>
+            </button>
+
+            <div className="p-3.5 sm:p-4">
+                {course.englishTitle && (
+                    <p
+                        dir="ltr"
+                        className={`
+                            truncate
+                            text-left
+                            text-[8px]
+                            font-bold
+                            uppercase
+                            tracking-[1px]
+                            ${oman ? "text-cyan-200/65" : "text-orange-300/60"}
+                        `}
+                    >
+                        {course.englishTitle}
+                    </p>
+                )}
+
+                <h3
+                    className="
+                        mt-1.5
+                        line-clamp-2
+                        min-h-[48px]
+                        text-sm
+                        font-black
+                        leading-6
+                        text-white
+                        sm:text-[15px]
+                    "
+                >
+                    {course.title}
+                </h3>
+
+                <div
+                    className="
+                        mt-3
+                        flex
+                        flex-wrap
+                        items-center
+                        gap-2
+                    "
+                >
+                    {course.duration && (
+                        <span
+                            className="
+                                rounded-full
+                                border
+                                border-white/[0.07]
+                                bg-white/[0.03]
+                                px-2.5
+                                py-1.5
+                                text-[8px]
+                                font-bold
+                                text-slate-300
+                            "
+                        >
+                            {course.duration}
+                        </span>
+                    )}
+
+                    {course.source && (
+                        <span
+                            className="
+                                max-w-[150px]
+                                truncate
+                                rounded-full
+                                border
+                                border-cyan-300/10
+                                bg-cyan-300/[0.05]
+                                px-2.5
+                                py-1.5
+                                text-[8px]
+                                font-bold
+                                text-cyan-200
+                            "
                         >
                             {course.source}
                         </span>
-                    </div>
+                    )}
                 </div>
-
 
                 <div
                     className="
-            flex
-            flex-1
-            flex-col
-            px-5
-            pb-5
-            pt-4
-          "
+                        mt-3
+                        grid
+                        grid-cols-[0.9fr_1.1fr]
+                        gap-2
+                    "
                 >
-                    {course.englishTitle && (
-                        <p
-                            dir="ltr"
-                            className="
-                mb-2
-                truncate
-                text-left
-                text-[9px]
-                font-bold
-                uppercase
-                tracking-[1px]
-                text-orange-300/70
-              "
-                        >
-                            {course.englishTitle}
-                        </p>
-                    )}
-
-                    <h2
+                    <button
+                        type="button"
+                        onClick={() => onTopics(course)}
                         className="
-              text-[19px]
-              font-black
-              leading-8
-            "
+                            flex
+                            min-h-[40px]
+                            items-center
+                            justify-center
+                            gap-1.5
+                            rounded-[13px]
+                            border
+                            border-white/[0.09]
+                            bg-white/[0.035]
+                            px-2
+                            text-[9px]
+                            font-black
+                            text-slate-200
+                            transition
+                            hover:bg-white/[0.07]
+                            sm:text-[10px]
+                        "
                     >
-                        {course.title}
-                    </h2>
+                        <ListIcon />
+                        سرفصل‌ها
+                    </button>
 
+                    <button
+                        type="button"
+                        onClick={() => onRequest(course)}
+                        className={`
+                            flex
+                            min-h-[40px]
+                            items-center
+                            justify-center
+                            gap-1.5
+                            rounded-[13px]
+                            px-2
+                            text-[9px]
+                            font-black
+                            text-[#06192E]
+                            transition
+                            sm:text-[10px]
 
-                    {course.duration && (
-                        <div className="mt-4">
-                            <span
-                                className="
-                  inline-flex
-                  rounded-full
-                  border
-                  border-white/[0.07]
-                  bg-white/[0.04]
-                  px-3
-                  py-2
-                  text-[11px]
-                  font-bold
-                  text-slate-300
-                "
-                            >
-                                {course.duration}
-                            </span>
-                        </div>
-                    )}
-
-
-                    <div className="flex-1" />
-
-
-                    <div
-                        className="
-              mt-5
-              grid
-              grid-cols-[0.85fr_1.15fr]
-              gap-2
-            "
+                            ${oman
+                                ? "bg-cyan-300 hover:bg-cyan-200"
+                                : "bg-orange-400 hover:bg-orange-300"
+                            }
+                        `}
                     >
-                        <button
-                            type="button"
-                            onClick={() => onTopics(course)}
-                            className="
-                flex
-                items-center
-                justify-center
-                gap-2
-                rounded-[17px]
-                border
-                border-white/10
-                bg-white/[0.04]
-                px-3
-                py-3.5
-                text-xs
-                font-bold
-                transition
-                hover:bg-white/[0.08]
-              "
-                        >
-                            <ListIcon />
-                            سرفصل‌ها
-                        </button>
-
-
-                        <button
-                            type="button"
-                            onClick={() => onRequest(course)}
-                            className={`
-                flex
-                items-center
-                justify-between
-                gap-2
-                rounded-[17px]
-                border
-                px-4
-                py-3.5
-                text-xs
-                font-black
-                transition
-
-                ${oman
-                                    ? `
-                      border-cyan-300/20
-                      bg-cyan-300/[0.07]
-                      text-cyan-100
-                      hover:bg-cyan-300
-                      hover:text-[#06192E]
-                    `
-                                    : `
-                      border-orange-400/25
-                      bg-orange-400/[0.08]
-                      text-orange-200
-                      hover:bg-orange-400
-                      hover:text-[#06192E]
-                    `
-                                }
-              `}
-                        >
-                            درخواست دوره
-
-                            <ArrowIcon />
-                        </button>
-                    </div>
+                        درخواست دوره
+                        <ArrowIcon />
+                    </button>
                 </div>
-            </motion.article>
-        </div>
+            </div>
+        </motion.article>
     );
 }
 
@@ -736,6 +990,15 @@ function Catalog({
     const [
         topicsCourse,
         setTopicsCourse,
+    ] =
+        useState<CatalogCourse | null>(
+            null
+        );
+
+
+    const [
+        previewCatalogCourse,
+        setPreviewCatalogCourse,
     ] =
         useState<CatalogCourse | null>(
             null
@@ -918,319 +1181,656 @@ function Catalog({
 
     return (
         <>
-            {/* HERO */}
-
+            {/* COMPACT COURSE HERO */}
             <section
                 className="
-          mx-auto
-          max-w-[1500px]
-          px-4
-          pb-7
-          pt-8
-          sm:px-5
-          lg:px-10
-        "
+                    mx-auto
+                    max-w-[1450px]
+                    px-3
+                    pb-4
+                    pt-4
+                    sm:px-5
+                    sm:pt-6
+                    lg:px-10
+                "
             >
                 <motion.div
                     initial={{
                         opacity: 0,
-                        y: 25,
+                        y: 16,
                     }}
                     animate={{
                         opacity: 1,
                         y: 0,
                     }}
+                    transition={{
+                        duration: 0.45,
+                    }}
                     className={`
-            relative
-            overflow-hidden
-            rounded-[34px]
-            border
-            px-6
-            py-10
-            backdrop-blur-2xl
-            sm:px-10
-            lg:px-14
+                        relative
+                        overflow-hidden
+                        rounded-[28px]
+                        border
+                        px-5
+                        py-6
+                        sm:rounded-[32px]
+                        sm:px-8
+                        sm:py-8
 
-            ${isOman
+                        ${isOman
                             ? `
-                  border-cyan-300/[0.10]
-                  bg-gradient-to-l
-                  from-cyan-300/[0.05]
-                  to-white/[0.025]
-                `
+                                    border-cyan-300/[0.10]
+                                    bg-gradient-to-l
+                                    from-[#12364C]
+                                    via-[#0E293E]
+                                    to-[#091E31]
+                                `
                             : `
-                  border-white/[0.09]
-                  bg-white/[0.035]
-                `
+                                    border-white/[0.08]
+                                    bg-gradient-to-l
+                                    from-[#173953]
+                                    via-[#102B43]
+                                    to-[#0B2137]
+                                `
                         }
-          `}
+                    `}
                 >
                     <div
+                        className={`
+                            pointer-events-none
+                            absolute
+                            -right-20
+                            -top-20
+                            h-56
+                            w-56
+                            rounded-full
+                            blur-[95px]
+                            ${isOman
+                                ? "bg-cyan-300/[0.08]"
+                                : "bg-orange-400/[0.08]"
+                            }
+                        `}
+                    />
+
+                    <div
                         className="
-              grid
-              gap-10
-              lg:grid-cols-[1fr_480px]
-              lg:items-center
-            "
+                            relative
+                            grid
+                            gap-5
+                            lg:grid-cols-[1fr_390px]
+                            lg:items-center
+                        "
                     >
                         <div>
-                            <span
-                                className={`
-                  inline-flex
-                  rounded-full
-                  border
-                  px-4
-                  py-2
-                  text-xs
-                  font-bold
-
-                  ${isOman
-                                        ? `
-                        border-cyan-300/20
-                        bg-cyan-300/[0.07]
-                        text-cyan-200
-                      `
-                                        : `
-                        border-orange-400/20
-                        bg-orange-400/[0.08]
-                        text-orange-300
-                      `
-                                    }
-                `}
+                            <div
+                                className="
+                                    flex
+                                    flex-wrap
+                                    items-center
+                                    gap-2
+                                "
                             >
-                                {isOman
-                                    ? "آموزش‌های بین‌المللی"
-                                    : "مجتمع آموزشی کاردو"}
-                            </span>
+                                <span
+                                    className={`
+                                        inline-flex
+                                        items-center
+                                        gap-2
+                                        rounded-full
+                                        border
+                                        px-3
+                                        py-1.5
+                                        text-[9px]
+                                        font-black
+                                        sm:text-[10px]
 
+                                        ${isOman
+                                            ? `
+                                                    border-cyan-300/20
+                                                    bg-cyan-300/[0.06]
+                                                    text-cyan-200
+                                                `
+                                            : `
+                                                    border-orange-300/20
+                                                    bg-orange-300/[0.06]
+                                                    text-orange-200
+                                                `
+                                        }
+                                    `}
+                                >
+                                    <span
+                                        className={`
+                                            h-1.5
+                                            w-1.5
+                                            rounded-full
+                                            ${isOman
+                                                ? "bg-cyan-300"
+                                                : "bg-orange-400"
+                                            }
+                                        `}
+                                    />
+
+                                    {isOman
+                                        ? "دوره‌های بین‌المللی"
+                                        : "تحت نظر سازمان آموزش فنی و حرفه‌ای"}
+                                </span>
+
+                                <span
+                                    className="
+                                        rounded-full
+                                        border
+                                        border-white/[0.08]
+                                        bg-white/[0.03]
+                                        px-3
+                                        py-1.5
+                                        text-[9px]
+                                        font-bold
+                                        text-slate-300
+                                    "
+                                >
+                                    {courses.length} دوره
+                                </span>
+                            </div>
 
                             <h1
                                 className="
-                  mt-6
-                  text-3xl
-                  font-black
-                  leading-[1.5]
-                  sm:text-5xl
-                  lg:text-[56px]
-                "
+                                    mt-4
+                                    text-[28px]
+                                    font-black
+                                    leading-[1.55]
+                                    text-white
+                                    sm:text-4xl
+                                    lg:text-[42px]
+                                "
                             >
                                 {isOman ? (
                                     <>
                                         دوره‌های{" "}
-                                        <span
-                                            className="
-                        text-cyan-300
-                      "
-                                        >
-                                            عمان
+                                        <span className="text-cyan-300">
+                                            بین‌المللی
                                         </span>
                                     </>
                                 ) : (
                                     <>
                                         دوره‌های{" "}
-                                        <span
-                                            className="
-                        text-orange-400
-                      "
-                                        >
+                                        <span className="text-orange-400">
                                             فنی و حرفه‌ای
                                         </span>
                                     </>
                                 )}
                             </h1>
 
-
                             <p
                                 className="
-                  mt-4
-                  max-w-2xl
-                  text-sm
-                  leading-8
-                  text-slate-300
-                  sm:text-base
-                "
+                                    mt-2
+                                    max-w-2xl
+                                    text-[10px]
+                                    leading-6
+                                    text-slate-400
+                                    sm:text-xs
+                                    sm:leading-7
+                                "
                             >
-                                {isOman
-                                    ? "دوره‌های تخصصی هوانوردی، عملیات فرودگاهی، آتش‌نشانی و واکنش در شرایط اضطراری."
-                                    : "دوره موردنظر خود را جستجو کنید، اطلاعات آن را بررسی کنید و درخواست دوره را ارسال کنید."}
+                                دوره را پیدا کنید، تصویر کامل دوره را ببینید،
+                                سرفصل‌ها را بررسی کنید و درخواست خود را ثبت کنید.
                             </p>
                         </div>
 
-
-                        <div
-                            className="
-                relative
-                rounded-[22px]
-                border
-                border-white/10
-                bg-[#06192E]/50
-                p-2
-              "
-                        >
-                            <span
+                        <div>
+                            <label
                                 className="
-                  absolute
-                  right-6
-                  top-1/2
-                  -translate-y-1/2
-                  text-slate-500
-                "
+                                    mb-2
+                                    block
+                                    text-[9px]
+                                    font-bold
+                                    text-slate-500
+                                "
                             >
-                                <SearchIcon />
-                            </span>
+                                جستجو بین دوره‌ها
+                            </label>
 
-                            <input
-                                value={search}
-                                onChange={(
-                                    event
-                                ) =>
-                                    setSearch(
-                                        event.target.value
-                                    )
-                                }
-                                placeholder={
-                                    isOman
-                                        ? "مثلاً Airport، NFPA 1003..."
-                                        : "مثلاً NFPA، HSE، IOSH..."
-                                }
+                            <div
                                 className="
-                  h-16
-                  w-full
-                  rounded-[17px]
-                  bg-white/[0.03]
-                  pr-12
-                  pl-5
-                  text-sm
-                  outline-none
-                  placeholder:text-slate-500
-                "
-                            />
+                                    relative
+                                    rounded-[18px]
+                                    border
+                                    border-white/[0.08]
+                                    bg-[#06192E]/55
+                                    p-1.5
+                                "
+                            >
+                                <span
+                                    className="
+                                        absolute
+                                        right-4
+                                        top-1/2
+                                        -translate-y-1/2
+                                        text-slate-500
+                                    "
+                                >
+                                    <SearchIcon />
+                                </span>
+
+                                <input
+                                    value={search}
+                                    onChange={(event) =>
+                                        setSearch(
+                                            event.target.value
+                                        )
+                                    }
+                                    placeholder={
+                                        isOman
+                                            ? "نام دوره را جستجو کنید..."
+                                            : "مثلاً HSE، آتش‌نشانی، IOSH..."
+                                    }
+                                    className="
+                                        h-12
+                                        w-full
+                                        rounded-[14px]
+                                        bg-white/[0.02]
+                                        pr-11
+                                        pl-4
+                                        text-xs
+                                        text-white
+                                        outline-none
+                                        placeholder:text-slate-600
+                                    "
+                                />
+                            </div>
                         </div>
                     </div>
                 </motion.div>
             </section>
 
-
-            {/* FILTER */}
-
+            {/* CATEGORY FILTER */}
             <div
                 className="
-          sticky
-          top-0
-          z-[100]
-          border-y
-          border-white/[0.06]
-          bg-[#06192E]/90
-          backdrop-blur-2xl
-        "
+                    sticky
+                    top-[76px]
+                    z-[80]
+                    border-y
+                    border-white/[0.05]
+                    bg-[#06192E]/94
+                    backdrop-blur-2xl
+                    sm:top-[84px]
+                    lg:top-[94px]
+                "
             >
                 <div
                     className="
-            mx-auto
-            flex
-            max-w-[1500px]
-            gap-2
-            overflow-x-auto
-            px-4
-            py-3
-            lg:px-10
-          "
+                        mx-auto
+                        max-w-[1500px]
+                        px-3
+                        py-3
+                        sm:px-5
+                        lg:px-10
+                    "
                 >
-                    {groups.map(
-                        (group) => (
+                    <div
+                        className="
+                            flex
+                            gap-2
+                            overflow-x-auto
+                            pb-1
+                            [scrollbar-width:none]
+                            [&::-webkit-scrollbar]:hidden
+                        "
+                    >
+                        {groups.map((group) => (
                             <button
                                 key={group}
-                                onClick={() =>
-                                    setActiveGroup(
-                                        group
-                                    )
-                                }
+                                type="button"
+                                onClick={() => setActiveGroup(group)}
                                 className={`
-                  shrink-0
-                  rounded-full
-                  border
-                  px-4
-                  py-2.5
-                  text-xs
-                  font-bold
+                                    shrink-0
+                                    rounded-full
+                                    border
+                                    px-4
+                                    py-2.5
+                                    text-[10px]
+                                    font-black
+                                    transition-all
+                                    duration-300
+                                    sm:text-xs
 
-                  ${activeGroup ===
-                                        group
+                                    ${activeGroup === group
                                         ? isOman
                                             ? `
-                          border-cyan-300
-                          bg-cyan-300
-                          text-[#06192E]
-                        `
+                                                    border-cyan-300
+                                                    bg-cyan-300
+                                                    text-[#06192E]
+                                                `
                                             : `
-                          border-orange-400
-                          bg-orange-400
-                          text-[#06192E]
-                        `
+                                                    border-orange-400
+                                                    bg-orange-400
+                                                    text-[#06192E]
+                                                    shadow-[0_8px_20px_rgba(251,146,60,0.13)]
+                                                `
                                         : `
-                        border-white/10
-                        bg-white/[0.04]
-                        text-slate-300
-                      `
+                                                border-white/[0.08]
+                                                bg-white/[0.035]
+                                                text-slate-300
+                                                hover:bg-white/[0.07]
+                                            `
                                     }
-                `}
+                                `}
                             >
                                 {group}
                             </button>
-                        )
-                    )}
+                        ))}
+                    </div>
                 </div>
             </div>
 
-
-            {/* COURSES */}
-
+            {/* COURSE GRID */}
             <section
                 className="
-          mx-auto
-          max-w-[1500px]
-          px-4
-          pb-32
-          pt-10
-          lg:px-10
-        "
+                    mx-auto
+                    max-w-[1500px]
+                    px-3
+                    pb-24
+                    pt-6
+                    sm:px-5
+                    sm:pt-7
+                    lg:px-10
+                "
             >
-                <div
-                    className="
-            grid
-            grid-cols-1
-            gap-5
-            md:grid-cols-2
-            xl:grid-cols-3
-            2xl:grid-cols-4
-          "
-                >
-                    {filtered.map(
-                        (course, index) => (
-                            <CourseCard
+                <div className="mb-5 flex items-center justify-between gap-4">
+                    <div>
+                        <h2 className="text-lg font-black text-white sm:text-xl">
+                            {activeGroup === "همه دوره‌ها"
+                                ? "همه دوره‌ها"
+                                : activeGroup}
+                        </h2>
+
+                        <p className="mt-1 text-[10px] text-slate-500 sm:text-xs">
+                            {filtered.length} دوره پیدا شد
+                        </p>
+                    </div>
+
+                    {(search || activeGroup !== "همه دوره‌ها") && (
+                        <button
+                            type="button"
+                            onClick={() => {
+                                setSearch("");
+                                setActiveGroup("همه دوره‌ها");
+                            }}
+                            className="
+                                rounded-full
+                                border
+                                border-white/[0.08]
+                                bg-white/[0.035]
+                                px-4
+                                py-2.5
+                                text-[10px]
+                                font-black
+                                text-slate-300
+                                transition
+                                hover:bg-white/[0.07]
+                            "
+                        >
+                            پاک کردن فیلترها
+                        </button>
+                    )}
+                </div>
+
+                {filtered.length > 0 ? (
+                    <div
+                        className={`
+                            grid
+                            gap-3
+                            sm:grid-cols-2
+                            lg:gap-4
+
+                            lg:grid-cols-3
+                            xl:grid-cols-4
+                        `}
+                    >
+                        {filtered.map((course, index) => (
+                            <CompactCatalogCard
                                 key={course.id}
                                 course={course}
                                 index={index}
                                 oman={isOman}
-                                onRequest={(
-                                    item
-                                ) => {
-                                    setSelectedCourse(
-                                        item
+                                onRequest={(item) => {
+                                    setSelectedCourse(item);
+                                    setSubmitted(false);
+                                    setError("");
+                                }}
+                                onTopics={setTopicsCourse}
+                                onPreview={setPreviewCatalogCourse}
+                            />
+                        ))}
+                    </div>
+                ) : (
+                    <div
+                        className="
+                            rounded-[28px]
+                            border
+                            border-dashed
+                            border-white/[0.10]
+                            bg-white/[0.025]
+                            px-5
+                            py-14
+                            text-center
+                        "
+                    >
+                        <div
+                            className="
+                                mx-auto
+                                flex
+                                h-14
+                                w-14
+                                items-center
+                                justify-center
+                                rounded-full
+                                bg-white/[0.04]
+                                text-2xl
+                            "
+                        >
+                            ⌕
+                        </div>
+
+                        <h3 className="mt-5 text-lg font-black text-white">
+                            دوره‌ای پیدا نشد
+                        </h3>
+
+                        <p className="mt-2 text-xs leading-7 text-slate-500">
+                            عبارت جستجو یا دسته‌بندی را تغییر دهید.
+                        </p>
+
+                        <button
+                            type="button"
+                            onClick={() => {
+                                setSearch("");
+                                setActiveGroup("همه دوره‌ها");
+                            }}
+                            className="
+                                mt-5
+                                rounded-full
+                                bg-orange-400
+                                px-5
+                                py-3
+                                text-xs
+                                font-black
+                                text-[#06192E]
+                            "
+                        >
+                            نمایش همه دوره‌ها
+                        </button>
+                    </div>
+                )}
+            </section>
+
+            {/* COURSE IMAGE PREVIEW */}
+            <AnimatePresence>
+                {previewCatalogCourse && (
+                    <Modal
+                        close={() =>
+                            setPreviewCatalogCourse(
+                                null
+                            )
+                        }
+                    >
+                        <div>
+                            <span
+                                className={`
+                                    inline-flex
+                                    rounded-full
+                                    border
+                                    px-3
+                                    py-1.5
+                                    text-[9px]
+                                    font-black
+                                    ${isOman
+                                        ? "border-cyan-300/15 bg-cyan-300/[0.06] text-cyan-200"
+                                        : "border-orange-300/15 bg-orange-300/[0.06] text-orange-200"
+                                    }
+                                `}
+                            >
+                                {previewCatalogCourse.group}
+                            </span>
+
+                            <h2
+                                className="
+                                    mt-3
+                                    text-xl
+                                    font-black
+                                    leading-8
+                                    text-white
+                                    sm:text-2xl
+                                "
+                            >
+                                {previewCatalogCourse.title}
+                            </h2>
+                        </div>
+
+                        <div
+                            className="
+                                relative
+                                mt-5
+                                aspect-[16/10]
+                                overflow-hidden
+                                rounded-[20px]
+                                border
+                                border-white/[0.08]
+                                bg-[#0B2137]
+                            "
+                        >
+                            <Image
+                                src={
+                                    previewCatalogCourse.image ||
+                                    getTechnicalImage(
+                                        previewCatalogCourse,
+                                        0
+                                    )
+                                }
+                                alt={
+                                    previewCatalogCourse.title
+                                }
+                                fill
+                                sizes="90vw"
+                                className="
+                                    object-contain
+                                "
+                            />
+                        </div>
+
+                        <div
+                            className="
+                                mt-4
+                                grid
+                                grid-cols-[0.9fr_1.1fr]
+                                gap-2
+                            "
+                        >
+                            <button
+                                type="button"
+                                onClick={() => {
+                                    const course =
+                                        previewCatalogCourse;
+
+                                    setPreviewCatalogCourse(
+                                        null
                                     );
+
+                                    setTimeout(
+                                        () =>
+                                            setTopicsCourse(
+                                                course
+                                            ),
+                                        80
+                                    );
+                                }}
+                                className="
+                                    flex
+                                    min-h-[48px]
+                                    items-center
+                                    justify-center
+                                    gap-2
+                                    rounded-full
+                                    border
+                                    border-white/10
+                                    bg-white/[0.04]
+                                    px-3
+                                    text-[10px]
+                                    font-black
+                                    text-slate-200
+                                    transition
+                                    hover:bg-white/[0.08]
+                                    sm:text-xs
+                                "
+                            >
+                                <ListIcon />
+                                سرفصل‌ها
+                            </button>
+
+                            <button
+                                type="button"
+                                onClick={() => {
+                                    const course =
+                                        previewCatalogCourse;
+
+                                    setPreviewCatalogCourse(
+                                        null
+                                    );
+
+                                    setSelectedCourse(
+                                        course
+                                    );
+
                                     setSubmitted(
                                         false
                                     );
+
                                     setError("");
                                 }}
-                                onTopics={
-                                    setTopicsCourse
-                                }
-                            />
-                        )
-                    )}
-                </div>
-            </section>
+                                className={`
+                                    flex
+                                    min-h-[48px]
+                                    items-center
+                                    justify-center
+                                    gap-2
+                                    rounded-full
+                                    px-3
+                                    text-[10px]
+                                    font-black
+                                    text-[#06192E]
+                                    transition
+                                    sm:text-xs
+
+                                    ${isOman
+                                        ? "bg-cyan-300 hover:bg-cyan-200"
+                                        : "bg-orange-400 hover:bg-orange-300"
+                                    }
+                                `}
+                            >
+                                درخواست دوره
+                                <ArrowIcon />
+                            </button>
+                        </div>
+                    </Modal>
+                )}
+            </AnimatePresence>
 
 
             {/* TOPICS */}
@@ -1557,7 +2157,7 @@ const completedOrganizationCourses = [
         title: "اطفاء حریق",
         subtitle: "اصول و تکنیک‌های عملیات اطفاء حریق",
         instructor: "دکتر هاشم ستاره",
-        duration: "۴ ساعت",
+        duration: "۴۰ ساعت",
         format: "عملی",
         image: "/images/organization/fire-extinguishing.jpg",
         group: "آتش‌نشانی",
@@ -1662,6 +2262,40 @@ function OrganizationPage() {
     const [submitting, setSubmitting] = useState(false);
     const [success, setSuccess] = useState(false);
     const [error, setError] = useState("");
+    const [orgSearch, setOrgSearch] = useState("");
+    const [orgGroup, setOrgGroup] = useState("همه");
+    const [previewCourse, setPreviewCourse] =
+        useState<(typeof completedOrganizationCourses)[number] | null>(null);
+
+    const [outlineCourse, setOutlineCourse] =
+        useState<(typeof completedOrganizationCourses)[number] | null>(null);
+
+    const orgGroups = [
+        "همه",
+        ...Array.from(
+            new Set(
+                completedOrganizationCourses.map((course) => course.group)
+            )
+        ),
+    ];
+
+    const filteredOrgCourses = useMemo(() => {
+        const query = orgSearch.trim().toLowerCase();
+
+        return completedOrganizationCourses.filter((course) => {
+            const groupMatch =
+                orgGroup === "همه" || course.group === orgGroup;
+
+            const searchMatch =
+                !query ||
+                course.title.toLowerCase().includes(query) ||
+                course.subtitle.toLowerCase().includes(query) ||
+                course.instructor.toLowerCase().includes(query) ||
+                course.group.toLowerCase().includes(query);
+
+            return groupMatch && searchMatch;
+        });
+    }, [orgSearch, orgGroup]);
 
     function requestCourse(courseTitle: string) {
         setSelectedOrgCourse(courseTitle);
@@ -1682,7 +2316,6 @@ function OrganizationPage() {
         event: React.FormEvent<HTMLFormElement>
     ) {
         event.preventDefault();
-
         if (submitting) return;
 
         setSubmitting(true);
@@ -1718,17 +2351,14 @@ function OrganizationPage() {
 
             if (!response.ok || !result.success) {
                 throw new Error(
-                    result.message ||
-                    "ثبت درخواست انجام نشد."
+                    result.message || "ثبت درخواست انجام نشد."
                 );
             }
 
             setSuccess(true);
         } catch (err) {
             setError(
-                err instanceof Error
-                    ? err.message
-                    : "خطایی رخ داد."
+                err instanceof Error ? err.message : "خطایی رخ داد."
             );
         } finally {
             setSubmitting(false);
@@ -1737,1239 +2367,595 @@ function OrganizationPage() {
 
     return (
         <>
-            {/* =====================================================
-            HERO
-        ====================================================== */}
-
+            {/* COMPACT INTRO */}
             <section
                 className="
-            mx-auto
-            max-w-[1500px]
-            px-3
-            pb-8
-            pt-5
-            sm:px-4
-            sm:pb-12
-            sm:pt-8
-            lg:px-10
-          "
+                    mx-auto
+                    max-w-[1450px]
+                    px-3
+                    pb-4
+                    pt-4
+                    sm:px-5
+                    lg:px-10
+                "
             >
                 <div
                     className="
-              relative
-              overflow-hidden
-              rounded-[28px]
-              border
-              border-cyan-300/[0.10]
-              bg-gradient-to-bl
-              from-cyan-300/[0.08]
-              via-white/[0.035]
-              to-orange-400/[0.05]
-              px-5
-              py-9
-              sm:rounded-[38px]
-              sm:px-8
-              sm:py-14
-              lg:px-16
-              lg:py-20
-            "
-                >
-                    {/* background glows */}
-
-                    <div
-                        className="
-                pointer-events-none
-                absolute
-                -right-32
-                -top-32
-                h-[360px]
-                w-[360px]
-                rounded-full
-                bg-cyan-300/[0.08]
-                blur-[120px]
-              "
-                    />
-
-                    <div
-                        className="
-                pointer-events-none
-                -bottom-32
-                -left-32
-                absolute
-                h-[360px]
-                w-[360px]
-                rounded-full
-                bg-orange-300/[0.08]
-                blur-[120px]
-              "
-                    />
-
-                    <div
-                        className="
-                relative
-                grid
-                gap-10
-                lg:grid-cols-[1.05fr_.95fr]
-                lg:items-center
-              "
-                    >
-                        {/* CONTENT */}
-
-                        <div>
-                            <span
-                                className="
-                    inline-flex
-                    items-center
-                    gap-2
-                    rounded-full
-                    border
-                    border-cyan-300/20
-                    bg-cyan-300/[0.07]
-                    px-3.5
-                    py-2
-                    text-[10px]
-                    font-black
-                    text-cyan-200
-                    sm:px-4
-                    sm:text-xs
-                  "
-                            >
-                                <span
-                                    className="
-                      h-2
-                      w-2
-                      rounded-full
-                      bg-orange-400
-                    "
-                                />
-
-                                آموزش اختصاصی سازمان‌ها
-                            </span>
-
-                            <h1
-                                className="
-                    mt-5
-                    text-[31px]
-                    font-black
-                    leading-[1.6]
-                    text-white
-                    sm:text-5xl
-                    lg:text-[60px]
-                  "
-                            >
-                                آموزش متناسب با{" "}
-
-                                <span
-                                    className="
-                      bg-gradient-to-l
-                      from-cyan-300
-                      via-white
-                      to-orange-300
-                      bg-clip-text
-                      text-transparent
-                    "
-                                >
-                                    نیاز واقعی سازمان
-                                </span>
-                            </h1>
-
-                            <p
-                                className="
-                    mt-4
-                    max-w-2xl
-                    text-xs
-                    leading-7
-                    text-slate-300
-                    sm:mt-6
-                    sm:text-base
-                    sm:leading-8
-                  "
-                            >
-                                بخشی از فعالیت‌های کاردو به طراحی و اجرای
-                                آموزش‌های تخصصی برای سازمان‌ها، شرکت‌ها و
-                                مجموعه‌های صنعتی اختصاص دارد. در ادامه
-                                نمونه‌ای از دوره‌های برگزارشده را مشاهده می‌کنید.
-                            </p>
-
-                            <a
-                                href="#completed-organization-courses"
-                                className="
-                    mt-6
-                    inline-flex
-                    w-full
-                    items-center
-                    justify-center
-                    gap-3
-                    rounded-2xl
-                    bg-orange-400
-                    px-5
-                    py-4
-                    text-xs
-                    font-black
-                    text-[#06192E]
-                    transition
-                    hover:bg-orange-300
-  
-                    sm:w-auto
-                    sm:rounded-full
-                    sm:px-7
-                    sm:text-sm
-                  "
-                            >
-                                مشاهده دوره‌های برگزارشده
-
-                                <span>↓</span>
-                            </a>
-                        </div>
-
-                        {/* DESKTOP PANEL */}
-
-                        <div
-                            className="
-                  relative
-                  hidden
-                  min-h-[350px]
-                  lg:block
-                "
-                        >
-                            <div
-                                className="
-                    absolute
-                    inset-8
-                    rotate-[-4deg]
-                    rounded-[36px]
-                    border
-                    border-cyan-300/10
-                    bg-cyan-300/[0.035]
-                  "
-                            />
-
-                            <div
-                                className="
-                    absolute
-                    inset-8
-                    rotate-[4deg]
-                    rounded-[36px]
-                    border
-                    border-orange-300/10
-                    bg-orange-300/[0.035]
-                  "
-                            />
-
-                            <div
-                                className="
-                    absolute
-                    inset-0
-                    flex
-                    items-center
-                    justify-center
-                    rounded-[36px]
-                    border
-                    border-white/[0.10]
-                    bg-[#0B2137]/75
-                    p-8
-                    backdrop-blur-2xl
-                  "
-                            >
-                                <div
-                                    className="
-                      grid
-                      w-full
-                      grid-cols-2
-                      gap-4
-                    "
-                                >
-                                    {[
-                                        ["12+", "نمونه دوره برگزارشده"],
-                                        ["HSE", "ایمنی و محیط زیست"],
-                                        ["FIRE", "آتش‌نشانی تخصصی"],
-                                        ["RESCUE", "امداد و نجات"],
-                                    ].map((item, index) => (
-                                        <div
-                                            key={item[0]}
-                                            className="
-                          rounded-[24px]
-                          border
-                          border-white/[0.07]
-                          bg-white/[0.04]
-                          p-5
-                        "
-                                        >
-                                            <span
-                                                className={`
-                            text-3xl
-                            font-black
-                            ${index % 2 === 0
-                                                        ? "text-orange-300"
-                                                        : "text-cyan-300"
-                                                    }
-                          `}
-                                            >
-                                                {item[0]}
-                                            </span>
-
-                                            <p
-                                                className="
-                            mt-2
-                            text-xs
-                            leading-6
-                            text-slate-300
-                          "
-                                            >
-                                                {item[1]}
-                                            </p>
-                                        </div>
-                                    ))}
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-
-            {/* =====================================================
-            TITLE
-        ====================================================== */}
-
-            <section
-                id="completed-organization-courses"
-                className="
-            mx-auto
-            max-w-[1450px]
-            scroll-mt-28
-            px-4
-            pb-6
-            pt-12
-            sm:pb-10
-            sm:pt-16
-            lg:px-10
-          "
-            >
-                <div>
-                    <div
-                        className="
-                flex
-                items-center
-                gap-2
-              "
-                    >
-                        <span
-                            className="
-                  h-2
-                  w-2
-                  rounded-full
-                  bg-orange-400
-                "
-                        />
-
-                        <span
-                            className="
-                  text-[9px]
-                  font-black
-                  tracking-[0.15em]
-                  text-orange-300
-                  sm:text-xs
-                "
-                        >
-                            RECENT TRAININGS
-                        </span>
-                    </div>
-
-                    <h2
-                        className="
-                mt-3
-                text-2xl
-                font-black
-                leading-[1.7]
-                text-white
-                sm:text-4xl
-                lg:text-5xl
-              "
-                    >
-                        برخی از دوره‌های اخیر
-                        <br className="sm:hidden" />{" "}
-                        <span className="text-orange-400">
-                            برگزارشده
-                        </span>
-                    </h2>
-
-                    <p
-                        className="
-                mt-3
-                text-xs
-                leading-7
-                text-slate-400
-                sm:max-w-2xl
-                sm:text-sm
-                sm:leading-8
-              "
-                    >
-                        دوره را انتخاب کنید تا اطلاعات مدرس، مدت و
-                        نوع آموزش را سریع مشاهده کنید.
-                    </p>
-                </div>
-            </section>
-
-
-            {/* =====================================================
-            MOBILE COURSE LIST
-        ====================================================== */}
-
-            <section
-                className="
-            mx-auto
-            max-w-[1450px]
-            px-3
-            pb-20
-            sm:px-4
-            lg:hidden
-          "
-            >
-                <div className="space-y-3">
-                    {completedOrganizationCourses.map(
-                        (course, index) => (
-                            <motion.article
-                                key={course.id}
-                                initial={{
-                                    opacity: 0,
-                                    y: 15,
-                                }}
-                                whileInView={{
-                                    opacity: 1,
-                                    y: 0,
-                                }}
-                                viewport={{
-                                    once: true,
-                                    amount: 0.15,
-                                }}
-                                transition={{
-                                    duration: 0.35,
-                                }}
-                                className="
-                    relative
-                    overflow-hidden
-                    rounded-[22px]
-                    border
-                    border-white/[0.08]
-                    bg-white/[0.035]
-                    p-2.5
-                  "
-                            >
-                                <div
-                                    className="
-                      grid
-                      grid-cols-[105px_1fr]
-                      gap-3
-                    "
-                                >
-                                    {/* IMAGE */}
-
-                                    <div
-                                        className="
-                        relative
-                        h-[125px]
-                        overflow-hidden
-                        rounded-[17px]
-                        bg-[#0B2137]
-                      "
-                                    >
-                                        <Image
-                                            src={course.image}
-                                            alt={course.title}
-                                            fill
-                                            sizes="105px"
-                                            className="object-cover"
-                                        />
-
-                                        <div
-                                            className="
-                          absolute
-                          inset-0
-                          bg-gradient-to-t
-                          from-[#06192E]/60
-                          to-transparent
-                        "
-                                        />
-
-                                        <div
-                                            className="
-                          absolute
-                          bottom-2
-                          right-2
-                          rounded-full
-                          bg-[#06192E]/80
-                          px-2
-                          py-1
-                          text-[8px]
-                          font-black
-                          text-white
-                          backdrop-blur-md
-                        "
-                                        >
-                                            {String(index + 1).padStart(
-                                                2,
-                                                "0"
-                                            )}
-                                        </div>
-                                    </div>
-
-
-                                    {/* CONTENT */}
-
-                                    <div
-                                        className="
                         flex
-                        min-w-0
                         flex-col
-                        justify-center
-                      "
-                                    >
-                                        <span
-                                            className="
-                          w-fit
-                          rounded-full
-                          border
-                          border-cyan-300/15
-                          bg-cyan-300/[0.06]
-                          px-2.5
-                          py-1
-                          text-[8px]
-                          font-black
-                          text-cyan-200
-                        "
-                                        >
-                                            {course.group}
-                                        </span>
-
-                                        <h3
-                                            className="
-                          mt-2
-                          line-clamp-2
-                          text-sm
-                          font-black
-                          leading-6
-                          text-white
-                        "
-                                        >
-                                            {course.title}
-                                        </h3>
-
-                                        <p
-                                            className="
-                          mt-1
-                          line-clamp-1
-                          text-[10px]
-                          text-slate-500
-                        "
-                                        >
-                                            {course.subtitle}
-                                        </p>
-
-                                        <div
-                                            className="
-                          mt-3
-                          flex
-                          flex-wrap
-                          gap-x-3
-                          gap-y-1
-                          text-[9px]
-                          text-slate-400
-                        "
-                                        >
-                                            <span>
-                                                👤 {course.instructor}
-                                            </span>
-
-                                            <span>
-                                                ⏱ {course.duration}
-                                            </span>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                {/* BOTTOM INFO */}
-
-                                <div
-                                    className="
-                      mt-2.5
-                      flex
-                      items-center
-                      justify-between
-                      rounded-[15px]
-                      bg-white/[0.025]
-                      px-3
-                      py-2.5
+                        gap-5
+                        rounded-[26px]
+                        border
+                        border-white/[0.08]
+                        bg-gradient-to-l
+                        from-[#15364F]
+                        to-[#0B2239]
+                        px-5
+                        py-6
+                        sm:px-7
+                        lg:flex-row
+                        lg:items-center
+                        lg:justify-between
+                        lg:px-9
+                        lg:py-7
                     "
-                                >
-                                    <div
-                                        className="
+                >
+                    <div className="max-w-3xl">
+                        <span
+                            className="
+                                inline-flex
+                                items-center
+                                gap-2
+                                rounded-full
+                                border
+                                border-cyan-300/20
+                                bg-cyan-300/[0.06]
+                                px-3
+                                py-1.5
+                                text-[9px]
+                                font-black
+                                text-cyan-200
+                            "
+                        >
+                            <span className="h-1.5 w-1.5 rounded-full bg-orange-400" />
+                            آموزش اختصاصی سازمان‌ها
+                        </span>
+
+                        <h1
+                            className="
+                                mt-3
+                                text-2xl
+                                font-black
+                                leading-[1.6]
+                                text-white
+                                sm:text-3xl
+                                lg:text-[38px]
+                            "
+                        >
+                            دوره‌های برگزارشده کاردو
+                        </h1>
+
+                        <p
+                            className="
+                                mt-2
+                                max-w-2xl
+                                text-[11px]
+                                leading-7
+                                text-slate-400
+                                sm:text-xs
+                            "
+                        >
+                            پوستر کامل هر دوره را ببینید و اگر برای سازمان شما مناسب بود،
+                            مستقیماً درخواست برگزاری همان دوره را ثبت کنید.
+                        </p>
+                    </div>
+
+                    <button
+                        type="button"
+                        onClick={() => requestCourse("آموزش اختصاصی جدید")}
+                        className="
+                            inline-flex
+                            min-h-[46px]
+                            shrink-0
+                            items-center
+                            justify-center
+                            gap-2
+                            rounded-full
+                            bg-orange-400
+                            px-6
+                            text-xs
+                            font-black
+                            text-[#06192E]
+                            transition
+                            hover:bg-orange-300
+                        "
+                    >
+                        درخواست دوره اختصاصی
+                        <ArrowIcon />
+                    </button>
+                </div>
+            </section>
+
+            {/* SEARCH + FILTER */}
+            <section
+                className="
+                    mx-auto
+                    max-w-[1450px]
+                    px-3
+                    pb-4
+                    pt-3
+                    sm:px-5
+                    lg:px-10
+                "
+            >
+                <div
+                    className="
+                        flex
+                        flex-col
+                        gap-3
+                        lg:flex-row
+                        lg:items-center
+                        lg:justify-between
+                    "
+                >
+                    <div className="relative w-full lg:max-w-[360px]">
+                        <span
+                            className="
+                                absolute
+                                right-4
+                                top-1/2
+                                -translate-y-1/2
+                                text-slate-500
+                            "
+                        >
+                            <SearchIcon />
+                        </span>
+
+                        <input
+                            value={orgSearch}
+                            onChange={(event) => setOrgSearch(event.target.value)}
+                            placeholder="جستجو دوره یا مدرس..."
+                            className="
+                                h-12
+                                w-full
+                                rounded-[16px]
+                                border
+                                border-white/[0.08]
+                                bg-white/[0.035]
+                                pr-11
+                                pl-4
+                                text-xs
+                                text-white
+                                outline-none
+                                placeholder:text-slate-600
+                                focus:border-orange-300/25
+                            "
+                        />
+                    </div>
+
+                    <div
+                        className="
+                            flex
+                            gap-2
+                            overflow-x-auto
+                            pb-1
+                            [scrollbar-width:none]
+                            [&::-webkit-scrollbar]:hidden
+                        "
+                    >
+                        {orgGroups.map((group) => (
+                            <button
+                                key={group}
+                                type="button"
+                                onClick={() => setOrgGroup(group)}
+                                className={`
+                                    shrink-0
+                                    rounded-full
+                                    border
+                                    px-4
+                                    py-2.5
+                                    text-[10px]
+                                    font-black
+                                    transition
+                                    ${orgGroup === group
+                                        ? "border-orange-400 bg-orange-400 text-[#06192E]"
+                                        : "border-white/[0.08] bg-white/[0.03] text-slate-300 hover:bg-white/[0.06]"
+                                    }
+                                `}
+                            >
+                                {group}
+                            </button>
+                        ))}
+                    </div>
+                </div>
+            </section>
+
+            {/* COMPACT FULL-POSTER GALLERY */}
+            <section
+                className="
+                    mx-auto
+                    max-w-[1450px]
+                    px-3
+                    pb-16
+                    sm:px-5
+                    lg:px-10
+                "
+            >
+                <div
+                    className="
+                        mb-3
                         flex
                         items-center
-                        gap-2
-                      "
-                                    >
-                                        <span
-                                            className="
-                          h-1.5
-                          w-1.5
-                          rounded-full
-                          bg-emerald-300
-                        "
-                                        />
-
-                                        <span
-                                            className="
-                          text-[9px]
-                          font-bold
-                          text-emerald-200
-                        "
-                                        >
-                                            برگزارشده
-                                        </span>
-                                    </div>
-
-                                    <span
-                                        className="
-                        text-[9px]
-                        font-black
-                        text-orange-200
-                      "
-                                    >
-                                        {course.format}
-                                    </span>
-                                </div>
-
-                                <button
-                                    type="button"
-                                    onClick={() =>
-                                        requestCourse(course.title)
-                                    }
-                                    className="
-                      mt-2.5
-                      flex
-                      w-full
-                      items-center
-                      justify-center
-                      gap-2
-                      rounded-[15px]
-                      bg-orange-400
-                      px-4
-                      py-3
-                      text-[11px]
-                      font-black
-                      text-[#06192E]
-                      transition
-                      hover:bg-orange-300
+                        justify-between
+                        gap-3
                     "
-                                >
-                                    درخواست این دوره
-                                    <ArrowIcon />
-                                </button>
-                            </motion.article>
-                        )
+                >
+                    <p className="text-[10px] font-bold text-slate-500 sm:text-xs">
+                        {filteredOrgCourses.length} دوره
+                    </p>
+
+                    {(orgSearch || orgGroup !== "همه") && (
+                        <button
+                            type="button"
+                            onClick={() => {
+                                setOrgSearch("");
+                                setOrgGroup("همه");
+                            }}
+                            className="
+                                rounded-full
+                                border
+                                border-white/[0.08]
+                                px-3
+                                py-2
+                                text-[9px]
+                                font-black
+                                text-slate-300
+                            "
+                        >
+                            پاک کردن فیلترها
+                        </button>
                     )}
                 </div>
-            </section>
 
-
-            {/* =====================================================
-            DESKTOP COURSE GRID
-        ====================================================== */}
-
-            <section
-                className="
-            mx-auto
-            hidden
-            max-w-[1450px]
-            px-4
-            pb-24
-            lg:block
-            lg:px-10
-          "
-            >
-                <div
-                    className="
-              grid
-              gap-5
-              lg:grid-cols-3
-            "
-                >
-                    {completedOrganizationCourses.map(
-                        (course, index) => (
+                {filteredOrgCourses.length > 0 ? (
+                    <div
+                        className="
+                            grid
+                            grid-cols-2
+                            gap-3
+                            sm:grid-cols-3
+                            lg:grid-cols-4
+                            xl:grid-cols-5
+                        "
+                    >
+                        {filteredOrgCourses.map((course, index) => (
                             <motion.article
                                 key={course.id}
-                                initial={{
-                                    opacity: 0,
-                                    y: 35,
-                                }}
-                                whileInView={{
-                                    opacity: 1,
-                                    y: 0,
-                                }}
-                                viewport={{
-                                    once: true,
-                                    amount: 0.15,
-                                }}
+                                initial={{ opacity: 0, y: 16 }}
+                                whileInView={{ opacity: 1, y: 0 }}
+                                viewport={{ once: true, amount: 0.08 }}
                                 transition={{
-                                    duration: 0.5,
-                                    delay:
-                                        (index % 3) *
-                                        0.08,
+                                    duration: 0.35,
+                                    delay: Math.min(index * 0.02, 0.12),
                                 }}
                                 className="
-                    group
-                    relative
-                    overflow-hidden
-                    rounded-[30px]
-                    border
-                    border-white/[0.08]
-                    bg-white/[0.035]
-                    p-2
-                    transition
-                    duration-500
-  
-                    hover:-translate-y-2
-                    hover:border-orange-300/20
-                    hover:bg-white/[0.055]
-                  "
+                                    group
+                                    overflow-hidden
+                                    rounded-[20px]
+                                    border
+                                    border-white/[0.08]
+                                    bg-white/[0.025]
+                                    transition
+                                    hover:-translate-y-1
+                                    hover:border-orange-300/20
+                                "
                             >
-                                {/* IMAGE */}
-
-                                <div
+                                <button
+                                    type="button"
+                                    onClick={() => setPreviewCourse(course)}
                                     className="
-                      relative
-                      aspect-square
-                      overflow-hidden
-                      rounded-[24px]
-                      bg-[#0B2137]
-                    "
+                                        relative
+                                        block
+                                        aspect-[4/5]
+                                        w-full
+                                        overflow-hidden
+                                        bg-[#081C2F]
+                                    "
                                 >
                                     <Image
                                         src={course.image}
                                         alt={course.title}
                                         fill
-                                        sizes="33vw"
+                                        sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 20vw"
                                         className="
-                        object-cover
-                        transition
-                        duration-700
-                        group-hover:scale-[1.04]
-                      "
+                                            object-contain
+                                            transition
+                                            duration-500
+                                            group-hover:scale-[1.015]
+                                        "
                                     />
 
                                     <div
                                         className="
-                        absolute
-                        inset-0
-                        bg-gradient-to-t
-                        from-[#06192E]/85
-                        via-transparent
-                        to-transparent
-                      "
+                                            absolute
+                                            inset-x-0
+                                            bottom-0
+                                            h-16
+                                            bg-gradient-to-t
+                                            from-[#06192E]/85
+                                            to-transparent
+                                        "
                                     />
 
-                                    <div
-                                        className="
-                        absolute
-                        left-4
-                        top-4
-                        rounded-full
-                        border
-                        border-white/10
-                        bg-[#06192E]/80
-                        px-3
-                        py-2
-                        text-[10px]
-                        font-black
-                        text-white
-                      "
-                                    >
-                                        {String(index + 1).padStart(
-                                            2,
-                                            "0"
-                                        )}
-                                    </div>
-                                </div>
-
-
-                                {/* CONTENT */}
-
-                                <div
-                                    className="
-                      px-4
-                      pb-5
-                      pt-5
-                    "
-                                >
                                     <span
                                         className="
-                        rounded-full
-                        border
-                        border-cyan-300/15
-                        bg-cyan-300/[0.06]
-                        px-3
-                        py-1.5
-                        text-[10px]
-                        font-black
-                        text-cyan-200
-                      "
+                                            absolute
+                                            bottom-2
+                                            left-2
+                                            rounded-full
+                                            border
+                                            border-white/10
+                                            bg-[#06192E]/75
+                                            px-2.5
+                                            py-1.5
+                                            text-[8px]
+                                            font-black
+                                            text-white
+                                            backdrop-blur-md
+                                        "
                                     >
-                                        {course.group}
+                                        بزرگ‌نمایی
                                     </span>
+                                </button>
 
-                                    <h3
-                                        className="
-                        mt-5
-                        text-xl
-                        font-black
-                        leading-8
-                        text-white
-                      "
-                                    >
-                                        {course.title}
-                                    </h3>
-
-                                    <p
-                                        className="
-                        mt-2
-                        min-h-[48px]
-                        text-xs
-                        leading-6
-                        text-slate-400
-                      "
-                                    >
-                                        {course.subtitle}
-                                    </p>
-
+                                <div className="p-3">
                                     <div
                                         className="
-                        my-5
-                        h-px
-                        bg-white/[0.07]
-                      "
-                                    />
-
-                                    <div
-                                        className="
-                        grid
-                        grid-cols-2
-                        gap-3
-                      "
+                                            flex
+                                            items-start
+                                            justify-between
+                                            gap-2
+                                        "
                                     >
-                                        <div
-                                            className="
-                          rounded-2xl
-                          bg-white/[0.025]
-                          p-3
-                        "
-                                        >
-                                            <span
+                                        <div className="min-w-0">
+                                            <h3
                                                 className="
-                            text-[9px]
-                            text-slate-500
-                          "
+                                                    truncate
+                                                    text-[12px]
+                                                    font-black
+                                                    text-white
+                                                    sm:text-sm
+                                                "
                                             >
-                                                مدرس
-                                            </span>
+                                                {course.title}
+                                            </h3>
 
                                             <p
                                                 className="
-                            mt-1
-                            text-xs
-                            font-black
-                            leading-6
-                            text-slate-200
-                          "
+                                                    mt-1
+                                                    truncate
+                                                    text-[8px]
+                                                    text-slate-500
+                                                    sm:text-[9px]
+                                                "
                                             >
-                                                {course.instructor}
+                                                {course.duration} · {course.format}
                                             </p>
                                         </div>
 
-                                        <div
+                                        <span
                                             className="
-                          rounded-2xl
-                          bg-white/[0.025]
-                          p-3
-                        "
+                                                shrink-0
+                                                rounded-full
+                                                bg-cyan-300/[0.07]
+                                                px-2
+                                                py-1
+                                                text-[7px]
+                                                font-black
+                                                text-cyan-200
+                                            "
                                         >
-                                            <span
-                                                className="
-                            text-[9px]
-                            text-slate-500
-                          "
-                                            >
-                                                مدت
-                                            </span>
-
-                                            <p
-                                                className="
-                            mt-1
-                            text-xs
-                            font-black
-                            text-slate-200
-                          "
-                                            >
-                                                {course.duration}
-                                            </p>
-                                        </div>
+                                            {course.group}
+                                        </span>
                                     </div>
 
                                     <div
                                         className="
-                        mt-3
-                        flex
-                        items-center
-                        justify-between
-                        rounded-2xl
-                        bg-white/[0.025]
-                        px-4
-                        py-3
-                      "
+                                            mt-3
+                                            grid
+                                            grid-cols-[0.9fr_1.1fr]
+                                            gap-2
+                                        "
                                     >
-                                        <span
+                                        <button
+                                            type="button"
+                                            onClick={() => setOutlineCourse(course)}
                                             className="
-                          text-[10px]
-                          text-slate-500
-                        "
+                                                flex
+                                                min-h-[40px]
+                                                items-center
+                                                justify-center
+                                                gap-1.5
+                                                rounded-[13px]
+                                                border
+                                                border-white/[0.09]
+                                                bg-white/[0.035]
+                                                px-2
+                                                text-[9px]
+                                                font-black
+                                                text-slate-200
+                                                transition
+                                                hover:bg-white/[0.07]
+                                                sm:text-[10px]
+                                            "
                                         >
-                                            شیوه آموزش
-                                        </span>
+                                            <ListIcon />
+                                            سرفصل‌ها
+                                        </button>
 
-                                        <span
+                                        <button
+                                            type="button"
+                                            onClick={() => requestCourse(course.title)}
                                             className="
-                          text-xs
-                          font-black
-                          text-orange-200
-                        "
+                                                flex
+                                                min-h-[40px]
+                                                items-center
+                                                justify-center
+                                                gap-1.5
+                                                rounded-[13px]
+                                                bg-orange-400
+                                                px-2
+                                                text-[9px]
+                                                font-black
+                                                text-[#06192E]
+                                                transition
+                                                hover:bg-orange-300
+                                                sm:text-[10px]
+                                            "
                                         >
-                                            {course.format}
-                                        </span>
+                                            درخواست برگزاری
+                                            <ArrowIcon />
+                                        </button>
                                     </div>
-
-                                    <button
-                                        type="button"
-                                        onClick={() =>
-                                            requestCourse(course.title)
-                                        }
-                                        className="
-                        mt-4
-                        flex
-                        w-full
-                        items-center
-                        justify-center
-                        gap-2
-                        rounded-2xl
-                        bg-orange-400
-                        px-4
-                        py-3.5
-                        text-xs
-                        font-black
-                        text-[#06192E]
-                        transition
-                        hover:bg-orange-300
-                      "
-                                    >
-                                        درخواست این دوره
-                                        <ArrowIcon />
-                                    </button>
                                 </div>
                             </motion.article>
-                        )
-                    )}
-                </div>
-            </section>
-
-
-            {/* =====================================================
-            PROCESS
-        ====================================================== */}
-
-            <section
-                className="
-            mx-auto
-            max-w-[1300px]
-            px-4
-            pb-24
-            pt-6
-            sm:pb-32
-            sm:pt-10
-            lg:px-10
-          "
-            >
-                <div
-                    className="
-              mb-7
-              text-center
-              sm:mb-10
-            "
-                >
-                    <span
+                        ))}
+                    </div>
+                ) : (
+                    <div
                         className="
-                text-[10px]
-                font-black
-                text-cyan-300
-                sm:text-xs
-              "
+                            rounded-[22px]
+                            border
+                            border-dashed
+                            border-white/10
+                            bg-white/[0.02]
+                            px-5
+                            py-12
+                            text-center
+                        "
                     >
-                        آموزش سازمانی در کاردو
-                    </span>
-
-                    <h2
-                        className="
-                mt-3
-                text-2xl
-                font-black
-                text-white
-                sm:text-3xl
-              "
-                    >
-                        فرآیند اجرای دوره اختصاصی
-                    </h2>
-                </div>
-
-                <div
-                    className="
-              grid
-              gap-3
-              sm:gap-5
-              md:grid-cols-3
-            "
-                >
-                    {[
-                        {
-                            number: "01",
-                            title: "نیازسنجی",
-                            text: "نیاز آموزشی و سطح تخصص شرکت‌کنندگان بررسی می‌شود.",
-                        },
-
-                        {
-                            number: "02",
-                            title: "طراحی آموزش",
-                            text: "ساختار دوره متناسب با شرایط مجموعه تنظیم می‌شود.",
-                        },
-
-                        {
-                            number: "03",
-                            title: "اجرای دوره",
-                            text: "آموزش توسط مدرس تخصصی به‌صورت نظری یا عملی اجرا می‌شود.",
-                        },
-                    ].map((step) => (
-                        <div
-                            key={step.number}
+                        <h3 className="text-base font-black text-white">
+                            دوره‌ای پیدا نشد
+                        </h3>
+                        <button
+                            type="button"
+                            onClick={() => {
+                                setOrgSearch("");
+                                setOrgGroup("همه");
+                            }}
                             className="
-                  rounded-[22px]
-                  border
-                  border-white/[0.07]
-                  bg-white/[0.03]
-                  p-5
-                  sm:rounded-[28px]
-                  sm:p-7
-                "
+                                mt-4
+                                rounded-full
+                                bg-orange-400
+                                px-5
+                                py-3
+                                text-[10px]
+                                font-black
+                                text-[#06192E]
+                            "
                         >
-                            <span
-                                className="
-                    text-3xl
-                    font-black
-                    text-orange-300/30
-                  "
-                            >
-                                {step.number}
-                            </span>
-
-                            <h3
-                                className="
-                    mt-4
-                    text-base
-                    font-black
-                    text-white
-                    sm:text-xl
-                  "
-                            >
-                                {step.title}
-                            </h3>
-
-                            <p
-                                className="
-                    mt-2
-                    text-xs
-                    leading-7
-                    text-slate-400
-                    sm:text-sm
-                  "
-                            >
-                                {step.text}
-                            </p>
-                        </div>
-                    ))}
-                </div>
+                            نمایش همه دوره‌ها
+                        </button>
+                    </div>
+                )}
             </section>
 
-            {/* =====================================================
-                ORGANIZATION REQUEST FORM
-            ====================================================== */}
-
+            {/* REQUEST FORM */}
             <section
                 id="organization-request"
                 className="
-          mx-auto
-          max-w-[1100px]
-          scroll-mt-28
-          px-4
-          pb-32
-          pt-4
-          lg:px-10
-        "
+                    mx-auto
+                    max-w-[1000px]
+                    scroll-mt-32
+                    px-3
+                    pb-28
+                    sm:px-5
+                    lg:px-10
+                "
             >
                 <div
                     className="
-            relative
-            overflow-hidden
-            rounded-[34px]
-            border
-            border-white/[0.09]
-            bg-white/[0.035]
-            p-5
-            sm:p-9
-          "
+                        rounded-[28px]
+                        border
+                        border-orange-300/15
+                        bg-gradient-to-bl
+                        from-orange-400/[0.05]
+                        via-white/[0.025]
+                        to-cyan-300/[0.035]
+                        p-5
+                        sm:p-7
+                    "
                 >
-                    <div
-                        className="
-              pointer-events-none
-              absolute
-              -right-20
-              -top-20
-              h-56
-              w-56
-              rounded-full
-              bg-orange-400/[0.06]
-              blur-[80px]
-            "
-                    />
-
                     {!success ? (
-                        <div className="relative">
-                            <span
+                        <>
+                            <div
                                 className="
-                  inline-flex
-                  rounded-full
-                  border
-                  border-orange-300/20
-                  bg-orange-300/[0.07]
-                  px-3
-                  py-2
-                  text-[10px]
-                  font-black
-                  text-orange-300
-                  sm:text-xs
-                "
+                                    flex
+                                    flex-col
+                                    gap-3
+                                    sm:flex-row
+                                    sm:items-end
+                                    sm:justify-between
+                                "
                             >
-                                فرم درخواست سازمانی
-                            </span>
-
-                            <h2
-                                className="
-                  mt-4
-                  text-2xl
-                  font-black
-                  leading-[1.6]
-                  text-white
-                  sm:text-3xl
-                "
-                            >
-                                درخواست دوره اختصاصی برای سازمان
-                            </h2>
-
-                            <p
-                                className="
-                  mt-3
-                  max-w-2xl
-                  text-xs
-                  leading-7
-                  text-slate-400
-                  sm:text-sm
-                "
-                            >
-                                یکی از دوره‌های برگزارشده را انتخاب کنید
-                                یا درخواست آموزش اختصاصی جدید برای مجموعه
-                                خود ثبت کنید.
-                            </p>
-
-                            {selectedOrgCourse && (
-                                <div
-                                    className="
-                    mt-5
-                    flex
-                    flex-col
-                    gap-2
-                    rounded-2xl
-                    border
-                    border-orange-300/15
-                    bg-orange-300/[0.05]
-                    p-4
-                    sm:flex-row
-                    sm:items-center
-                    sm:justify-between
-                  "
-                                >
-                                    <span
-                                        className="
-                      text-[10px]
-                      text-slate-400
-                    "
-                                    >
-                                        دوره انتخاب‌شده
+                                <div>
+                                    <span className="text-[9px] font-black text-orange-300">
+                                        درخواست سازمانی
                                     </span>
-
-                                    <strong
-                                        className="
-                      text-sm
-                      text-orange-200
-                    "
-                                    >
-                                        {selectedOrgCourse}
-                                    </strong>
+                                    <h2 className="mt-2 text-2xl font-black text-white">
+                                        درخواست برگزاری دوره
+                                    </h2>
                                 </div>
-                            )}
+
+                                {selectedOrgCourse && (
+                                    <div
+                                        className="
+                                            rounded-[14px]
+                                            border
+                                            border-orange-300/15
+                                            bg-orange-300/[0.06]
+                                            px-4
+                                            py-2.5
+                                        "
+                                    >
+                                        <span className="block text-[8px] text-slate-500">
+                                            دوره انتخاب‌شده
+                                        </span>
+                                        <strong className="mt-1 block text-xs font-black text-orange-200">
+                                            {selectedOrgCourse}
+                                        </strong>
+                                    </div>
+                                )}
+                            </div>
 
                             <form
                                 onSubmit={submitOrganizationRequest}
-                                className="
-                  mt-7
-                  grid
-                  gap-4
-                  sm:grid-cols-2
-                "
+                                className="mt-5 grid gap-3 sm:grid-cols-2"
                             >
                                 <Input
                                     name="organizationName"
                                     placeholder="نام سازمان / شرکت *"
                                     required
                                 />
-
                                 <Input
                                     name="contactName"
                                     placeholder="نام فرد رابط *"
                                     required
                                 />
-
                                 <Input
                                     name="phone"
                                     placeholder="شماره تماس *"
                                     required
                                 />
-
                                 <Input
                                     name="city"
                                     placeholder="شهر *"
                                     required
                                 />
-
                                 <Input
                                     name="industry"
                                     placeholder="حوزه فعالیت سازمان"
                                 />
-
                                 <Input
                                     name="participantCount"
                                     type="number"
@@ -2979,38 +2965,27 @@ function OrganizationPage() {
                                 <select
                                     value={selectedOrgCourse}
                                     onChange={(event) =>
-                                        setSelectedOrgCourse(
-                                            event.target.value
-                                        )
+                                        setSelectedOrgCourse(event.target.value)
                                     }
                                     className="
-                    h-14
-                    rounded-2xl
-                    border
-                    border-white/10
-                    bg-[#0B2137]
-                    px-4
-                    text-sm
-                    text-white
-                    outline-none
-                    focus:border-orange-400/40
-                  "
+                                        h-14
+                                        rounded-2xl
+                                        border
+                                        border-white/10
+                                        bg-[#0B2137]
+                                        px-4
+                                        text-xs
+                                        text-white
+                                        outline-none
+                                        focus:border-orange-400/40
+                                    "
                                 >
-                                    <option value="">
-                                        انتخاب دوره یا درخواست جدید
-                                    </option>
-
-                                    {completedOrganizationCourses.map(
-                                        (course) => (
-                                            <option
-                                                key={course.id}
-                                                value={course.title}
-                                            >
-                                                {course.title}
-                                            </option>
-                                        )
-                                    )}
-
+                                    <option value="">انتخاب دوره</option>
+                                    {completedOrganizationCourses.map((course) => (
+                                        <option key={course.id} value={course.title}>
+                                            {course.title}
+                                        </option>
+                                    ))}
                                     <option value="آموزش اختصاصی جدید">
                                         آموزش اختصاصی جدید
                                     </option>
@@ -3019,102 +2994,78 @@ function OrganizationPage() {
                                 <select
                                     name="trainingArea"
                                     className="
-                    h-14
-                    rounded-2xl
-                    border
-                    border-white/10
-                    bg-[#0B2137]
-                    px-4
-                    text-sm
-                    text-white
-                    outline-none
-                    focus:border-orange-400/40
-                  "
+                                        h-14
+                                        rounded-2xl
+                                        border
+                                        border-white/10
+                                        bg-[#0B2137]
+                                        px-4
+                                        text-xs
+                                        text-white
+                                        outline-none
+                                        focus:border-orange-400/40
+                                    "
                                 >
-                                    <option value="">
-                                        حوزه آموزشی
-                                    </option>
-                                    <option value="HSE و ایمنی">
-                                        HSE و ایمنی
-                                    </option>
-                                    <option value="آتش‌نشانی">
-                                        آتش‌نشانی
-                                    </option>
-                                    <option value="مواد خطرناک">
-                                        مواد خطرناک
-                                    </option>
-                                    <option value="امداد و نجات">
-                                        امداد و نجات
-                                    </option>
-                                    <option value="مدیریت بحران">
-                                        مدیریت بحران
-                                    </option>
-                                    <option value="سایر">
-                                        سایر
-                                    </option>
+                                    <option value="">حوزه آموزشی</option>
+                                    <option value="HSE و ایمنی">HSE و ایمنی</option>
+                                    <option value="آتش‌نشانی">آتش‌نشانی</option>
+                                    <option value="مواد خطرناک">مواد خطرناک</option>
+                                    <option value="امداد و نجات">امداد و نجات</option>
+                                    <option value="مدیریت بحران">مدیریت بحران</option>
+                                    <option value="سایر">سایر</option>
                                 </select>
 
                                 <select
                                     name="preferredLocation"
                                     className="
-                    h-14
-                    rounded-2xl
-                    border
-                    border-white/10
-                    bg-[#0B2137]
-                    px-4
-                    text-sm
-                    text-white
-                    outline-none
-                    focus:border-orange-400/40
-                    sm:col-span-2
-                  "
+                                        h-14
+                                        rounded-2xl
+                                        border
+                                        border-white/10
+                                        bg-[#0B2137]
+                                        px-4
+                                        text-xs
+                                        text-white
+                                        outline-none
+                                        focus:border-orange-400/40
+                                        sm:col-span-2
+                                    "
                                 >
-                                    <option value="">
-                                        محل پیشنهادی برگزاری
-                                    </option>
-                                    <option value="organization">
-                                        محل سازمان / شرکت
-                                    </option>
-                                    <option value="academy">
-                                        مجتمع آموزشی کاردو
-                                    </option>
-                                    <option value="negotiable">
-                                        قابل هماهنگی
-                                    </option>
+                                    <option value="">محل پیشنهادی برگزاری</option>
+                                    <option value="organization">محل سازمان / شرکت</option>
+                                    <option value="academy">مجتمع آموزشی کاردو</option>
+                                    <option value="negotiable">قابل هماهنگی</option>
                                 </select>
 
                                 <textarea
                                     name="notes"
-                                    placeholder="توضیحات درباره نیاز آموزشی، زمان پیشنهادی، تعداد نفرات یا سایر موارد..."
+                                    placeholder="توضیحات تکمیلی، زمان پیشنهادی یا نیاز خاص مجموعه..."
                                     className="
-                    min-h-[140px]
-                    rounded-2xl
-                    border
-                    border-white/10
-                    bg-white/[0.04]
-                    p-4
-                    text-sm
-                    text-white
-                    outline-none
-                    placeholder:text-slate-500
-                    focus:border-orange-400/40
-                    sm:col-span-2
-                  "
+                                        min-h-[110px]
+                                        rounded-2xl
+                                        border
+                                        border-white/10
+                                        bg-white/[0.04]
+                                        p-4
+                                        text-xs
+                                        text-white
+                                        outline-none
+                                        placeholder:text-slate-600
+                                        focus:border-orange-400/40
+                                        sm:col-span-2
+                                    "
                                 />
 
                                 {error && (
                                     <div
                                         className="
-                      rounded-2xl
-                      border
-                      border-red-300/10
-                      bg-red-400/[0.08]
-                      p-4
-                      text-sm
-                      text-red-200
-                      sm:col-span-2
-                    "
+                                            rounded-2xl
+                                            bg-red-400/[0.08]
+                                            p-4
+                                            text-xs
+                                            text-red-200
+                                            sm:col-span-2
+                                        "
                                     >
                                         {error}
                                     </div>
@@ -3124,43 +3075,28 @@ function OrganizationPage() {
                                     type="submit"
                                     disabled={submitting}
                                     className="
-                    flex
-                    min-h-14
-                    items-center
-                    justify-center
-                    gap-3
-                    rounded-2xl
-                    bg-orange-400
-                    px-6
-                    py-4
-                    text-sm
-                    font-black
-                    text-[#06192E]
-                    transition
-                    hover:bg-orange-300
-                    disabled:cursor-not-allowed
-                    disabled:opacity-50
-                    sm:col-span-2
-                    sm:rounded-full
-                  "
+                                        min-h-14
+                                        rounded-full
+                                        bg-orange-400
+                                        px-6
+                                        text-xs
+                                        font-black
+                                        text-[#06192E]
+                                        transition
+                                        hover:bg-orange-300
+                                        disabled:opacity-50
+                                        sm:col-span-2
+                                    "
                                 >
                                     {submitting
                                         ? "در حال ثبت درخواست..."
                                         : "ارسال درخواست سازمانی"}
-
-                                    {!submitting && <ArrowIcon />}
                                 </button>
                             </form>
-                        </div>
+                        </>
                     ) : (
-                        <div
-                            className="
-                relative
-                py-10
-              "
-                        >
+                        <div className="py-8">
                             <Success />
-
                             <button
                                 type="button"
                                 onClick={() => {
@@ -3168,21 +3104,19 @@ function OrganizationPage() {
                                     setSelectedOrgCourse("");
                                 }}
                                 className="
-                  mx-auto
-                  mt-4
-                  block
-                  rounded-full
-                  border
-                  border-white/10
-                  bg-white/[0.04]
-                  px-6
-                  py-3
-                  text-xs
-                  font-black
-                  text-slate-200
-                  transition
-                  hover:bg-white/[0.08]
-                "
+                                    mx-auto
+                                    mt-4
+                                    block
+                                    rounded-full
+                                    border
+                                    border-white/10
+                                    bg-white/[0.04]
+                                    px-6
+                                    py-3
+                                    text-xs
+                                    font-black
+                                    text-slate-200
+                                "
                             >
                                 ثبت درخواست جدید
                             </button>
@@ -3190,9 +3124,323 @@ function OrganizationPage() {
                     )}
                 </div>
             </section>
+
+            {/* POSTER MODAL */}
+            <AnimatePresence>
+                {previewCourse && (
+                    <Modal close={() => setPreviewCourse(null)}>
+                        <h2 className="text-xl font-black text-white">
+                            {previewCourse.title}
+                        </h2>
+
+                        <div
+                            className="
+                                relative
+                                mt-4
+                                aspect-[4/5]
+                                overflow-hidden
+                                rounded-[18px]
+                                bg-[#081C2F]
+                            "
+                        >
+                            <Image
+                                src={previewCourse.image}
+                                alt={previewCourse.title}
+                                fill
+                                sizes="90vw"
+                                className="object-contain"
+                            />
+                        </div>
+
+                        <div
+                            className="
+                                mt-4
+                                grid
+                                grid-cols-[0.9fr_1.1fr]
+                                gap-2
+                            "
+                        >
+                            <button
+                                type="button"
+                                onClick={() => {
+                                    const course = previewCourse;
+                                    setPreviewCourse(null);
+                                    setTimeout(
+                                        () => setOutlineCourse(course),
+                                        80
+                                    );
+                                }}
+                                className="
+                                    flex
+                                    min-h-[48px]
+                                    items-center
+                                    justify-center
+                                    gap-2
+                                    rounded-full
+                                    border
+                                    border-white/10
+                                    bg-white/[0.04]
+                                    px-3
+                                    text-[10px]
+                                    font-black
+                                    text-slate-200
+                                    transition
+                                    hover:bg-white/[0.08]
+                                    sm:text-xs
+                                "
+                            >
+                                <ListIcon />
+                                سرفصل‌ها
+                            </button>
+
+                            <button
+                                type="button"
+                                onClick={() => {
+                                    const title = previewCourse.title;
+                                    setPreviewCourse(null);
+                                    setTimeout(() => requestCourse(title), 80);
+                                }}
+                                className="
+                                    min-h-[48px]
+                                    rounded-full
+                                    bg-orange-400
+                                    px-3
+                                    text-[10px]
+                                    font-black
+                                    text-[#06192E]
+                                    transition
+                                    hover:bg-orange-300
+                                    sm:text-xs
+                                "
+                            >
+                                درخواست برگزاری
+                            </button>
+                        </div>
+                    </Modal>
+                )}
+            </AnimatePresence>
+
+            {/* COURSE OUTLINE MODAL */}
+            <AnimatePresence>
+                {outlineCourse && (
+                    <Modal close={() => setOutlineCourse(null)}>
+                        <div
+                            className="
+                                flex
+                                items-start
+                                justify-between
+                                gap-4
+                            "
+                        >
+                            <div>
+                                <span
+                                    className="
+                                        inline-flex
+                                        rounded-full
+                                        border
+                                        border-cyan-300/15
+                                        bg-cyan-300/[0.06]
+                                        px-3
+                                        py-1.5
+                                        text-[9px]
+                                        font-black
+                                        text-cyan-200
+                                    "
+                                >
+                                    {outlineCourse.group}
+                                </span>
+
+                                <h2
+                                    className="
+                                        mt-3
+                                        text-xl
+                                        font-black
+                                        leading-8
+                                        text-white
+                                        sm:text-2xl
+                                    "
+                                >
+                                    سرفصل‌های {outlineCourse.title}
+                                </h2>
+
+                                <p
+                                    className="
+                                        mt-1
+                                        text-[10px]
+                                        text-slate-500
+                                        sm:text-xs
+                                    "
+                                >
+                                    {outlineCourse.duration}
+                                    {" · "}
+                                    {outlineCourse.format}
+                                </p>
+                            </div>
+                        </div>
+
+                        <div
+                            className="
+                                mt-6
+                                rounded-[20px]
+                                border
+                                border-white/[0.08]
+                                bg-white/[0.03]
+                                p-4
+                            "
+                        >
+                            <span
+                                className="
+                                    text-[9px]
+                                    font-black
+                                    text-orange-300
+                                "
+                            >
+                                محور اصلی دوره
+                            </span>
+
+                            <p
+                                className="
+                                    mt-2
+                                    text-sm
+                                    font-bold
+                                    leading-7
+                                    text-white
+                                "
+                            >
+                                {outlineCourse.subtitle}
+                            </p>
+                        </div>
+
+                        <div
+                            className="
+                                mt-3
+                                rounded-[20px]
+                                border
+                                border-dashed
+                                border-white/[0.10]
+                                bg-white/[0.02]
+                                p-4
+                            "
+                        >
+                            <div
+                                className="
+                                    flex
+                                    gap-3
+                                "
+                            >
+                                <span
+                                    className="
+                                        mt-0.5
+                                        flex
+                                        h-7
+                                        w-7
+                                        shrink-0
+                                        items-center
+                                        justify-center
+                                        rounded-full
+                                        bg-orange-400/[0.10]
+                                        text-[11px]
+                                        font-black
+                                        text-orange-300
+                                    "
+                                >
+                                    i
+                                </span>
+
+                                <p
+                                    className="
+                                        text-[10px]
+                                        leading-6
+                                        text-slate-400
+                                        sm:text-xs
+                                        sm:leading-7
+                                    "
+                                >
+                                    سرفصل تفصیلی این دوره در اطلاعات فعلی
+                                    پوستر درج نشده است. برای دریافت برنامه
+                                    کامل آموزشی و جزئیات سرفصل‌ها، درخواست
+                                    برگزاری دوره را ثبت کنید.
+                                </p>
+                            </div>
+                        </div>
+
+                        <div
+                            className="
+                                mt-5
+                                grid
+                                grid-cols-[0.85fr_1.15fr]
+                                gap-2
+                            "
+                        >
+                            <button
+                                type="button"
+                                onClick={() => {
+                                    const course = outlineCourse;
+                                    setOutlineCourse(null);
+                                    setTimeout(
+                                        () => setPreviewCourse(course),
+                                        80
+                                    );
+                                }}
+                                className="
+                                    flex
+                                    min-h-[48px]
+                                    items-center
+                                    justify-center
+                                    rounded-full
+                                    border
+                                    border-white/10
+                                    bg-white/[0.04]
+                                    px-3
+                                    text-[10px]
+                                    font-black
+                                    text-slate-200
+                                    transition
+                                    hover:bg-white/[0.08]
+                                    sm:text-xs
+                                "
+                            >
+                                مشاهده پوستر
+                            </button>
+
+                            <button
+                                type="button"
+                                onClick={() => {
+                                    const title = outlineCourse.title;
+                                    setOutlineCourse(null);
+                                    setTimeout(
+                                        () => requestCourse(title),
+                                        80
+                                    );
+                                }}
+                                className="
+                                    flex
+                                    min-h-[48px]
+                                    items-center
+                                    justify-center
+                                    gap-2
+                                    rounded-full
+                                    bg-orange-400
+                                    px-3
+                                    text-[10px]
+                                    font-black
+                                    text-[#06192E]
+                                    transition
+                                    hover:bg-orange-300
+                                    sm:text-xs
+                                "
+                            >
+                                درخواست برگزاری
+                                <ArrowIcon />
+                            </button>
+                        </div>
+                    </Modal>
+                )}
+            </AnimatePresence>
         </>
     );
 }
+
 
 /* =========================================================
    GENERIC UI
