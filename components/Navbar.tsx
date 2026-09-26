@@ -2,8 +2,8 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
+import { useState } from "react";
 
 const menuItems = [
     {
@@ -30,34 +30,25 @@ const menuItems = [
     },
 ];
 
+const courseLinks = [
+    {
+        title: "اختصاصی سازمان‌ها",
+        href: "/courses?category=organization",
+    },
+    {
+        title: "بین‌المللی",
+        href: "/courses?category=international",
+    },
+    {
+        title: "فنی و حرفه‌ای",
+        href: "/courses?category=technical",
+    },
+];
+
 export default function Navbar() {
     const pathname = usePathname();
 
     const [open, setOpen] = useState(false);
-
-    /* =========================================================
-       CLOSE MOBILE MENU ON ROUTE CHANGE
-    ========================================================= */
-
-    useEffect(() => {
-        setOpen(false);
-    }, [pathname]);
-
-    /* =========================================================
-       LOCK BODY WHEN MENU OPEN
-    ========================================================= */
-
-    useEffect(() => {
-        if (open) {
-            document.body.style.overflow = "hidden";
-        } else {
-            document.body.style.overflow = "";
-        }
-
-        return () => {
-            document.body.style.overflow = "";
-        };
-    }, [open]);
 
     function isActive(
         href: string,
@@ -74,106 +65,141 @@ export default function Navbar() {
         return pathname.startsWith(href);
     }
 
-    function goToPartners() {
-        setOpen(false);
-
-        if (pathname === "/") {
-            setTimeout(() => {
-                document
-                    .getElementById("partners")
-                    ?.scrollIntoView({
-                        behavior: "smooth",
-                        block: "start",
-                    });
-            }, 50);
-
-            return;
-        }
-
-        window.location.href = "/#partners";
-    }
-
     return (
-        <>
-            <header
-                dir="rtl"
+        <header
+            dir="rtl"
+            className="
+        sticky
+        top-0
+        z-[100]
+        w-full
+        bg-[#0B2239]/95
+        px-3
+        py-2
+        backdrop-blur-xl
+
+        sm:px-4
+        lg:bg-transparent
+        lg:px-8
+        lg:pt-3
+      "
+            style={{
+                paddingTop:
+                    "max(8px, env(safe-area-inset-top))",
+            }}
+        >
+            <div
                 className="
-          relative
-          z-[500]
-          px-3
-          pt-3
-          sm:px-5
-          lg:px-8
+          mx-auto
+          max-w-[1500px]
         "
             >
+                {/* =========================
+            NAVBAR
+        ========================= */}
+
                 <nav
                     className="
-            mx-auto
             flex
-            h-[74px]
-            max-w-[1500px]
+            min-h-[64px]
             items-center
             justify-between
-            rounded-[28px]
+            rounded-[22px]
             border
-            border-white/[0.10]
-            bg-[#0B2239]/90
-            px-4
-            shadow-[0_18px_60px_rgba(0,0,0,0.18)]
-            backdrop-blur-2xl
+            border-white/[0.08]
+            bg-[#102A43]/95
+            px-3
+            shadow-[0_14px_40px_rgba(0,0,0,0.18)]
+            backdrop-blur-xl
 
-            sm:h-[82px]
-            sm:px-5
+            sm:min-h-[70px]
+            sm:px-4
 
-            lg:h-[90px]
-            lg:rounded-[34px]
-            lg:px-7
+            lg:min-h-[86px]
+            lg:rounded-[30px]
+            lg:px-6
           "
                 >
-                    {/* =====================================================
-              LOGO
-          ====================================================== */}
+                    {/* LOGO */}
 
                     <Link
                         href="/"
+                        onClick={() =>
+                            setOpen(false)
+                        }
                         className="
-              relative
               flex
               shrink-0
               items-center
-              justify-center
-              rounded-[17px]
-              bg-white
-              p-2
-              transition
-              duration-300
-              hover:scale-[1.03]
-
-              sm:rounded-[19px]
-              sm:p-2.5
+              gap-2
             "
                     >
-                        <Image
-                            src="/logo.png"
-                            alt="مجتمع آموزشی کاردو"
-                            width={58}
-                            height={58}
-                            priority
+                        <div
                             className="
-                h-[42px]
-                w-[42px]
-                object-contain
+                flex
+                h-[45px]
+                w-[45px]
+                items-center
+                justify-center
+                rounded-[14px]
+                bg-white
+                p-1.5
 
-                sm:h-[48px]
-                sm:w-[48px]
+                sm:h-[50px]
+                sm:w-[50px]
+
+                lg:h-[58px]
+                lg:w-[58px]
+                lg:rounded-[17px]
               "
-                        />
+                        >
+                            <Image
+                                src="/logo.png"
+                                alt="مجتمع آموزشی کاردو"
+                                width={58}
+                                height={58}
+                                priority
+                                className="
+                  h-full
+                  w-full
+                  object-contain
+                "
+                            />
+                        </div>
+
+                        <div
+                            className="
+                hidden
+                sm:block
+                lg:hidden
+              "
+                        >
+                            <p
+                                className="
+                  text-xs
+                  font-black
+                  text-white
+                "
+                            >
+                                کاردو
+                            </p>
+
+                            <p
+                                className="
+                  mt-0.5
+                  text-[8px]
+                  text-slate-500
+                "
+                            >
+                                CARDO ACADEMY
+                            </p>
+                        </div>
                     </Link>
 
 
-                    {/* =====================================================
+                    {/* =========================
               DESKTOP MENU
-          ====================================================== */}
+          ========================= */}
 
                     <div
                         className="
@@ -199,20 +225,13 @@ export default function Navbar() {
                     rounded-full
                     px-4
                     py-3
-                    text-sm
+                    text-[13px]
                     font-black
                     transition
-                    duration-300
 
                     ${active
-                                            ? `
-                          text-white
-                        `
-                                            : `
-                          text-slate-300
-                          hover:bg-white/[0.05]
-                          hover:text-white
-                        `
+                                            ? "text-white"
+                                            : "text-slate-300 hover:bg-white/[0.05] hover:text-white"
                                         }
                   `}
                                 >
@@ -222,7 +241,7 @@ export default function Navbar() {
                                         <span
                                             className="
                         absolute
-                        -bottom-[7px]
+                        -bottom-[4px]
                         right-1/2
                         h-[3px]
                         w-7
@@ -236,40 +255,35 @@ export default function Navbar() {
                             );
                         })}
 
-
-                        {/* CUSTOMERS */}
-
-                        <button
-                            type="button"
-                            onClick={goToPartners}
+                        <Link
+                            href="/#partners"
                             className="
                 rounded-full
                 px-4
                 py-3
-                text-sm
+                text-[13px]
                 font-black
                 text-slate-300
                 transition
-                duration-300
 
                 hover:bg-white/[0.05]
                 hover:text-white
               "
                         >
                             مشتریان ما
-                        </button>
+                        </Link>
                     </div>
 
 
-                    {/* =====================================================
-              DESKTOP AUTH
-          ====================================================== */}
+                    {/* =========================
+              DESKTOP BUTTONS
+          ========================= */}
 
                     <div
                         className="
               hidden
               items-center
-              gap-3
+              gap-2
               lg:flex
             "
                     >
@@ -284,7 +298,6 @@ export default function Navbar() {
                 text-slate-300
                 transition
 
-                hover:bg-white/[0.05]
                 hover:text-white
               "
                         >
@@ -294,18 +307,15 @@ export default function Navbar() {
                         <button
                             type="button"
                             className="
-                rounded-[18px]
+                rounded-[17px]
                 bg-orange-400
-                px-7
-                py-4
+                px-6
+                py-3.5
                 text-sm
                 font-black
                 text-[#07192D]
-                shadow-[0_12px_35px_rgba(251,146,60,0.20)]
                 transition
-                duration-300
 
-                hover:-translate-y-0.5
                 hover:bg-orange-300
               "
                         >
@@ -314,9 +324,9 @@ export default function Navbar() {
                     </div>
 
 
-                    {/* =====================================================
-              MOBILE RIGHT SIDE
-          ====================================================== */}
+                    {/* =========================
+              MOBILE ACTIONS
+          ========================= */}
 
                     <div
                         className="
@@ -333,48 +343,41 @@ export default function Navbar() {
                 rounded-full
                 bg-orange-400
                 px-4
-                py-3
-                text-[11px]
+                py-2.5
+                text-[10px]
                 font-black
                 text-[#07192D]
+
                 sm:inline-flex
               "
                         >
-                            مشاهده دوره‌ها
+                            دوره‌ها
                         </Link>
 
                         <button
                             type="button"
-                            aria-label={
-                                open
-                                    ? "بستن منو"
-                                    : "باز کردن منو"
-                            }
                             onClick={() =>
                                 setOpen((prev) => !prev)
                             }
+                            aria-label="منوی سایت"
+                            aria-expanded={open}
                             className="
-                relative
                 flex
-                h-12
-                w-12
+                h-[44px]
+                w-[44px]
                 items-center
                 justify-center
-                rounded-[16px]
+                rounded-[14px]
                 border
                 border-white/10
                 bg-white/[0.05]
-                text-white
-                transition
-
-                hover:bg-white/[0.08]
               "
                         >
                             <div
                                 className="
                   relative
-                  h-[18px]
-                  w-[22px]
+                  h-[16px]
+                  w-[20px]
                 "
                             >
                                 <span
@@ -383,17 +386,14 @@ export default function Navbar() {
                     left-0
                     top-0
                     h-[2px]
-                    w-[22px]
+                    w-full
                     rounded-full
                     bg-white
-                    transition
+                    transition-all
                     duration-300
 
                     ${open
-                                            ? `
-                          top-[8px]
-                          rotate-45
-                        `
+                                            ? "top-[7px] rotate-45"
                                             : ""
                                         }
                   `}
@@ -403,21 +403,16 @@ export default function Navbar() {
                                     className={`
                     absolute
                     left-0
-                    top-[8px]
+                    top-[7px]
                     h-[2px]
                     rounded-full
                     bg-white
-                    transition
+                    transition-all
                     duration-300
 
                     ${open
-                                            ? `
-                          w-0
-                          opacity-0
-                        `
-                                            : `
-                          w-[16px]
-                        `
+                                            ? "w-0 opacity-0"
+                                            : "w-[14px]"
                                         }
                   `}
                                 />
@@ -428,17 +423,14 @@ export default function Navbar() {
                     bottom-0
                     left-0
                     h-[2px]
-                    w-[22px]
+                    w-full
                     rounded-full
                     bg-white
-                    transition
+                    transition-all
                     duration-300
 
                     ${open
-                                            ? `
-                          bottom-[8px]
-                          -rotate-45
-                        `
+                                            ? "bottom-[7px] -rotate-45"
                                             : ""
                                         }
                   `}
@@ -447,434 +439,265 @@ export default function Navbar() {
                         </button>
                     </div>
                 </nav>
-            </header>
 
 
-            {/* =====================================================
-          MOBILE BACKDROP
-      ====================================================== */}
-
-            <div
-                onClick={() => setOpen(false)}
-                className={`
-          fixed
-          inset-0
-          z-[580]
-          bg-[#020812]/70
-          backdrop-blur-sm
-          transition
-          duration-300
-          lg:hidden
-
-          ${open
-                        ? `
-                visible
-                opacity-100
-              `
-                        : `
-                invisible
-                opacity-0
-              `
-                    }
-        `}
-            />
-
-
-            {/* =====================================================
-          MOBILE MENU
-      ====================================================== */}
-
-            <aside
-                dir="rtl"
-                className={`
-          fixed
-          bottom-0
-          right-0
-          top-0
-          z-[600]
-          w-[86%]
-          max-w-[360px]
-          border-l
-          border-white/10
-          bg-[#081D31]/95
-          p-5
-          shadow-[-30px_0_80px_rgba(0,0,0,0.35)]
-          backdrop-blur-2xl
-          transition-transform
-          duration-500
-          lg:hidden
-
-          ${open
-                        ? `
-                translate-x-0
-              `
-                        : `
-                translate-x-full
-              `
-                    }
-        `}
-            >
-                {/* MOBILE MENU HEADER */}
+                {/* =========================
+            MOBILE MENU
+        ========================= */}
 
                 <div
-                    className="
-            flex
-            items-center
-            justify-between
-          "
+                    className={`
+            overflow-hidden
+            transition-all
+            duration-300
+            lg:hidden
+
+            ${open
+                            ? `
+                  mt-2
+                  max-h-[calc(100dvh-95px)]
+                  opacity-100
+                `
+                            : `
+                  max-h-0
+                  opacity-0
+                `
+                        }
+          `}
                 >
-                    <Link
-                        href="/"
-                        onClick={() => setOpen(false)}
+                    <div
                         className="
-              flex
-              items-center
-              gap-3
+              max-h-[calc(100dvh-105px)]
+              overflow-y-auto
+              rounded-[24px]
+              border
+              border-white/[0.08]
+              bg-[#0D263D]/98
+              p-3
+              shadow-[0_20px_55px_rgba(0,0,0,0.28)]
+              backdrop-blur-2xl
             "
                     >
+                        {/* MAIN LINKS */}
+
                         <div
                             className="
-                flex
-                h-12
-                w-12
-                items-center
-                justify-center
-                rounded-[15px]
-                bg-white
-                p-2
+                space-y-1
               "
                         >
-                            <Image
-                                src="/logo.png"
-                                alt="کاردو"
-                                width={42}
-                                height={42}
-                                className="
-                  h-full
-                  w-full
-                  object-contain
-                "
-                            />
-                        </div>
+                            {menuItems.map((item) => {
+                                const active =
+                                    isActive(
+                                        item.href,
+                                        item.exact
+                                    );
 
-                        <div>
-                            <p
-                                className="
-                  text-sm
-                  font-black
-                  text-white
-                "
-                            >
-                                مجتمع آموزشی کاردو
-                            </p>
+                                return (
+                                    <Link
+                                        key={item.title}
+                                        href={item.href}
+                                        onClick={() =>
+                                            setOpen(false)
+                                        }
+                                        className={`
+                      flex
+                      min-h-[48px]
+                      items-center
+                      justify-between
+                      rounded-[15px]
+                      px-4
+                      text-[12px]
+                      font-black
 
-                            <p
-                                className="
-                  mt-1
-                  text-[9px]
-                  text-slate-500
-                "
-                            >
-                                CARDO ACADEMY
-                            </p>
-                        </div>
-                    </Link>
+                      ${active
+                                                ? `
+                            bg-orange-400/[0.10]
+                            text-orange-200
+                          `
+                                                : `
+                            text-slate-200
+                          `
+                                            }
+                    `}
+                                    >
+                                        <span>
+                                            {item.title}
+                                        </span>
 
-
-                    <button
-                        type="button"
-                        onClick={() => setOpen(false)}
-                        className="
-              flex
-              h-10
-              w-10
-              items-center
-              justify-center
-              rounded-full
-              border
-              border-white/10
-              bg-white/[0.04]
-              text-xl
-              text-white
-            "
-                    >
-                        ×
-                    </button>
-                </div>
+                                        <span
+                                            className="
+                        text-sm
+                        text-slate-500
+                      "
+                                        >
+                                            ←
+                                        </span>
+                                    </Link>
+                                );
+                            })}
 
 
-                {/* DIVIDER */}
-
-                <div
-                    className="
-            my-6
-            h-px
-            bg-white/[0.07]
-          "
-                />
-
-
-                {/* MOBILE NAVIGATION */}
-
-                <div
-                    className="
-            space-y-2
-          "
-                >
-                    {menuItems.map((item) => {
-                        const active =
-                            isActive(
-                                item.href,
-                                item.exact
-                            );
-
-                        return (
                             <Link
-                                key={item.title}
-                                href={item.href}
+                                href="/#partners"
                                 onClick={() =>
                                     setOpen(false)
                                 }
-                                className={`
+                                className="
                   flex
-                  min-h-[54px]
+                  min-h-[48px]
                   items-center
                   justify-between
-                  rounded-[18px]
-                  border
+                  rounded-[15px]
                   px-4
-                  text-sm
+                  text-[12px]
                   font-black
-                  transition
-
-                  ${active
-                                        ? `
-                        border-orange-400/20
-                        bg-orange-400/[0.09]
-                        text-orange-200
-                      `
-                                        : `
-                        border-transparent
-                        text-slate-200
-                        hover:border-white/[0.06]
-                        hover:bg-white/[0.04]
-                      `
-                                    }
-                `}
+                  text-slate-200
+                "
                             >
-                                <span>{item.title}</span>
+                                <span>
+                                    مشتریان ما
+                                </span>
 
                                 <span
-                                    className={`
-                    text-lg
-
-                    ${active
-                                            ? "text-orange-300"
-                                            : "text-slate-600"
-                                        }
-                  `}
+                                    className="
+                    text-sm
+                    text-slate-500
+                  "
                                 >
                                     ←
                                 </span>
                             </Link>
-                        );
-                    })}
+                        </div>
 
 
-                    {/* CUSTOMERS */}
+                        {/* DIVIDER */}
 
-                    <button
-                        type="button"
-                        onClick={goToPartners}
-                        className="
-              flex
-              min-h-[54px]
-              w-full
-              items-center
-              justify-between
-              rounded-[18px]
-              px-4
-              text-right
-              text-sm
-              font-black
-              text-slate-200
-              transition
-
-              hover:bg-white/[0.04]
-            "
-                    >
-                        <span>مشتریان ما</span>
-
-                        <span
+                        <div
                             className="
-                text-lg
-                text-slate-600
+                my-3
+                h-px
+                bg-white/[0.07]
+              "
+                        />
+
+
+                        {/* COURSE LINKS */}
+
+                        <div
+                            className="
+                rounded-[18px]
+                bg-white/[0.025]
+                p-3
               "
                         >
-                            ←
-                        </span>
-                    </button>
-                </div>
+                            <p
+                                className="
+                  mb-3
+                  text-[9px]
+                  font-black
+                  text-slate-500
+                "
+                            >
+                                مسیرهای آموزشی
+                            </p>
+
+                            <div
+                                className="
+                  grid
+                  grid-cols-1
+                  gap-2
+                "
+                            >
+                                {courseLinks.map(
+                                    (item) => (
+                                        <Link
+                                            key={
+                                                item.title
+                                            }
+                                            href={
+                                                item.href
+                                            }
+                                            onClick={() =>
+                                                setOpen(
+                                                    false
+                                                )
+                                            }
+                                            className="
+                        flex
+                        min-h-[44px]
+                        items-center
+                        justify-between
+                        rounded-[13px]
+                        border
+                        border-white/[0.06]
+                        bg-white/[0.025]
+                        px-3
+                        text-[10px]
+                        font-black
+                        text-white
+                      "
+                                        >
+                                            <span>
+                                                {item.title}
+                                            </span>
+
+                                            <span
+                                                className="
+                          text-orange-300
+                        "
+                                            >
+                                                ←
+                                            </span>
+                                        </Link>
+                                    )
+                                )}
+                            </div>
+                        </div>
 
 
-                {/* =================================================
-            MOBILE COURSES QUICK LINKS
-        ================================================== */}
+                        {/* MOBILE AUTH */}
 
-                <div
-                    className="
-            mt-7
-            rounded-[22px]
-            border
-            border-white/[0.07]
-            bg-white/[0.025]
-            p-3
-          "
-                >
-                    <p
-                        className="
-              px-2
-              pb-3
-              text-[10px]
-              font-black
-              text-slate-500
-            "
-                    >
-                        مسیرهای آموزشی
-                    </p>
-
-
-                    <div
-                        className="
-              space-y-2
-            "
-                    >
-                        <Link
-                            href="/courses?category=organization"
-                            onClick={() =>
-                                setOpen(false)
-                            }
+                        <div
                             className="
-                flex
-                items-center
-                justify-between
-                rounded-[15px]
-                bg-white/[0.035]
-                px-3
-                py-3
-                text-[11px]
-                font-bold
-                text-white
+                mt-3
+                grid
+                grid-cols-2
+                gap-2
               "
                         >
-                            اختصاصی سازمان‌ها
+                            <button
+                                type="button"
+                                className="
+                  min-h-[44px]
+                  rounded-[14px]
+                  border
+                  border-white/10
+                  bg-white/[0.035]
+                  text-[11px]
+                  font-black
+                  text-white
+                "
+                            >
+                                ورود
+                            </button>
 
-                            <span className="text-orange-300">
-                                ←
-                            </span>
-                        </Link>
-
-
-                        <Link
-                            href="/courses?category=international"
-                            onClick={() =>
-                                setOpen(false)
-                            }
-                            className="
-                flex
-                items-center
-                justify-between
-                rounded-[15px]
-                bg-white/[0.035]
-                px-3
-                py-3
-                text-[11px]
-                font-bold
-                text-white
-              "
-                        >
-                            دوره‌های بین‌المللی
-
-                            <span className="text-orange-300">
-                                ←
-                            </span>
-                        </Link>
-
-
-                        <Link
-                            href="/courses?category=technical"
-                            onClick={() =>
-                                setOpen(false)
-                            }
-                            className="
-                flex
-                items-center
-                justify-between
-                rounded-[15px]
-                bg-white/[0.035]
-                px-3
-                py-3
-                text-[11px]
-                font-bold
-                text-white
-              "
-                        >
-                            فنی و حرفه‌ای
-
-                            <span className="text-orange-300">
-                                ←
-                            </span>
-                        </Link>
+                            <button
+                                type="button"
+                                className="
+                  min-h-[44px]
+                  rounded-[14px]
+                  bg-orange-400
+                  text-[11px]
+                  font-black
+                  text-[#07192D]
+                "
+                            >
+                                ثبت‌نام
+                            </button>
+                        </div>
                     </div>
                 </div>
-
-
-                {/* =================================================
-            MOBILE AUTH
-        ================================================== */}
-
-                <div
-                    className="
-            absolute
-            bottom-5
-            left-5
-            right-5
-            grid
-            grid-cols-2
-            gap-2
-          "
-                >
-                    <button
-                        type="button"
-                        className="
-              rounded-[17px]
-              border
-              border-white/10
-              bg-white/[0.04]
-              py-3.5
-              text-xs
-              font-black
-              text-white
-            "
-                    >
-                        ورود
-                    </button>
-
-                    <button
-                        type="button"
-                        className="
-              rounded-[17px]
-              bg-orange-400
-              py-3.5
-              text-xs
-              font-black
-              text-[#07192D]
-            "
-                    >
-                        ثبت‌نام
-                    </button>
-                </div>
-            </aside>
-        </>
+            </div>
+        </header>
     );
 }
