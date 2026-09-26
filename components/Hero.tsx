@@ -1,734 +1,262 @@
 "use client";
 
-import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useState } from "react";
-import { AnimatePresence, motion } from "framer-motion";
+import { useEffect, useRef, useState } from "react";
 
-type SlideItem = {
+type HeroSlide = {
     id: number;
     title: string;
-    description: string;
-    tag: string;
-    href: string;
+    subtitle?: string;
     image: string;
+    href: string;
 };
 
-const slides: SlideItem[] = [
+const heroSlides: HeroSlide[] = [
     {
         id: 1,
-        title: "دوره‌های فنی و حرفه‌ای",
-        description:
-            "دوره‌های مهارتی و کاربردی برای توسعه توانمندی‌های حرفه‌ای و ورود مؤثرتر به بازار کار.",
-        tag: "دوره‌های فنی و حرفه‌ای",
+        title: "دوره رفتارشناسی حریق",
+        image: "/images/hero/hero-fire-behavior.jpg",
         href: "/courses?category=technical",
-        image: "/images/01.png",
     },
     {
         id: 2,
-        title: "آموزش اختصاصی سازمان‌ها",
-        description:
-            "طراحی و اجرای دوره‌های آموزشی اختصاصی متناسب با نیاز شرکت‌ها، سازمان‌ها و مجموعه‌ها.",
-        tag: "آموزش اختصاصی سازمان‌ها",
-        href: "/courses?category=organization",
-        image: "/images/02.png",
+        title: "دوره آتش‌نشانی شهری",
+        image: "/images/hero/hero-urban-firefighting.jpg",
+        href: "/courses?category=technical",
     },
     {
         id: 3,
-        title: "دوره‌های بین‌المللی",
-        description:
-            "مسیرهای آموزشی ویژه برای توسعه مهارت‌های کاربردی در سطح بین‌المللی و فرصت‌های شغلی جدید.",
-        tag: "دوره‌های بین‌المللی",
-        href: "/courses?category=international",
-        image: "/images/03.png",
-    },
-];
-
-const mobileQuickLinks = [
-    {
-        title: "آموزش اختصاصی سازمان‌ها",
+        title: "آموزش نگهداری تجهیزات نجات",
+        subtitle: "جمعیت هلال احمر جمهوری اسلامی ایران",
+        image: "/images/hero/hero-rescue-equipment.jpg",
         href: "/courses?category=organization",
     },
     {
-        title: "دوره‌های بین‌المللی",
-        href: "/courses?category=international",
+        id: 4,
+        title: "آموزش تست و راه‌اندازی تشک‌های نجات و ست هیدرولیک",
+        subtitle: "ایران‌مال",
+        image: "/images/hero/hero-rescue-cushion-hydraulic.jpg",
+        href: "/courses?category=organization",
     },
     {
-        title: "دوره‌های فنی و حرفه‌ای",
+        id: 5,
+        title: "آموزش کار با موتورسیکلت آتش‌نشانی",
+        subtitle: "سازمان امداد و نجات جمعیت هلال احمر",
+        image: "/images/hero/hero-fire-motorcycle.jpg",
+        href: "/courses?category=organization",
+    },
+];
+
+const categoryLinks = [
+    {
+        title: "اختصاصی سازمان‌ها",
+        href: "/courses?category=organization",
+    },
+    {
+        title: "فنی و حرفه‌ای",
         href: "/courses?category=technical",
+    },
+    {
+        title: "بین‌المللی",
+        href: "/courses?category=oman",
     },
 ];
 
 export default function Hero() {
     const [active, setActive] = useState(0);
+    const [paused, setPaused] = useState(false);
+    const touchStartX = useRef<number | null>(null);
 
     useEffect(() => {
-        const timer = setInterval(() => {
-            setActive((prev) => (prev + 1) % slides.length);
+        if (paused) return;
+
+        const timer = window.setInterval(() => {
+            setActive((prev) => (prev + 1) % heroSlides.length);
         }, 5000);
 
-        return () => clearInterval(timer);
-    }, []);
+        return () => window.clearInterval(timer);
+    }, [paused]);
 
-    const nextSlide = () => {
-        setActive((prev) => (prev + 1) % slides.length);
-    };
+    function nextSlide() {
+        setActive((prev) => (prev + 1) % heroSlides.length);
+    }
 
-    const prevSlide = () => {
-        setActive((prev) => (prev - 1 + slides.length) % slides.length);
-    };
+    function prevSlide() {
+        setActive((prev) =>
+            prev === 0 ? heroSlides.length - 1 : prev - 1
+        );
+    }
+
+    function handleTouchStart(event: React.TouchEvent<HTMLDivElement>) {
+        touchStartX.current = event.touches[0]?.clientX ?? null;
+    }
+
+    function handleTouchEnd(event: React.TouchEvent<HTMLDivElement>) {
+        if (touchStartX.current === null) return;
+
+        const endX = event.changedTouches[0]?.clientX ?? touchStartX.current;
+        const diff = endX - touchStartX.current;
+
+        if (Math.abs(diff) > 45) {
+            if (diff > 0) {
+                prevSlide();
+            } else {
+                nextSlide();
+            }
+        }
+
+        touchStartX.current = null;
+    }
 
     return (
         <section
             dir="rtl"
-            className="
-        relative
-        px-4
-        pt-24
-        pb-12
-        sm:px-6
-        lg:px-10
-        lg:pt-28
-        lg:pb-20
-      "
+            className="relative overflow-hidden px-3 pb-8 pt-3 sm:px-5 lg:px-8 lg:pb-12 lg:pt-4"
         >
-            <div
-                className="
-          relative
-          mx-auto
-          max-w-7xl
-          overflow-hidden
-          rounded-[34px]
-          border
-          border-white/10
-          bg-[linear-gradient(135deg,rgba(255,255,255,0.06),rgba(255,255,255,0.03))]
-          px-4
-          py-5
-          shadow-[0_25px_80px_rgba(0,0,0,0.25)]
-          backdrop-blur-2xl
-          sm:px-6
-          sm:py-6
-          lg:rounded-[42px]
-          lg:px-8
-          lg:py-8
-        "
-            >
-                <div
-                    className="
-            pointer-events-none
-            absolute
-            inset-0
-            bg-[radial-gradient(circle_at_top_right,rgba(56,189,248,0.10),transparent_30%),radial-gradient(circle_at_bottom_left,rgba(251,146,60,0.10),transparent_30%)]
-          "
-                />
+            <div className="pointer-events-none absolute -right-40 top-0 h-[420px] w-[420px] rounded-full bg-orange-400/[0.07] blur-[150px]" />
+            <div className="pointer-events-none absolute -left-40 bottom-0 h-[420px] w-[420px] rounded-full bg-cyan-300/[0.06] blur-[150px]" />
 
-                {/* =========================
-                    MOBILE HERO
-                ========================= */}
-                <div className="relative lg:hidden">
-                    <div className="text-center">
-                        <span
-                            className="
-                inline-flex
-                items-center
-                gap-2
-                rounded-full
-                border
-                border-cyan-400/25
-                bg-cyan-400/10
-                px-4
-                py-2
-                text-[11px]
-                font-black
-                text-cyan-200
-              "
-                        >
-                            <span className="h-2 w-2 rounded-full bg-cyan-300" />
+            <div className="relative mx-auto max-w-[1500px] overflow-hidden rounded-[28px] border border-white/[0.08] bg-gradient-to-bl from-[#173953] via-[#102B43] to-[#0B2137] shadow-[0_28px_90px_rgba(0,0,0,0.20)] sm:rounded-[34px] lg:rounded-[40px]">
+                <div className="grid items-center gap-6 p-5 sm:p-7 lg:min-h-[545px] lg:grid-cols-[0.95fr_1.05fr] lg:gap-10 lg:p-9 xl:gap-12 xl:p-10">
+                    {/* TEXT */}
+                    <div className="order-2 text-center lg:order-1 lg:text-right">
+                        <div className="inline-flex items-center gap-2 rounded-full border border-cyan-300/20 bg-cyan-300/[0.07] px-3.5 py-2 text-[9px] font-black text-cyan-100 sm:text-[10px] lg:px-4 lg:py-2.5 lg:text-xs">
+                            <span className="h-1.5 w-1.5 rounded-full bg-cyan-300 lg:h-2 lg:w-2" />
                             تحت نظر سازمان آموزش فنی و حرفه‌ای
-                        </span>
+                        </div>
 
-                        <h1
-                            className="
-                mt-6
-                text-4xl
-                font-black
-                leading-[1.5]
-                text-white
-              "
-                        >
-                            آموزش
+                        <h1 className="mt-4 text-[31px] font-black leading-[1.55] tracking-[-1px] text-white sm:text-[40px] lg:mt-6 lg:text-[52px] xl:text-[60px]">
+                            قدرت واقعی
                             <br />
-                            <span className="text-orange-400">برای رشد واقعی</span>
+                            <span className="bg-gradient-to-l from-orange-300 via-orange-400 to-[#ff825d] bg-clip-text text-transparent">
+                                با آموزش ظاهر می‌شود
+                            </span>
                         </h1>
 
-                        <p
-                            className="
-                mt-4
-                text-sm
-                leading-8
-                text-slate-300
-              "
-                        >
-                            مسیر مناسب خودت را انتخاب کن و وارد صفحه اختصاصی دوره‌ها شو.
-                        </p>
-                    </div>
-
-                    {/* quick links mobile */}
-                    <div className="mt-6 grid grid-cols-1 gap-3">
-                        {mobileQuickLinks.map((item) => (
-                            <Link
-                                key={item.title}
-                                href={item.href}
-                                className="
-                  flex
-                  items-center
-                  justify-between
-                  rounded-[22px]
-                  border
-                  border-white/10
-                  bg-white/[0.04]
-                  px-4
-                  py-4
-                  text-sm
-                  font-black
-                  text-white
-                  transition
-                  hover:-translate-y-0.5
-                  hover:border-orange-300/40
-                  hover:bg-white/[0.06]
-                "
-                            >
-                                <span>{item.title}</span>
-                                <span
-                                    className="
-                    flex
-                    h-9
-                    w-9
-                    items-center
-                    justify-center
-                    rounded-full
-                    bg-orange-400
-                    text-lg
-                    text-[#06192E]
-                  "
-                                >
-                                    ←
-                                </span>
-                            </Link>
-                        ))}
-                    </div>
-
-                    {/* mobile image slider */}
-                    <div className="mt-6">
-                        <div
-                            className="
-                relative
-                overflow-hidden
-                rounded-[28px]
-                border
-                border-white/10
-                bg-[#071a2b]
-              "
-                        >
-                            <div className="relative h-[280px]">
-                                <AnimatePresence mode="wait">
-                                    <motion.div
-                                        key={slides[active].id}
-                                        initial={{ opacity: 0, scale: 1.03 }}
-                                        animate={{ opacity: 1, scale: 1 }}
-                                        exit={{ opacity: 0, scale: 0.98 }}
-                                        transition={{ duration: 0.55 }}
-                                        className="absolute inset-0"
-                                    >
-                                        <Image
-                                            src={slides[active].image}
-                                            alt={slides[active].title}
-                                            fill
-                                            priority
-                                            sizes="100vw"
-                                            className="object-cover"
-                                        />
-                                    </motion.div>
-                                </AnimatePresence>
-
-                                <div className="absolute inset-0 bg-gradient-to-t from-[#06192E] via-[#06192E]/20 to-transparent" />
-
-                                <button
-                                    type="button"
-                                    onClick={prevSlide}
-                                    className="
-                    absolute
-                    right-3
-                    top-3
-                    z-20
-                    flex
-                    h-10
-                    w-10
-                    items-center
-                    justify-center
-                    rounded-full
-                    border
-                    border-white/15
-                    bg-[#06192E]/70
-                    text-white
-                    backdrop-blur-md
-                  "
-                                >
-                                    →
-                                </button>
-
-                                <button
-                                    type="button"
-                                    onClick={nextSlide}
-                                    className="
-                    absolute
-                    left-3
-                    top-3
-                    z-20
-                    flex
-                    h-10
-                    w-10
-                    items-center
-                    justify-center
-                    rounded-full
-                    border
-                    border-white/15
-                    bg-[#06192E]/70
-                    text-white
-                    backdrop-blur-md
-                  "
-                                >
-                                    ←
-                                </button>
-
-                                <div className="absolute right-0 bottom-0 left-0 p-5">
-                                    <span
-                                        className="
-                      inline-flex
-                      rounded-full
-                      border
-                      border-orange-300/20
-                      bg-orange-400/10
-                      px-3
-                      py-1.5
-                      text-[10px]
-                      font-black
-                      text-orange-200
-                    "
-                                    >
-                                        {slides[active].tag}
-                                    </span>
-
-                                    <h2
-                                        className="
-                      mt-3
-                      text-2xl
-                      font-black
-                      leading-[1.6]
-                      text-white
-                    "
-                                    >
-                                        {slides[active].title}
-                                    </h2>
-
-                                    <p
-                                        className="
-                      mt-2
-                      text-xs
-                      leading-7
-                      text-slate-300
-                    "
-                                    >
-                                        {slides[active].description}
-                                    </p>
-
-                                    <Link
-                                        href={slides[active].href}
-                                        className="
-                      mt-4
-                      inline-flex
-                      items-center
-                      gap-2
-                      rounded-full
-                      bg-white/10
-                      px-4
-                      py-3
-                      text-xs
-                      font-black
-                      text-white
-                      transition
-                      hover:bg-white/15
-                    "
-                                    >
-                                        مشاهده دوره‌ها
-                                        <span>←</span>
-                                    </Link>
-                                </div>
-                            </div>
-                        </div>
-
-                        {/* mobile dots */}
-                        <div className="mt-4 flex items-center justify-center gap-2">
-                            {slides.map((_, index) => (
-                                <button
-                                    key={index}
-                                    type="button"
-                                    onClick={() => setActive(index)}
-                                    className={`h-2.5 rounded-full transition-all ${index === active
-                                        ? "w-7 bg-orange-400"
-                                        : "w-2.5 bg-white/25"
-                                        }`}
-                                />
-                            ))}
-                        </div>
-                    </div>
-                </div>
-
-                {/* =========================
-                    DESKTOP HERO
-                ========================= */}
-                <div
-                    className="
-            relative
-            hidden
-            items-center
-            gap-8
-            lg:grid
-            lg:grid-cols-[1.05fr_0.95fr]
-          "
-                >
-                    {/* text */}
-                    <motion.div
-                        initial={{ opacity: 0, y: 25 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.8 }}
-                        className="order-2 xl:pr-8"
-                    >
-                        <span
-                            className="
-                inline-flex
-                items-center
-                gap-2
-                rounded-full
-                border
-                border-cyan-400/25
-                bg-cyan-400/10
-                px-5
-                py-3
-                text-sm
-                font-black
-                text-cyan-200
-              "
-                        >
-                            <span className="h-2.5 w-2.5 rounded-full bg-cyan-300" />
-                            تحت نظر سازمان آموزش فنی و حرفه‌ای
-                        </span>
-
-                        <h1
-                            className="
-                mt-8
-                text-6xl
-                font-black
-                leading-[1.45]
-                text-white
-              "
-                        >
-                            آموزش حرفه‌ای
-                            <br />
-                            <span className="text-orange-400">برای رشد واقعی</span>
-                        </h1>
-
-                        <p
-                            className="
-                mt-7
-                max-w-[720px]
-                text-xl
-                leading-[2.1]
-                text-slate-300
-              "
-                        >
-                            مجتمع آموزشی کاردو، ارائه‌دهنده
-                            <span className="font-black text-white">
-                                {" "}
-                                دوره‌های فنی و حرفه‌ای، دوره‌های اختصاصی سازمان‌ها
-                            </span>
-                            {" "}و
-                            <span className="font-black text-white">
-                                {" "}دوره‌های بین‌المللی
-                            </span>
-                            ، با مسیرهای آموزشی متنوع و کاربردی.
+                        <p className="mx-auto mt-3 max-w-[620px] text-[11px] leading-7 text-slate-300 sm:text-xs lg:mx-0 lg:mt-5 lg:text-sm lg:leading-8 xl:text-base">
+                            مجتمع آموزشی کاردو، مسیرهای آموزشی تخصصی برای افراد،
+                            سازمان‌ها و فرصت‌های بین‌المللی ارائه می‌دهد.
                         </p>
 
-                        <div className="mt-10 flex flex-wrap gap-4">
-                            <Link
-                                href="/courses?category=organization"
-                                className="
-                  inline-flex
-                  items-center
-                  justify-center
-                  rounded-full
-                  bg-[#314863]
-                  px-8
-                  py-5
-                  text-base
-                  font-black
-                  text-white
-                  transition
-                  hover:bg-[#3b5675]
-                "
-                            >
-                                درخواست دوره اختصاصی
-                            </Link>
-
-                            <Link
-                                href="/courses?category=technical"
-                                className="
-                  inline-flex
-                  items-center
-                  gap-3
-                  justify-center
-                  rounded-full
-                  bg-orange-400
-                  px-8
-                  py-5
-                  text-base
-                  font-black
-                  text-[#06192E]
-                  shadow-[0_18px_40px_rgba(251,146,60,0.20)]
-                  transition
-                  hover:translate-y-[-2px]
-                  hover:bg-orange-300
-                "
-                            >
-                                مشاهده دوره‌ها
-                                <span>←</span>
-                            </Link>
-                        </div>
-
-                        <div className="mt-10 grid grid-cols-3 gap-4">
-                            {[
-                                {
-                                    title: "دوره‌های بین‌المللی",
-                                    href: "/courses?category=international",
-                                },
-                                {
-                                    title: "آموزش اختصاصی سازمان‌ها",
-                                    href: "/courses?category=organization",
-                                },
-                                {
-                                    title: "دوره‌های فنی و حرفه‌ای",
-                                    href: "/courses?category=technical",
-                                },
-                            ].map((item, index) => (
+                        <div className="mt-5 grid grid-cols-1 gap-2.5 sm:grid-cols-3 lg:mt-8">
+                            {categoryLinks.map((item, index) => (
                                 <Link
-                                    key={item.title}
+                                    key={item.href}
                                     href={item.href}
-                                    className={`
-                    rounded-[24px]
-                    border
-                    px-5
-                    py-6
-                    text-center
-                    text-base
-                    font-black
-                    transition
-                    ${index === 2
-                                            ? "border-orange-400/50 bg-orange-400/10 text-white"
-                                            : "border-white/10 bg-white/[0.035] text-slate-200 hover:bg-white/[0.05]"
-                                        }
-                  `}
+                                    className="group flex min-h-[54px] items-center justify-between rounded-[17px] border border-white/[0.08] bg-white/[0.035] px-4 text-right transition hover:-translate-y-0.5 hover:bg-white/[0.06]"
                                 >
-                                    {item.title}
+                                    <div className="flex items-center gap-2">
+                                        <span
+                                            className={`h-2 w-2 rounded-full ${index === 2 ? "bg-cyan-300" : "bg-orange-400"
+                                                }`}
+                                        />
+                                        <strong className="text-[11px] font-black text-white sm:text-[12px]">
+                                            {item.title}
+                                        </strong>
+                                    </div>
+
+                                    <span className="text-sm text-slate-400 transition group-hover:-translate-x-1 group-hover:text-white">
+                                        ←
+                                    </span>
                                 </Link>
                             ))}
                         </div>
-                    </motion.div>
+                    </div>
 
-                    {/* slider */}
-                    <motion.div
-                        initial={{ opacity: 0, scale: 0.98 }}
-                        animate={{ opacity: 1, scale: 1 }}
-                        transition={{ duration: 0.8 }}
-                        className="order-1"
-                    >
+                    {/* SLIDER */}
+                    <div className="order-1 lg:order-2">
                         <div
-                            className="
-                relative
-                overflow-hidden
-                rounded-[38px]
-                border
-                border-white/10
-                bg-[#071a2b]
-              "
+                            className="relative mx-auto h-[280px] w-full max-w-[620px] overflow-hidden rounded-[24px] border border-white/[0.10] bg-[#081C2F] shadow-[0_24px_65px_rgba(0,0,0,0.24)] sm:h-[350px] lg:h-[410px] lg:rounded-[30px] xl:h-[430px]"
+                            onMouseEnter={() => setPaused(true)}
+                            onMouseLeave={() => setPaused(false)}
+                            onTouchStart={handleTouchStart}
+                            onTouchEnd={handleTouchEnd}
                         >
-                            <div className="relative h-[650px]">
-                                <AnimatePresence mode="wait">
-                                    <motion.div
-                                        key={slides[active].id}
-                                        initial={{
-                                            opacity: 0,
-                                            scale: 1.03,
-                                            filter: "blur(6px)",
-                                        }}
-                                        animate={{
-                                            opacity: 1,
-                                            scale: 1,
-                                            filter: "blur(0px)",
-                                        }}
-                                        exit={{ opacity: 0 }}
-                                        transition={{ duration: 0.65 }}
-                                        className="absolute inset-0"
-                                    >
-                                        <Image
-                                            src={slides[active].image}
-                                            alt={slides[active].title}
-                                            fill
-                                            priority
-                                            sizes="(max-width: 1200px) 45vw, 40vw"
-                                            className="object-cover"
-                                        />
-                                    </motion.div>
-                                </AnimatePresence>
-
-                                <div className="absolute inset-0 bg-gradient-to-t from-[#06192E] via-[#06192E]/25 to-transparent" />
-
-                                <button
-                                    type="button"
-                                    onClick={prevSlide}
-                                    className="
-                    absolute
-                    right-6
-                    top-1/2
-                    z-20
-                    flex
-                    h-14
-                    w-14
-                    -translate-y-1/2
-                    items-center
-                    justify-center
-                    rounded-full
-                    border
-                    border-white/15
-                    bg-[#06192E]/70
-                    text-2xl
-                    text-white
-                    backdrop-blur-md
-                    transition
-                    hover:bg-[#0c2740]
-                  "
+                            {heroSlides.map((slide, index) => (
+                                <div
+                                    key={slide.id}
+                                    className={`absolute inset-0 transition-all duration-700 ${index === active
+                                            ? "z-10 scale-100 opacity-100"
+                                            : "z-0 scale-[1.025] opacity-0"
+                                        }`}
                                 >
-                                    →
-                                </button>
+                                    <img
+                                        src={slide.image}
+                                        alt={slide.title}
+                                        className="h-full w-full object-cover"
+                                        onError={(event) => {
+                                            event.currentTarget.src = "/images/hsecourse.png";
+                                        }}
+                                    />
 
-                                <button
-                                    type="button"
-                                    onClick={nextSlide}
-                                    className="
-                    absolute
-                    left-6
-                    top-1/2
-                    z-20
-                    flex
-                    h-14
-                    w-14
-                    -translate-y-1/2
-                    items-center
-                    justify-center
-                    rounded-full
-                    border
-                    border-white/15
-                    bg-[#06192E]/70
-                    text-2xl
-                    text-white
-                    backdrop-blur-md
-                    transition
-                    hover:bg-[#0c2740]
-                  "
-                                >
-                                    ←
-                                </button>
+                                    <div className="absolute inset-0 bg-gradient-to-t from-[#06192E]/95 via-[#06192E]/30 to-transparent" />
 
-                                <div className="absolute right-0 bottom-0 left-0 p-8">
-                                    <span
-                                        className="
-                      inline-flex
-                      rounded-full
-                      border
-                      border-orange-300/20
-                      bg-orange-400/10
-                      px-4
-                      py-2
-                      text-xs
-                      font-black
-                      text-orange-200
-                    "
-                                    >
-                                        {slides[active].tag}
-                                    </span>
+                                    <div className="absolute inset-x-0 bottom-0 z-20 p-4 sm:p-5 lg:p-6">
+                                        <span className="inline-flex rounded-full border border-orange-300/15 bg-[#06192E]/70 px-3 py-1.5 text-[9px] font-black text-orange-200 backdrop-blur-md">
+                                            آموزش کاردو
+                                        </span>
 
-                                    <h2
-                                        className="
-                      mt-5
-                      text-5xl
-                      font-black
-                      leading-[1.4]
-                      text-white
-                    "
-                                    >
-                                        {slides[active].title}
-                                    </h2>
+                                        <h2 className="mt-2 max-w-[95%] text-[21px] font-black leading-8 text-white sm:text-2xl lg:text-[30px] lg:leading-[1.5]">
+                                            {slide.title}
+                                        </h2>
 
-                                    <p
-                                        className="
-                      mt-4
-                      max-w-[90%]
-                      text-lg
-                      leading-9
-                      text-slate-300
-                    "
-                                    >
-                                        {slides[active].description}
-                                    </p>
+                                        {slide.subtitle && (
+                                            <p className="mt-1.5 max-w-[92%] text-[10px] leading-6 text-slate-300 sm:text-xs lg:text-sm">
+                                                {slide.subtitle}
+                                            </p>
+                                        )}
 
-                                    <Link
-                                        href={slides[active].href}
-                                        className="
-                      mt-7
-                      inline-flex
-                      items-center
-                      gap-3
-                      rounded-full
-                      bg-white/10
-                      px-6
-                      py-4
-                      text-sm
-                      font-black
-                      text-white
-                      transition
-                      hover:bg-white/15
-                    "
-                                    >
-                                        مشاهده {slides[active].title}
-                                        <span>←</span>
-                                    </Link>
+                                        <Link
+                                            href={slide.href}
+                                            className="mt-3 inline-flex min-h-[40px] items-center justify-center gap-2 rounded-full border border-white/10 bg-white/[0.10] px-4 text-[10px] font-black text-white backdrop-blur-md transition hover:bg-white/[0.16] sm:text-xs"
+                                        >
+                                            مشاهده دوره‌ها
+                                            <span>←</span>
+                                        </Link>
+                                    </div>
                                 </div>
+                            ))}
+
+                            {/* Desktop arrows */}
+                            <button
+                                type="button"
+                                onClick={prevSlide}
+                                aria-label="اسلاید قبلی"
+                                className="absolute right-4 top-1/2 z-30 hidden h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-white/10 bg-[#06192E]/60 text-white backdrop-blur-md transition hover:bg-[#06192E]/85 lg:flex"
+                            >
+                                →
+                            </button>
+
+                            <button
+                                type="button"
+                                onClick={nextSlide}
+                                aria-label="اسلاید بعدی"
+                                className="absolute left-4 top-1/2 z-30 hidden h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-white/10 bg-[#06192E]/60 text-white backdrop-blur-md transition hover:bg-[#06192E]/85 lg:flex"
+                            >
+                                ←
+                            </button>
+
+                            {/* Dots */}
+                            <div className="absolute bottom-4 left-4 z-30 flex items-center gap-1.5 rounded-full bg-[#06192E]/55 px-2.5 py-2 backdrop-blur-md">
+                                {heroSlides.map((slide, index) => (
+                                    <button
+                                        key={slide.id}
+                                        type="button"
+                                        aria-label={`نمایش اسلاید ${index + 1}`}
+                                        onClick={() => setActive(index)}
+                                        className={`h-1.5 rounded-full transition-all ${active === index
+                                                ? "w-7 bg-orange-400"
+                                                : "w-1.5 bg-white/35"
+                                            }`}
+                                    />
+                                ))}
                             </div>
                         </div>
 
-                        <div className="mt-5 flex items-center justify-center gap-2">
-                            {slides.map((_, index) => (
-                                <button
-                                    key={index}
-                                    type="button"
-                                    onClick={() => setActive(index)}
-                                    className={`h-2.5 rounded-full transition-all ${index === active
-                                        ? "w-8 bg-orange-400"
-                                        : "w-2.5 bg-white/25"
-                                        }`}
-                                />
-                            ))}
-                        </div>
-                    </motion.div>
+                        <p className="mt-2 text-center text-[8px] text-slate-600 lg:hidden">
+                            برای تغییر تصویر، به چپ یا راست بکشید
+                        </p>
+                    </div>
                 </div>
             </div>
         </section>
