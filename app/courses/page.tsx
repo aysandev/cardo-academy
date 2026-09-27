@@ -202,17 +202,20 @@ function CategorySwitch({
     const items = [
         {
             id: "technical",
-            title: "فنی و حرفه‌ای",
+            title: "دوره‌های فنی و حرفه‌ای",
+            href: "/courses?category=technical",
         },
 
         {
             id: "organization",
-            title: "اختصاصی سازمان‌ها",
+            title: "دوره‌های اختصاصی",
+            href: "/courses?category=organization",
         },
 
         {
             id: "oman",
-            title: "دوره‌های عمان",
+            title: "دوره‌های بین‌المللی",
+            href: "/courses?category=international",
         },
     ] as const;
 
@@ -233,7 +236,7 @@ function CategorySwitch({
             {items.map((item) => (
                 <Link
                     key={item.id}
-                    href={`/courses?category=${item.id}`}
+                    href={item.href}
                     className={`
             shrink-0
             rounded-full
@@ -324,6 +327,8 @@ function CourseCard({
                 }
             `}
         >
+            {/* پوسترهای فنی و حرفه‌ای + بین‌المللی:
+                کامل، بدون کراپ و با ارتفاع کنترل‌شده */}
             <div
                 className="
                     relative
@@ -3441,7 +3446,8 @@ function CoursesContent() {
 
     const category:
         Category =
-        rawCategory === "oman"
+        rawCategory === "international" ||
+            rawCategory === "oman"
             ? "oman"
             : rawCategory ===
                 "organization"

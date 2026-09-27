@@ -1,794 +1,218 @@
-"use client";
-
-import Image from "next/image";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
-import { useEffect, useState } from "react";
 
-type NavItem = {
-    label: string;
-    href: string;
-};
-
-const navItems: NavItem[] = [
+const courses = [
     {
-        label: "خانه",
-        href: "/",
-    },
-    {
-        label: "دوره‌های اختصاصی",
+        title: "دوره‌های اختصاصی",
         href: "/courses?category=organization",
+        dot: "bg-orange-400",
     },
     {
-        label: "فنی و حرفه‌ای",
+        title: "دوره‌های فنی و حرفه‌ای",
         href: "/courses?category=technical",
+        dot: "bg-orange-400",
     },
     {
-        label: "بین‌المللی",
+        title: "دوره‌های بین‌المللی",
         href: "/courses?category=international",
+        dot: "bg-cyan-300",
     },
-    {
-        label: "مجوزها",
-        href: "/licenses",
-    },
-    {
-        label: "درباره ما",
-        href: "/about",
-    },
-];
-
-function MenuIcon({ open }: { open: boolean }) {
-    return (
-        <span className="relative block h-5 w-5">
-            <span
-                className={`
-          absolute left-0 top-[3px]
-          h-[2px] w-5
-          rounded-full bg-current
-          transition-all duration-300
-          ${open ? "translate-y-[6px] rotate-45" : ""}
-        `}
-            />
-
-            <span
-                className={`
-          absolute left-0 top-[9px]
-          h-[2px] w-5
-          rounded-full bg-current
-          transition-all duration-300
-          ${open ? "opacity-0" : "opacity-100"}
-        `}
-            />
-
-            <span
-                className={`
-          absolute left-0 top-[15px]
-          h-[2px] w-5
-          rounded-full bg-current
-          transition-all duration-300
-          ${open ? "-translate-y-[6px] -rotate-45" : ""}
-        `}
-            />
-        </span>
-    );
-}
-
-function ArrowIcon() {
-    return (
-        <svg
-            width="16"
-            height="16"
-            viewBox="0 0 24 24"
-            fill="none"
-            aria-hidden="true"
-        >
-            <path
-                d="M19 12H5"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-            />
-
-            <path
-                d="M10 7L5 12L10 17"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-            />
-        </svg>
-    );
-}
+] as const;
 
 export default function Navbar() {
-    const pathname = usePathname();
-
-    const [mobileOpen, setMobileOpen] =
-        useState(false);
-
-    useEffect(() => {
-        setMobileOpen(false);
-    }, [pathname]);
-
-    useEffect(() => {
-        function handleResize() {
-            if (window.innerWidth >= 1024) {
-                setMobileOpen(false);
-            }
-        }
-
-        window.addEventListener(
-            "resize",
-            handleResize
-        );
-
-        return () => {
-            window.removeEventListener(
-                "resize",
-                handleResize
-            );
-        };
-    }, []);
-
-    function isActive(href: string) {
-        if (href === "/") {
-            return pathname === "/";
-        }
-
-        const cleanHref =
-            href.split("?")[0];
-
-        return pathname === cleanHref;
-    }
-
     return (
         <header
             dir="rtl"
-            className="
-        sticky
-        top-0
-        z-[100]
-        w-full
-
-        border-b
-        border-white/[0.07]
-
-        bg-[#06192E]/95
-
-        pt-[env(safe-area-inset-top)]
-
-        text-white
-
-        shadow-[0_8px_30px_rgba(0,0,0,0.12)]
-
-        backdrop-blur-2xl
-      "
+            className="sticky top-0 z-[100] w-full border-b border-white/[0.07] bg-[#06192E]/95 pt-[env(safe-area-inset-top)] text-white shadow-[0_8px_30px_rgba(0,0,0,0.12)] backdrop-blur-2xl"
         >
-            <div
-                className="
-          relative
-          mx-auto
-
-          flex
-          min-h-[68px]
-          max-w-[1500px]
-          items-center
-          justify-between
-          gap-3
-
-          px-3
-
-          sm:min-h-[74px]
-          sm:px-5
-
-          lg:min-h-[82px]
-          lg:px-8
-
-          xl:px-10
-        "
-            >
-                {/* ================================
-            LOGO
-        ================================= */}
-
+            <div className="relative mx-auto flex min-h-[68px] max-w-[1500px] items-center justify-between gap-3 px-3 sm:min-h-[74px] sm:px-5 lg:min-h-[82px] lg:px-8 xl:px-10">
                 <Link
                     href="/"
-                    aria-label="صفحه اصلی کاردو"
-                    className="
-            group
-            flex
-            shrink-0
-            items-center
-            gap-2.5
-          "
+                    aria-label="خانه کاردو"
+                    className="flex shrink-0 items-center gap-2.5"
                 >
-                    <div
-                        className="
-              relative
-
-              flex
-              h-10
-              w-10
-
-              shrink-0
-
-              items-center
-              justify-center
-
-              overflow-hidden
-
-              rounded-[13px]
-
-              bg-white
-
-              shadow-[0_8px_22px_rgba(0,0,0,0.14)]
-
-              sm:h-11
-              sm:w-11
-            "
-                    >
-                        <Image
+                    <div className="flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-[13px] bg-white p-1.5 shadow-[0_8px_22px_rgba(0,0,0,0.14)] sm:h-11 sm:w-11">
+                        <img
                             src="/logo.png"
                             alt="کاردو"
-                            fill
-                            priority
-                            sizes="44px"
-                            className="
-                object-contain
-                p-1.5
-              "
+                            className="h-full w-full object-contain"
                         />
                     </div>
 
-                    <div
-                        className="
-              hidden
-              leading-none
-              sm:block
-            "
-                    >
-                        <strong
-                            className="
-                block
-                text-[14px]
-                font-black
-                tracking-[0.04em]
-                text-white
-              "
-                        >
+                    <div className="hidden leading-none sm:block">
+                        <strong className="block text-[14px] font-black tracking-[0.04em]">
                             CARDO
                         </strong>
-
-                        <span
-                            className="
-                mt-1
-                block
-                text-[7px]
-                font-bold
-                tracking-[0.08em]
-                text-slate-500
-              "
-                        >
+                        <span className="mt-1 block text-[7px] font-bold tracking-[0.08em] text-slate-500">
                             TRAINING ACADEMY
                         </span>
                     </div>
                 </Link>
 
-                {/* ================================
-            DESKTOP MENU
-        ================================= */}
-
                 <nav
                     aria-label="منوی اصلی"
-                    className="
-            hidden
-            min-w-0
-            flex-1
-            items-center
-            justify-center
-            gap-1
-
-            lg:flex
-
-            xl:gap-1.5
-          "
+                    className="hidden min-w-0 flex-1 items-center justify-center gap-1 lg:flex xl:gap-2"
                 >
-                    {navItems.map((item) => {
-                        const active =
-                            isActive(item.href);
+                    <Link
+                        href="/"
+                        className="rounded-full px-3 py-2.5 text-[10px] font-black text-slate-300 transition hover:bg-white/[0.05] hover:text-white xl:px-4 xl:text-[11px]"
+                    >
+                        خانه
+                    </Link>
 
-                        return (
-                            <Link
-                                key={item.href}
-                                href={item.href}
-                                className={`
-                  relative
+                    <details className="group relative">
+                        <summary className="flex cursor-pointer list-none items-center gap-1.5 rounded-full px-3 py-2.5 text-[10px] font-black text-slate-300 transition hover:bg-white/[0.05] hover:text-white xl:px-4 xl:text-[11px] [&::-webkit-details-marker]:hidden">
+                            دوره‌ها
+                            <span className="text-[10px] transition-transform duration-200 group-open:rotate-180">
+                                ▼
+                            </span>
+                        </summary>
 
-                  whitespace-nowrap
+                        <div className="absolute right-1/2 top-[calc(100%+10px)] z-[150] w-[470px] translate-x-1/2 rounded-[24px] border border-white/[0.10] bg-[#0B2238]/95 p-2.5 shadow-[0_28px_90px_rgba(0,0,0,0.38)] backdrop-blur-[28px]">
+                            <div className="grid grid-cols-3 gap-2">
+                                {courses.map((item) => (
+                                    <Link
+                                        key={item.href}
+                                        href={item.href}
+                                        className="group/card rounded-[18px] border border-white/[0.07] bg-white/[0.035] p-3.5 transition hover:-translate-y-0.5 hover:bg-white/[0.065]"
+                                    >
+                                        <div className="flex items-center justify-between">
+                                            <span className={`h-2 w-2 rounded-full ${item.dot}`} />
+                                            <span className="text-xs text-slate-500">←</span>
+                                        </div>
 
-                  rounded-full
+                                        <strong className="mt-3 block text-[11px] font-black leading-6 text-white">
+                                            {item.title}
+                                        </strong>
+                                    </Link>
+                                ))}
+                            </div>
+                        </div>
+                    </details>
 
-                  px-3
-                  py-2.5
-
-                  text-[10px]
-                  font-black
-
-                  transition-all
-                  duration-200
-
-                  xl:px-3.5
-                  xl:text-[11px]
-
-                  ${active
-                                        ? `
-                        bg-white/[0.07]
-                        text-white
-                      `
-                                        : `
-                        text-slate-300
-
-                        hover:bg-white/[0.05]
-                        hover:text-white
-                      `
-                                    }
-                `}
-                            >
-                                {item.label}
-
-                                {active && (
-                                    <span
-                                        className="
-                      absolute
-                      -bottom-[1px]
-                      left-1/2
-
-                      h-[2px]
-                      w-5
-
-                      -translate-x-1/2
-
-                      rounded-full
-
-                      bg-orange-400
-                    "
-                                    />
-                                )}
-                            </Link>
-                        );
-                    })}
-                </nav>
-
-                {/* ================================
-            DESKTOP ACTIONS
-        ================================= */}
-
-                <div
-                    className="
-            hidden
-            shrink-0
-            items-center
-            gap-2
-
-            lg:flex
-          "
-                >
-                    {/* ARABIC */}
+                    <a
+                        href="/#customers"
+                        className="rounded-full px-3 py-2.5 text-[10px] font-black text-slate-300 transition hover:bg-white/[0.05] hover:text-white xl:px-4 xl:text-[11px]"
+                    >
+                        مشتریان
+                    </a>
 
                     <Link
-                        href="/ar"
-                        aria-label="نسخه عربی سایت"
-                        className="
-              inline-flex
-              min-h-[40px]
-
-              items-center
-              justify-center
-              gap-1.5
-
-              rounded-full
-
-              border
-              border-cyan-300/20
-
-              bg-cyan-300/[0.06]
-
-              px-3.5
-
-              text-[10px]
-              font-black
-              text-cyan-100
-
-              transition
-
-              hover:-translate-y-0.5
-              hover:border-cyan-300/35
-              hover:bg-cyan-300/[0.10]
-            "
+                        href="/licenses"
+                        className="rounded-full px-3 py-2.5 text-[10px] font-black text-slate-300 transition hover:bg-white/[0.05] hover:text-white xl:px-4 xl:text-[11px]"
                     >
-                        <span>العربية</span>
+                        مدارک
+                    </Link>
 
-                        <span
-                            dir="ltr"
-                            className="
-                rounded-full
+                    <Link
+                        href="/about"
+                        className="rounded-full px-3 py-2.5 text-[10px] font-black text-slate-300 transition hover:bg-white/[0.05] hover:text-white xl:px-4 xl:text-[11px]"
+                    >
+                        درباره ما
+                    </Link>
+                </nav>
 
-                bg-cyan-300/10
-
-                px-1.5
-                py-0.5
-
-                text-[8px]
-                text-cyan-200
-              "
-                        >
+                <div className="hidden shrink-0 items-center gap-2 lg:flex">
+                    <Link
+                        href="/ar"
+                        className="inline-flex min-h-[40px] items-center justify-center gap-2 rounded-full border border-cyan-300/20 bg-cyan-300/[0.06] px-3 text-[9px] font-black text-cyan-100 xl:px-4 xl:text-[10px]"
+                    >
+                        العربية
+                        <span className="rounded-full bg-cyan-300/10 px-1.5 py-0.5 text-[8px]">
                             AR
                         </span>
                     </Link>
 
-                    {/* REQUEST */}
-
                     <Link
                         href="/courses?category=organization"
-                        className="
-              inline-flex
-              min-h-[42px]
-
-              items-center
-              justify-center
-              gap-2
-
-              rounded-full
-
-              bg-orange-400
-
-              px-4
-
-              text-[10px]
-              font-black
-              text-[#06192E]
-
-              shadow-[0_10px_24px_rgba(251,146,60,0.16)]
-
-              transition
-
-              hover:-translate-y-0.5
-              hover:bg-orange-300
-
-              xl:px-5
-              xl:text-[11px]
-            "
+                        className="inline-flex min-h-[42px] items-center justify-center gap-2 rounded-full bg-orange-400 px-4 text-[9px] font-black text-[#06192E] transition hover:bg-orange-300 xl:px-5 xl:text-[10px]"
                     >
                         درخواست دوره
-
-                        <ArrowIcon />
+                        <span>←</span>
                     </Link>
                 </div>
 
-                {/* ================================
-            MOBILE BUTTONS
-        ================================= */}
-
-                <div
-                    className="
-            flex
-            items-center
-            gap-2
-
-            lg:hidden
-          "
-                >
-                    {/* AR MOBILE */}
-
-                    <Link
-                        href="/ar"
-                        aria-label="نسخه عربی"
-                        className="
-              inline-flex
-
-              h-10
-              min-w-[46px]
-
-              items-center
-              justify-center
-
-              rounded-full
-
-              border
-              border-cyan-300/20
-
-              bg-cyan-300/[0.06]
-
-              px-3
-
-              text-[10px]
-              font-black
-              text-cyan-100
-
-              transition
-
-              active:scale-[0.97]
-            "
+                <details className="group relative lg:hidden">
+                    <summary
+                        aria-label="منو"
+                        className="flex h-10 w-10 cursor-pointer list-none items-center justify-center rounded-full border border-white/[0.09] bg-white/[0.045] text-white [&::-webkit-details-marker]:hidden"
                     >
-                        AR
-                    </Link>
+                        <span className="text-lg leading-none group-open:hidden">☰</span>
+                        <span className="hidden text-lg leading-none group-open:inline">×</span>
+                    </summary>
 
-                    {/* MENU */}
-
-                    <button
-                        type="button"
-                        onClick={() =>
-                            setMobileOpen(
-                                (current) => !current
-                            )
-                        }
-                        aria-expanded={mobileOpen}
-                        aria-label={
-                            mobileOpen
-                                ? "بستن منو"
-                                : "باز کردن منو"
-                        }
-                        className="
-              flex
-              h-10
-              w-10
-
-              items-center
-              justify-center
-
-              rounded-full
-
-              border
-              border-white/[0.09]
-
-              bg-white/[0.045]
-
-              text-white
-
-              transition
-
-              hover:bg-white/[0.08]
-
-              active:scale-[0.97]
-            "
-                    >
-                        <MenuIcon
-                            open={mobileOpen}
-                        />
-                    </button>
-                </div>
-
-                {/* ================================
-            MOBILE MENU
-        ================================= */}
-
-                <div
-                    className={`
-            absolute
-
-            inset-x-3
-
-            top-[calc(100%+8px)]
-
-            z-[120]
-
-            origin-top
-
-            overflow-hidden
-
-            rounded-[22px]
-
-            border
-            border-white/[0.08]
-
-            bg-[#0A2035]/98
-
-            shadow-[0_24px_70px_rgba(0,0,0,0.36)]
-
-            backdrop-blur-2xl
-
-            transition-all
-            duration-200
-
-            lg:hidden
-
-            ${mobileOpen
-                            ? `
-                  pointer-events-auto
-                  translate-y-0
-                  scale-100
-                  opacity-100
-                `
-                            : `
-                  pointer-events-none
-                  -translate-y-2
-                  scale-[0.98]
-                  opacity-0
-                `
-                        }
-          `}
-                >
-                    <div
-                        className="
-              max-h-[calc(100dvh-105px-env(safe-area-inset-top))]
-
-              overflow-y-auto
-
-              p-2.5
-
-              [scrollbar-width:none]
-
-              [&::-webkit-scrollbar]:hidden
-            "
-                    >
-                        <nav
-                            aria-label="منوی موبایل"
-                            className="grid gap-1"
-                        >
-                            {navItems.map((item) => {
-                                const active =
-                                    isActive(item.href);
-
-                                return (
-                                    <Link
-                                        key={item.href}
-                                        href={item.href}
-                                        onClick={() =>
-                                            setMobileOpen(false)
-                                        }
-                                        className={`
-                      flex
-                      min-h-[46px]
-
-                      items-center
-                      justify-between
-                      gap-3
-
-                      rounded-[15px]
-
-                      px-4
-
-                      text-[12px]
-                      font-black
-
-                      transition
-
-                      ${active
-                                                ? `
-                            bg-orange-400
-                            text-[#06192E]
-                          `
-                                                : `
-                            bg-white/[0.025]
-                            text-slate-200
-
-                            hover:bg-white/[0.06]
-                          `
-                                            }
-                    `}
-                                    >
-                                        <span>
-                                            {item.label}
-                                        </span>
-
-                                        <span
-                                            className={`
-                        text-sm
-
-                        ${active
-                                                    ? "text-[#06192E]"
-                                                    : "text-slate-600"
-                                                }
-                      `}
-                                        >
-                                            ←
-                                        </span>
-                                    </Link>
-                                );
-                            })}
-                        </nav>
-
-                        <div
-                            className="
-                my-2.5
-                h-px
-                bg-white/[0.07]
-              "
-                        />
-
-                        {/* ARABIC MOBILE */}
-
-                        <Link
-                            href="/ar"
-                            onClick={() =>
-                                setMobileOpen(false)
-                            }
-                            className="
-                flex
-                min-h-[48px]
-
-                items-center
-                justify-between
-                gap-3
-
-                rounded-[15px]
-
-                border
-                border-cyan-300/15
-
-                bg-cyan-300/[0.06]
-
-                px-4
-
-                text-sm
-                font-black
-                text-cyan-100
-
-                transition
-
-                hover:bg-cyan-300/[0.10]
-              "
-                        >
-                            <span>
-                                النسخة العربية
-                            </span>
-
-                            <span
-                                dir="ltr"
-                                className="
-                  rounded-full
-
-                  bg-cyan-300/10
-
-                  px-2
-                  py-1
-
-                  text-[9px]
-                  text-cyan-200
-                "
+                    <div className="absolute left-0 top-[calc(100%+10px)] z-[160] w-[min(88vw,340px)] rounded-[22px] border border-white/[0.09] bg-[#0A2035]/97 p-2.5 shadow-[0_24px_70px_rgba(0,0,0,0.36)] backdrop-blur-[28px]">
+                        <div className="max-h-[calc(100dvh-110px)] overflow-y-auto">
+                            <Link
+                                href="/"
+                                className="flex min-h-[46px] items-center justify-between rounded-[15px] px-4 text-[12px] font-black text-slate-200"
                             >
-                                AR
-                            </span>
-                        </Link>
+                                خانه
+                                <span>←</span>
+                            </Link>
 
-                        {/* REQUEST MOBILE */}
+                            <details className="mt-1 overflow-hidden rounded-[15px] border border-white/[0.06] bg-white/[0.025]">
+                                <summary className="flex min-h-[48px] cursor-pointer list-none items-center justify-between px-4 text-[12px] font-black text-slate-200 [&::-webkit-details-marker]:hidden">
+                                    دوره‌ها
+                                    <span>▼</span>
+                                </summary>
 
-                        <Link
-                            href="/courses?category=organization"
-                            onClick={() =>
-                                setMobileOpen(false)
-                            }
-                            className="
-                mt-2
+                                <div className="grid gap-1 px-2 pb-2">
+                                    {courses.map((item) => (
+                                        <Link
+                                            key={item.href}
+                                            href={item.href}
+                                            className="flex min-h-[46px] items-center justify-between rounded-[13px] border border-white/[0.05] bg-white/[0.025] px-3.5 text-[10px] font-black text-slate-300"
+                                        >
+                                            <span className="flex items-center gap-2">
+                                                <span className={`h-2 w-2 rounded-full ${item.dot}`} />
+                                                {item.title}
+                                            </span>
+                                            <span>←</span>
+                                        </Link>
+                                    ))}
+                                </div>
+                            </details>
 
-                flex
-                min-h-[50px]
+                            <a
+                                href="/#customers"
+                                className="mt-1 flex min-h-[46px] items-center justify-between rounded-[15px] px-4 text-[12px] font-black text-slate-200"
+                            >
+                                مشتریان
+                                <span>←</span>
+                            </a>
 
-                items-center
-                justify-center
-                gap-2
+                            <Link
+                                href="/licenses"
+                                className="mt-1 flex min-h-[46px] items-center justify-between rounded-[15px] px-4 text-[12px] font-black text-slate-200"
+                            >
+                                مدارک
+                                <span>←</span>
+                            </Link>
 
-                rounded-[15px]
+                            <Link
+                                href="/about"
+                                className="mt-1 flex min-h-[46px] items-center justify-between rounded-[15px] px-4 text-[12px] font-black text-slate-200"
+                            >
+                                درباره ما
+                                <span>←</span>
+                            </Link>
 
-                bg-orange-400
+                            <Link
+                                href="/ar"
+                                className="mt-2 flex min-h-[46px] items-center justify-center rounded-[15px] border border-cyan-300/15 bg-cyan-300/[0.06] px-4 text-[11px] font-black text-cyan-100"
+                            >
+                                العربية
+                            </Link>
 
-                px-4
-
-                text-xs
-                font-black
-                text-[#06192E]
-
-                transition
-
-                active:scale-[0.99]
-              "
-                        >
-                            درخواست دوره اختصاصی
-
-                            <ArrowIcon />
-                        </Link>
+                            <Link
+                                href="/courses?category=organization"
+                                className="mt-2 flex min-h-[48px] items-center justify-center rounded-[15px] bg-orange-400 px-4 text-[11px] font-black text-[#06192E]"
+                            >
+                                درخواست دوره
+                            </Link>
+                        </div>
                     </div>
-                </div>
+                </details>
             </div>
         </header>
     );
