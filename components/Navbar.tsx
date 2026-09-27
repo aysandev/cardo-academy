@@ -3,66 +3,142 @@
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
-const menuItems = [
+type NavItem = {
+    label: string;
+    href: string;
+};
+
+const navItems: NavItem[] = [
     {
-        title: "خانه",
+        label: "خانه",
         href: "/",
-        exact: true,
     },
     {
-        title: "دوره‌ها",
-        href: "/courses",
-    },
-    {
-        title: "درباره ما",
-        href: "/about",
-    },
-    {
-        title: "مجوزها",
-        href: "/licenses",
-        exact: true,
-    },
-    {
-        title: "مدارک و گواهی‌ها",
-        href: "/about#certificates",
-    },
-];
-
-const courseLinks = [
-    {
-        title: "اختصاصی سازمان‌ها",
+        label: "دوره‌های اختصاصی",
         href: "/courses?category=organization",
     },
     {
-        title: "بین‌المللی",
+        label: "فنی و حرفه‌ای",
+        href: "/courses?category=technical",
+    },
+    {
+        label: "بین‌المللی",
         href: "/courses?category=international",
     },
     {
-        title: "فنی و حرفه‌ای",
-        href: "/courses?category=technical",
+        label: "مجوزها",
+        href: "/licenses",
+    },
+    {
+        label: "درباره ما",
+        href: "/about",
     },
 ];
+
+function MenuIcon({ open }: { open: boolean }) {
+    return (
+        <span className="relative block h-5 w-5">
+            <span
+                className={`
+          absolute left-0 top-[3px]
+          h-[2px] w-5
+          rounded-full bg-current
+          transition-all duration-300
+          ${open ? "translate-y-[6px] rotate-45" : ""}
+        `}
+            />
+
+            <span
+                className={`
+          absolute left-0 top-[9px]
+          h-[2px] w-5
+          rounded-full bg-current
+          transition-all duration-300
+          ${open ? "opacity-0" : "opacity-100"}
+        `}
+            />
+
+            <span
+                className={`
+          absolute left-0 top-[15px]
+          h-[2px] w-5
+          rounded-full bg-current
+          transition-all duration-300
+          ${open ? "-translate-y-[6px] -rotate-45" : ""}
+        `}
+            />
+        </span>
+    );
+}
+
+function ArrowIcon() {
+    return (
+        <svg
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
+            fill="none"
+            aria-hidden="true"
+        >
+            <path
+                d="M19 12H5"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+            />
+
+            <path
+                d="M10 7L5 12L10 17"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+            />
+        </svg>
+    );
+}
 
 export default function Navbar() {
     const pathname = usePathname();
 
-    const [open, setOpen] = useState(false);
+    const [mobileOpen, setMobileOpen] =
+        useState(false);
 
-    function isActive(
-        href: string,
-        exact?: boolean
-    ) {
-        if (href.includes("#")) {
-            return false;
+    useEffect(() => {
+        setMobileOpen(false);
+    }, [pathname]);
+
+    useEffect(() => {
+        function handleResize() {
+            if (window.innerWidth >= 1024) {
+                setMobileOpen(false);
+            }
         }
 
-        if (exact) {
-            return pathname === href;
+        window.addEventListener(
+            "resize",
+            handleResize
+        );
+
+        return () => {
+            window.removeEventListener(
+                "resize",
+                handleResize
+            );
+        };
+    }, []);
+
+    function isActive(href: string) {
+        if (href === "/") {
+            return pathname === "/";
         }
 
-        return pathname.startsWith(href);
+        const cleanHref =
+            href.split("?")[0];
+
+        return pathname === cleanHref;
     }
 
     return (
@@ -73,393 +149,460 @@ export default function Navbar() {
         top-0
         z-[100]
         w-full
-        bg-[#0B2239]/95
-        px-3
-        py-2
-        backdrop-blur-xl
 
-        sm:px-4
-        lg:bg-transparent
-        lg:px-8
-        lg:pt-3
+        border-b
+        border-white/[0.07]
+
+        bg-[#06192E]/95
+
+        pt-[env(safe-area-inset-top)]
+
+        text-white
+
+        shadow-[0_8px_30px_rgba(0,0,0,0.12)]
+
+        backdrop-blur-2xl
       "
-            style={{
-                paddingTop:
-                    "max(8px, env(safe-area-inset-top))",
-            }}
         >
             <div
                 className="
+          relative
           mx-auto
+
+          flex
+          min-h-[68px]
           max-w-[1500px]
+          items-center
+          justify-between
+          gap-3
+
+          px-3
+
+          sm:min-h-[74px]
+          sm:px-5
+
+          lg:min-h-[82px]
+          lg:px-8
+
+          xl:px-10
         "
             >
-                {/* =========================
-            NAVBAR
-        ========================= */}
+                {/* ================================
+            LOGO
+        ================================= */}
 
-                <nav
+                <Link
+                    href="/"
+                    aria-label="صفحه اصلی کاردو"
                     className="
+            group
             flex
-            min-h-[64px]
+            shrink-0
             items-center
-            justify-between
-            rounded-[22px]
-            border
-            border-white/[0.08]
-            bg-[#102A43]/95
-            px-3
-            shadow-[0_14px_40px_rgba(0,0,0,0.18)]
-            backdrop-blur-xl
-
-            sm:min-h-[70px]
-            sm:px-4
-
-            lg:min-h-[86px]
-            lg:rounded-[30px]
-            lg:px-6
+            gap-2.5
           "
                 >
-                    {/* LOGO */}
+                    <div
+                        className="
+              relative
+
+              flex
+              h-10
+              w-10
+
+              shrink-0
+
+              items-center
+              justify-center
+
+              overflow-hidden
+
+              rounded-[13px]
+
+              bg-white
+
+              shadow-[0_8px_22px_rgba(0,0,0,0.14)]
+
+              sm:h-11
+              sm:w-11
+            "
+                    >
+                        <Image
+                            src="/logo.png"
+                            alt="کاردو"
+                            fill
+                            priority
+                            sizes="44px"
+                            className="
+                object-contain
+                p-1.5
+              "
+                        />
+                    </div>
+
+                    <div
+                        className="
+              hidden
+              leading-none
+              sm:block
+            "
+                    >
+                        <strong
+                            className="
+                block
+                text-[14px]
+                font-black
+                tracking-[0.04em]
+                text-white
+              "
+                        >
+                            CARDO
+                        </strong>
+
+                        <span
+                            className="
+                mt-1
+                block
+                text-[7px]
+                font-bold
+                tracking-[0.08em]
+                text-slate-500
+              "
+                        >
+                            TRAINING ACADEMY
+                        </span>
+                    </div>
+                </Link>
+
+                {/* ================================
+            DESKTOP MENU
+        ================================= */}
+
+                <nav
+                    aria-label="منوی اصلی"
+                    className="
+            hidden
+            min-w-0
+            flex-1
+            items-center
+            justify-center
+            gap-1
+
+            lg:flex
+
+            xl:gap-1.5
+          "
+                >
+                    {navItems.map((item) => {
+                        const active =
+                            isActive(item.href);
+
+                        return (
+                            <Link
+                                key={item.href}
+                                href={item.href}
+                                className={`
+                  relative
+
+                  whitespace-nowrap
+
+                  rounded-full
+
+                  px-3
+                  py-2.5
+
+                  text-[10px]
+                  font-black
+
+                  transition-all
+                  duration-200
+
+                  xl:px-3.5
+                  xl:text-[11px]
+
+                  ${active
+                                        ? `
+                        bg-white/[0.07]
+                        text-white
+                      `
+                                        : `
+                        text-slate-300
+
+                        hover:bg-white/[0.05]
+                        hover:text-white
+                      `
+                                    }
+                `}
+                            >
+                                {item.label}
+
+                                {active && (
+                                    <span
+                                        className="
+                      absolute
+                      -bottom-[1px]
+                      left-1/2
+
+                      h-[2px]
+                      w-5
+
+                      -translate-x-1/2
+
+                      rounded-full
+
+                      bg-orange-400
+                    "
+                                    />
+                                )}
+                            </Link>
+                        );
+                    })}
+                </nav>
+
+                {/* ================================
+            DESKTOP ACTIONS
+        ================================= */}
+
+                <div
+                    className="
+            hidden
+            shrink-0
+            items-center
+            gap-2
+
+            lg:flex
+          "
+                >
+                    {/* ARABIC */}
 
                     <Link
-                        href="/"
+                        href="/ar"
+                        aria-label="نسخه عربی سایت"
+                        className="
+              inline-flex
+              min-h-[40px]
+
+              items-center
+              justify-center
+              gap-1.5
+
+              rounded-full
+
+              border
+              border-cyan-300/20
+
+              bg-cyan-300/[0.06]
+
+              px-3.5
+
+              text-[10px]
+              font-black
+              text-cyan-100
+
+              transition
+
+              hover:-translate-y-0.5
+              hover:border-cyan-300/35
+              hover:bg-cyan-300/[0.10]
+            "
+                    >
+                        <span>العربية</span>
+
+                        <span
+                            dir="ltr"
+                            className="
+                rounded-full
+
+                bg-cyan-300/10
+
+                px-1.5
+                py-0.5
+
+                text-[8px]
+                text-cyan-200
+              "
+                        >
+                            AR
+                        </span>
+                    </Link>
+
+                    {/* REQUEST */}
+
+                    <Link
+                        href="/courses?category=organization"
+                        className="
+              inline-flex
+              min-h-[42px]
+
+              items-center
+              justify-center
+              gap-2
+
+              rounded-full
+
+              bg-orange-400
+
+              px-4
+
+              text-[10px]
+              font-black
+              text-[#06192E]
+
+              shadow-[0_10px_24px_rgba(251,146,60,0.16)]
+
+              transition
+
+              hover:-translate-y-0.5
+              hover:bg-orange-300
+
+              xl:px-5
+              xl:text-[11px]
+            "
+                    >
+                        درخواست دوره
+
+                        <ArrowIcon />
+                    </Link>
+                </div>
+
+                {/* ================================
+            MOBILE BUTTONS
+        ================================= */}
+
+                <div
+                    className="
+            flex
+            items-center
+            gap-2
+
+            lg:hidden
+          "
+                >
+                    {/* AR MOBILE */}
+
+                    <Link
+                        href="/ar"
+                        aria-label="نسخه عربی"
+                        className="
+              inline-flex
+
+              h-10
+              min-w-[46px]
+
+              items-center
+              justify-center
+
+              rounded-full
+
+              border
+              border-cyan-300/20
+
+              bg-cyan-300/[0.06]
+
+              px-3
+
+              text-[10px]
+              font-black
+              text-cyan-100
+
+              transition
+
+              active:scale-[0.97]
+            "
+                    >
+                        AR
+                    </Link>
+
+                    {/* MENU */}
+
+                    <button
+                        type="button"
                         onClick={() =>
-                            setOpen(false)
+                            setMobileOpen(
+                                (current) => !current
+                            )
+                        }
+                        aria-expanded={mobileOpen}
+                        aria-label={
+                            mobileOpen
+                                ? "بستن منو"
+                                : "باز کردن منو"
                         }
                         className="
               flex
-              shrink-0
+              h-10
+              w-10
+
               items-center
-              gap-2
+              justify-center
+
+              rounded-full
+
+              border
+              border-white/[0.09]
+
+              bg-white/[0.045]
+
+              text-white
+
+              transition
+
+              hover:bg-white/[0.08]
+
+              active:scale-[0.97]
             "
                     >
-                        <div
-                            className="
-                flex
-                h-[45px]
-                w-[45px]
-                items-center
-                justify-center
-                rounded-[14px]
-                bg-white
-                p-1.5
+                        <MenuIcon
+                            open={mobileOpen}
+                        />
+                    </button>
+                </div>
 
-                sm:h-[50px]
-                sm:w-[50px]
-
-                lg:h-[58px]
-                lg:w-[58px]
-                lg:rounded-[17px]
-              "
-                        >
-                            <Image
-                                src="/logo.png"
-                                alt="مجتمع آموزشی کاردو"
-                                width={58}
-                                height={58}
-                                priority
-                                className="
-                  h-full
-                  w-full
-                  object-contain
-                "
-                            />
-                        </div>
-
-                        <div
-                            className="
-                hidden
-                sm:block
-                lg:hidden
-              "
-                        >
-                            <p
-                                className="
-                  text-xs
-                  font-black
-                  text-white
-                "
-                            >
-                                کاردو
-                            </p>
-
-                            <p
-                                className="
-                  mt-0.5
-                  text-[8px]
-                  text-slate-500
-                "
-                            >
-                                CARDO ACADEMY
-                            </p>
-                        </div>
-                    </Link>
-
-
-                    {/* =========================
-              DESKTOP MENU
-          ========================= */}
-
-                    <div
-                        className="
-              hidden
-              items-center
-              gap-1
-              lg:flex
-            "
-                    >
-                        {menuItems.map((item) => {
-                            const active =
-                                isActive(
-                                    item.href,
-                                    item.exact
-                                );
-
-                            return (
-                                <Link
-                                    key={item.title}
-                                    href={item.href}
-                                    className={`
-                    relative
-                    rounded-full
-                    px-4
-                    py-3
-                    text-[13px]
-                    font-black
-                    transition
-
-                    ${active
-                                            ? "text-white"
-                                            : "text-slate-300 hover:bg-white/[0.05] hover:text-white"
-                                        }
-                  `}
-                                >
-                                    {item.title}
-
-                                    {active && (
-                                        <span
-                                            className="
-                        absolute
-                        -bottom-[4px]
-                        right-1/2
-                        h-[3px]
-                        w-7
-                        translate-x-1/2
-                        rounded-full
-                        bg-orange-400
-                      "
-                                        />
-                                    )}
-                                </Link>
-                            );
-                        })}
-
-                        <Link
-                            href="/#partners"
-                            className="
-                rounded-full
-                px-4
-                py-3
-                text-[13px]
-                font-black
-                text-slate-300
-                transition
-
-                hover:bg-white/[0.05]
-                hover:text-white
-              "
-                        >
-                            مشتریان ما
-                        </Link>
-                    </div>
-
-
-                    {/* =========================
-              DESKTOP BUTTONS
-          ========================= */}
-
-                    <div
-                        className="
-              hidden
-              items-center
-              gap-2
-              lg:flex
-            "
-                    >
-                        <button
-                            type="button"
-                            className="
-                rounded-full
-                px-5
-                py-3
-                text-sm
-                font-black
-                text-slate-300
-                transition
-
-                hover:text-white
-              "
-                        >
-                            ورود
-                        </button>
-
-                        <button
-                            type="button"
-                            className="
-                rounded-[17px]
-                bg-orange-400
-                px-6
-                py-3.5
-                text-sm
-                font-black
-                text-[#07192D]
-                transition
-
-                hover:bg-orange-300
-              "
-                        >
-                            ثبت‌نام
-                        </button>
-                    </div>
-
-
-                    {/* =========================
-              MOBILE ACTIONS
-          ========================= */}
-
-                    <div
-                        className="
-              flex
-              items-center
-              gap-2
-              lg:hidden
-            "
-                    >
-                        <Link
-                            href="/courses"
-                            className="
-                hidden
-                rounded-full
-                bg-orange-400
-                px-4
-                py-2.5
-                text-[10px]
-                font-black
-                text-[#07192D]
-
-                sm:inline-flex
-              "
-                        >
-                            دوره‌ها
-                        </Link>
-
-                        <button
-                            type="button"
-                            onClick={() =>
-                                setOpen((prev) => !prev)
-                            }
-                            aria-label="منوی سایت"
-                            aria-expanded={open}
-                            className="
-                flex
-                h-[44px]
-                w-[44px]
-                items-center
-                justify-center
-                rounded-[14px]
-                border
-                border-white/10
-                bg-white/[0.05]
-              "
-                        >
-                            <div
-                                className="
-                  relative
-                  h-[16px]
-                  w-[20px]
-                "
-                            >
-                                <span
-                                    className={`
-                    absolute
-                    left-0
-                    top-0
-                    h-[2px]
-                    w-full
-                    rounded-full
-                    bg-white
-                    transition-all
-                    duration-300
-
-                    ${open
-                                            ? "top-[7px] rotate-45"
-                                            : ""
-                                        }
-                  `}
-                                />
-
-                                <span
-                                    className={`
-                    absolute
-                    left-0
-                    top-[7px]
-                    h-[2px]
-                    rounded-full
-                    bg-white
-                    transition-all
-                    duration-300
-
-                    ${open
-                                            ? "w-0 opacity-0"
-                                            : "w-[14px]"
-                                        }
-                  `}
-                                />
-
-                                <span
-                                    className={`
-                    absolute
-                    bottom-0
-                    left-0
-                    h-[2px]
-                    w-full
-                    rounded-full
-                    bg-white
-                    transition-all
-                    duration-300
-
-                    ${open
-                                            ? "bottom-[7px] -rotate-45"
-                                            : ""
-                                        }
-                  `}
-                                />
-                            </div>
-                        </button>
-                    </div>
-                </nav>
-
-
-                {/* =========================
+                {/* ================================
             MOBILE MENU
-        ========================= */}
+        ================================= */}
 
                 <div
                     className={`
+            absolute
+
+            inset-x-3
+
+            top-[calc(100%+8px)]
+
+            z-[120]
+
+            origin-top
+
             overflow-hidden
+
+            rounded-[22px]
+
+            border
+            border-white/[0.08]
+
+            bg-[#0A2035]/98
+
+            shadow-[0_24px_70px_rgba(0,0,0,0.36)]
+
+            backdrop-blur-2xl
+
             transition-all
-            duration-300
+            duration-200
+
             lg:hidden
 
-            ${open
+            ${mobileOpen
                             ? `
-                  mt-2
-                  max-h-[calc(100dvh-95px)]
+                  pointer-events-auto
+                  translate-y-0
+                  scale-100
                   opacity-100
                 `
                             : `
-                  max-h-0
+                  pointer-events-none
+                  -translate-y-2
+                  scale-[0.98]
                   opacity-0
                 `
                         }
@@ -467,234 +610,183 @@ export default function Navbar() {
                 >
                     <div
                         className="
-              max-h-[calc(100dvh-105px)]
+              max-h-[calc(100dvh-105px-env(safe-area-inset-top))]
+
               overflow-y-auto
-              rounded-[24px]
-              border
-              border-white/[0.08]
-              bg-[#0D263D]/98
-              p-3
-              shadow-[0_20px_55px_rgba(0,0,0,0.28)]
-              backdrop-blur-2xl
+
+              p-2.5
+
+              [scrollbar-width:none]
+
+              [&::-webkit-scrollbar]:hidden
             "
                     >
-                        {/* MAIN LINKS */}
-
-                        <div
-                            className="
-                space-y-1
-              "
+                        <nav
+                            aria-label="منوی موبایل"
+                            className="grid gap-1"
                         >
-                            {menuItems.map((item) => {
+                            {navItems.map((item) => {
                                 const active =
-                                    isActive(
-                                        item.href,
-                                        item.exact
-                                    );
+                                    isActive(item.href);
 
                                 return (
                                     <Link
-                                        key={item.title}
+                                        key={item.href}
                                         href={item.href}
                                         onClick={() =>
-                                            setOpen(false)
+                                            setMobileOpen(false)
                                         }
                                         className={`
                       flex
-                      min-h-[48px]
+                      min-h-[46px]
+
                       items-center
                       justify-between
+                      gap-3
+
                       rounded-[15px]
+
                       px-4
+
                       text-[12px]
                       font-black
 
+                      transition
+
                       ${active
                                                 ? `
-                            bg-orange-400/[0.10]
-                            text-orange-200
+                            bg-orange-400
+                            text-[#06192E]
                           `
                                                 : `
+                            bg-white/[0.025]
                             text-slate-200
+
+                            hover:bg-white/[0.06]
                           `
                                             }
                     `}
                                     >
                                         <span>
-                                            {item.title}
+                                            {item.label}
                                         </span>
 
                                         <span
-                                            className="
+                                            className={`
                         text-sm
-                        text-slate-500
-                      "
+
+                        ${active
+                                                    ? "text-[#06192E]"
+                                                    : "text-slate-600"
+                                                }
+                      `}
                                         >
                                             ←
                                         </span>
                                     </Link>
                                 );
                             })}
-
-
-                            <Link
-                                href="/#partners"
-                                onClick={() =>
-                                    setOpen(false)
-                                }
-                                className="
-                  flex
-                  min-h-[48px]
-                  items-center
-                  justify-between
-                  rounded-[15px]
-                  px-4
-                  text-[12px]
-                  font-black
-                  text-slate-200
-                "
-                            >
-                                <span>
-                                    مشتریان ما
-                                </span>
-
-                                <span
-                                    className="
-                    text-sm
-                    text-slate-500
-                  "
-                                >
-                                    ←
-                                </span>
-                            </Link>
-                        </div>
-
-
-                        {/* DIVIDER */}
+                        </nav>
 
                         <div
                             className="
-                my-3
+                my-2.5
                 h-px
                 bg-white/[0.07]
               "
                         />
 
+                        {/* ARABIC MOBILE */}
 
-                        {/* COURSE LINKS */}
-
-                        <div
+                        <Link
+                            href="/ar"
+                            onClick={() =>
+                                setMobileOpen(false)
+                            }
                             className="
-                rounded-[18px]
-                bg-white/[0.025]
-                p-3
+                flex
+                min-h-[48px]
+
+                items-center
+                justify-between
+                gap-3
+
+                rounded-[15px]
+
+                border
+                border-cyan-300/15
+
+                bg-cyan-300/[0.06]
+
+                px-4
+
+                text-sm
+                font-black
+                text-cyan-100
+
+                transition
+
+                hover:bg-cyan-300/[0.10]
               "
                         >
-                            <p
+                            <span>
+                                النسخة العربية
+                            </span>
+
+                            <span
+                                dir="ltr"
                                 className="
-                  mb-3
+                  rounded-full
+
+                  bg-cyan-300/10
+
+                  px-2
+                  py-1
+
                   text-[9px]
-                  font-black
-                  text-slate-500
+                  text-cyan-200
                 "
                             >
-                                مسیرهای آموزشی
-                            </p>
+                                AR
+                            </span>
+                        </Link>
 
-                            <div
-                                className="
-                  grid
-                  grid-cols-1
-                  gap-2
-                "
-                            >
-                                {courseLinks.map(
-                                    (item) => (
-                                        <Link
-                                            key={
-                                                item.title
-                                            }
-                                            href={
-                                                item.href
-                                            }
-                                            onClick={() =>
-                                                setOpen(
-                                                    false
-                                                )
-                                            }
-                                            className="
-                        flex
-                        min-h-[44px]
-                        items-center
-                        justify-between
-                        rounded-[13px]
-                        border
-                        border-white/[0.06]
-                        bg-white/[0.025]
-                        px-3
-                        text-[10px]
-                        font-black
-                        text-white
-                      "
-                                        >
-                                            <span>
-                                                {item.title}
-                                            </span>
+                        {/* REQUEST MOBILE */}
 
-                                            <span
-                                                className="
-                          text-orange-300
-                        "
-                                            >
-                                                ←
-                                            </span>
-                                        </Link>
-                                    )
-                                )}
-                            </div>
-                        </div>
-
-
-                        {/* MOBILE AUTH */}
-
-                        <div
+                        <Link
+                            href="/courses?category=organization"
+                            onClick={() =>
+                                setMobileOpen(false)
+                            }
                             className="
-                mt-3
-                grid
-                grid-cols-2
+                mt-2
+
+                flex
+                min-h-[50px]
+
+                items-center
+                justify-center
                 gap-2
+
+                rounded-[15px]
+
+                bg-orange-400
+
+                px-4
+
+                text-xs
+                font-black
+                text-[#06192E]
+
+                transition
+
+                active:scale-[0.99]
               "
                         >
-                            <button
-                                type="button"
-                                className="
-                  min-h-[44px]
-                  rounded-[14px]
-                  border
-                  border-white/10
-                  bg-white/[0.035]
-                  text-[11px]
-                  font-black
-                  text-white
-                "
-                            >
-                                ورود
-                            </button>
+                            درخواست دوره اختصاصی
 
-                            <button
-                                type="button"
-                                className="
-                  min-h-[44px]
-                  rounded-[14px]
-                  bg-orange-400
-                  text-[11px]
-                  font-black
-                  text-[#07192D]
-                "
-                            >
-                                ثبت‌نام
-                            </button>
-                        </div>
+                            <ArrowIcon />
+                        </Link>
                     </div>
                 </div>
             </div>

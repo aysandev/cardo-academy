@@ -203,19 +203,16 @@ function CategorySwitch({
         {
             id: "technical",
             title: "فنی و حرفه‌ای",
-            href: "/courses?category=technical",
         },
 
         {
             id: "organization",
-            title: "دوره‌های اختصاصی",
-            href: "/courses?category=organization",
+            title: "اختصاصی سازمان‌ها",
         },
 
         {
             id: "oman",
-            title: "بین‌المللی",
-            href: "/courses?category=international",
+            title: "دوره‌های عمان",
         },
     ] as const;
 
@@ -236,7 +233,7 @@ function CategorySwitch({
             {items.map((item) => (
                 <Link
                     key={item.id}
-                    href={item.href}
+                    href={`/courses?category=${item.id}`}
                     className={`
             shrink-0
             rounded-full
@@ -330,22 +327,25 @@ function CourseCard({
             <div
                 className="
                     relative
-                    h-[175px]
+                    h-[185px]
                     overflow-hidden
-                    sm:h-[190px]
-                    lg:h-[205px]
+                    bg-[#081C2F]
+                    sm:h-[205px]
+                    lg:h-[220px]
                 "
             >
+                {/* پس‌زمینه نرم برای پر نشدن کادر با فضای خالی */}
                 <Image
                     src={image}
-                    alt={course.title}
+                    alt=""
                     fill
+                    aria-hidden="true"
                     sizes="(max-width: 768px) 100vw, (max-width: 1280px) 50vw, 33vw"
                     className="
+                        scale-110
                         object-cover
-                        transition-transform
-                        duration-700
-                        group-hover:scale-[1.045]
+                        opacity-25
+                        blur-[10px]
                     "
                 />
 
@@ -353,9 +353,41 @@ function CourseCard({
                     className="
                         absolute
                         inset-0
+                        bg-[#06192E]/25
+                    "
+                />
+
+                {/* پوستر اصلی؛ همیشه کامل دیده می‌شود */}
+                <div
+                    className="
+                        absolute
+                        inset-2.5
+                        sm:inset-3
+                    "
+                >
+                    <Image
+                        src={image}
+                        alt={course.title}
+                        fill
+                        sizes="(max-width: 768px) 92vw, (max-width: 1280px) 46vw, 30vw"
+                        className="
+                            object-contain
+                            object-center
+                            transition-transform
+                            duration-500
+                            group-hover:scale-[1.015]
+                        "
+                    />
+                </div>
+
+                <div
+                    className="
+                        pointer-events-none
+                        absolute
+                        inset-0
                         bg-gradient-to-t
-                        from-[#0B2137]
-                        via-[#0B2137]/15
+                        from-[#0B2137]/65
+                        via-transparent
                         to-transparent
                     "
                 />
@@ -1710,19 +1742,9 @@ function Catalog({
 
 const completedOrganizationCourses = [
     {
-        id: "pip-pre-incident-plan",
-        title: "PIP",
-        subtitle: "Pre Incident Plan | طرح‌ریزی پیش از رویداد",
-        instructor: "استعلام",
-        duration: "استعلام",
-        format: "اختصاصی",
-        image: "/images/organization/pip.jpg",
-        group: "HSE و ایمنی",
-    },
-    {
         id: "pssr",
         title: "PSSR",
-        subtitle: "Pre Start-Up Safety Review | بازبینی ایمنی پیش از راه‌اندازی",
+        subtitle: "بازبینی ایمنی پیش از راه‌اندازی",
         instructor: "دکتر هاشم ستاره",
         duration: "۱ روز",
         format: "نظری",
@@ -1731,8 +1753,8 @@ const completedOrganizationCourses = [
     },
     {
         id: "hse-risk-management",
-        title: "مدیریت ریسک‌های بهداشت، ایمنی و محیط زیست",
-        subtitle: "Risk Management",
+        title: "مدیریت ریسک",
+        subtitle: "بهداشت، ایمنی و محیط زیست",
         instructor: "دکتر هاشم ستاره",
         duration: "۲۴ ساعت",
         format: "نظری",
@@ -1741,8 +1763,8 @@ const completedOrganizationCourses = [
     },
     {
         id: "fire-extinguishing",
-        title: "آموزش عملی اطفاء حریق در میدان",
-        subtitle: "بررسی میدانی، ارزیابی مخاطرات و تاکتیک‌های عملیات اطفاء حریق",
+        title: "اطفاء حریق",
+        subtitle: "اصول و تکنیک‌های عملیات اطفاء حریق",
         instructor: "دکتر هاشم ستاره",
         duration: "۴۰ ساعت",
         format: "عملی",
@@ -1841,71 +1863,6 @@ const completedOrganizationCourses = [
     },
 ];
 
-
-/* =========================================================
-   ORGANIZATION COURSE TOPICS
-   سرفصل‌های دوره‌های دوره‌های اختصاصی
-========================================================= */
-
-const organizationTopics: Record<string, string[]> = {
-    "pip-pre-incident-plan": [
-        "اصول و مبانی طرح‌ریزی پیش از رویداد",
-        "مروری بر استانداردهای NFPA 1620، NFPA 1660 و راهنمای CCPS",
-        "بیان اجزای ۱۴ گانه PIP",
-    ],
-
-    "fire-risk-assessment": [
-        "بیان اصول و مبانی رفتارشناسی حریق و انفجار",
-        "بیان اصول و مبانی روش‌های ارزیابی ریسک حریق بر اساس NFPA 550",
-        "بیان اصول درخت ایمنی حریق بر اساس NFPA 551",
-        "بیان اصول و مبانی ارزیابی بار حریق بر اساس NFPA 557",
-        "بیان اصول و مبانی تکنیک FRAM و ETA در ارزیابی ریسک حریق",
-        "اصول مدیریت ریسک حریق با روش BowTie",
-    ],
-
-    "pssr": [
-        "اصول و مبانی PSSR و جایگاه آن در ایمنی فرایند",
-        "اصول و مبانی ایمنی در فازهای مختلف اتمام نصب مکانیکی تا راه‌اندازی نهایی",
-        "مروری بر انواع تست‌ها در مراحل مختلف راه‌اندازی",
-        "مروری بر انواع ریسک‌ها و مخاطرات بالقوه در مراحل مختلف راه‌اندازی",
-        "اصول بازبینی ایمنی پیش از راه‌اندازی بر اساس OSHA و CCPS",
-        "مروری بر الزامات قانونی PSSR بر اساس آیین‌نامه‌ها و مقررات",
-    ],
-
-    "incident-investigation": [
-        "بیان اصول و مبانی رویدادها و حوادث در محیط‌های کاری",
-        "مروری بر انواع تئوری‌ها و مدل‌های رویدادها و حوادث",
-        "بیان اصول، روش‌ها و تکنیک‌های بررسی رویداد",
-        "بیان تکنیک‌های Step، 5Why و Fish Bone در تحلیل عوامل رویداد",
-        "بیان تکنیک‌های Bow Tie، Tripod Beta و ETA در بررسی رویدادها",
-        "اصول و مبانی گزارش‌نویسی رویدادها و حوادث",
-    ],
-
-    "hse-risk-management": [
-        "بیان اصول و مبانی پایه در مدیریت ریسک",
-        "بیان اصول و مبانی شناسایی مخاطرات بالقوه Hazard Identification - HazID",
-        "بیان تکنیک FMEA در ارزیابی ریسک ناشی از تجهیزات",
-        "بیان تکنیک JHA در تحلیل ریسک‌ها و مخاطرات شغلی",
-        "بیان تکنیک Barrier Analysis و Bow-Tie در بررسی اثربخشی لایه‌های حفاظتی",
-        "اصول و مبانی ارزیابی روش‌های کنترل ریسک",
-        "اصول و مبانی اولویت‌بندی اقدامات پیشگیرانه و کاهش ریسک",
-    ],
-
-    "fire-extinguishing": [
-        "بررسی میدانی حریق و اصول Size Up در میدان",
-        "اصول ارزیابی مخاطرات میدان",
-        "بررسی و اتخاذ تاکتیک‌ها و تکنیک‌های عملیات اطفاء حریق",
-        "آموزش عملی تاکتیک‌های تدافعی و تهاجمی",
-    ],
-
-    "incident-command": [
-        "اصول و مبانی فرماندهی عملیات و ساختار فرمان و کنترل Command & Control",
-        "بیان اصول و مبانی انواع استراتژی‌ها، تاکتیک‌ها و تکنیک‌های عملیات اطفاء حریق",
-        "بیان اصول و مبانی انواع رویکردهای تدافعی، تهاجمی و ترکیبی",
-        "مروری بر اصول و مبانی روش‌های فرماندهی عملیات بر اساس مراجع فرماندهی معتبر همانند NFCC",
-    ],
-};
-
 /* =========================================================
    ORGANIZATION PAGE
 ========================================================= */
@@ -1917,9 +1874,6 @@ function OrganizationPage() {
     const [orgSearch, setOrgSearch] = useState("");
     const [orgGroup, setOrgGroup] = useState("همه");
     const [previewCourse, setPreviewCourse] =
-        useState<(typeof completedOrganizationCourses)[number] | null>(null);
-
-    const [outlineCourse, setOutlineCourse] =
         useState<(typeof completedOrganizationCourses)[number] | null>(null);
 
     const orgGroups = [
@@ -2010,7 +1964,7 @@ function OrganizationPage() {
                     courseTitle:
                         selectedOrgCourse ||
                         "درخواست آموزش اختصاصی سازمانی",
-                    courseGroup: "آموزش دوره‌های اختصاصی",
+                    courseGroup: "آموزش اختصاصی سازمان‌ها",
                     requestType: "organization",
                 }),
             });
@@ -2039,280 +1993,10 @@ function OrganizationPage() {
     return (
         <>
             {/* =====================================================
-                COMPACT HERO
-            ====================================================== */}
-
-            <section
-                className="
-                    mx-auto
-                    max-w-[1450px]
-                    px-3
-                    pb-5
-                    pt-4
-                    sm:px-5
-                    sm:pt-6
-                    lg:px-10
-                "
-            >
-                <div
-                    className="
-                        relative
-                        overflow-hidden
-                        rounded-[28px]
-                        border
-                        border-white/[0.08]
-                        bg-gradient-to-l
-                        from-[#173953]
-                        via-[#102B43]
-                        to-[#0B2137]
-                        px-5
-                        py-7
-                        sm:rounded-[34px]
-                        sm:px-8
-                        sm:py-9
-                        lg:px-11
-                        lg:py-10
-                    "
-                >
-                    <div
-                        className="
-                            pointer-events-none
-                            absolute
-                            -right-24
-                            -top-24
-                            h-64
-                            w-64
-                            rounded-full
-                            bg-cyan-300/[0.08]
-                            blur-[100px]
-                        "
-                    />
-
-                    <div
-                        className="
-                            pointer-events-none
-                            absolute
-                            -bottom-24
-                            left-1/3
-                            h-64
-                            w-64
-                            rounded-full
-                            bg-orange-400/[0.08]
-                            blur-[100px]
-                        "
-                    />
-
-                    <div
-                        className="
-                            relative
-                            grid
-                            gap-7
-                            lg:grid-cols-[1fr_380px]
-                            lg:items-center
-                        "
-                    >
-                        <div>
-                            <span
-                                className="
-                                    inline-flex
-                                    items-center
-                                    gap-2
-                                    rounded-full
-                                    border
-                                    border-cyan-300/20
-                                    bg-cyan-300/[0.07]
-                                    px-3.5
-                                    py-2
-                                    text-[10px]
-                                    font-black
-                                    text-cyan-200
-                                    sm:text-xs
-                                "
-                            >
-                                <span
-                                    className="
-                                        h-2
-                                        w-2
-                                        rounded-full
-                                        bg-orange-400
-                                    "
-                                />
-                                آموزش دوره‌های اختصاصی
-                            </span>
-
-                            <h1
-                                className="
-                                    mt-4
-                                    max-w-3xl
-                                    text-[30px]
-                                    font-black
-                                    leading-[1.55]
-                                    text-white
-                                    sm:text-4xl
-                                    lg:text-[46px]
-                                "
-                            >
-                                آموزش تخصصی،
-                                <span className="text-orange-400">
-                                    {" "}متناسب با نیاز سازمان شما
-                                </span>
-                            </h1>
-
-                            <p
-                                className="
-                                    mt-3
-                                    max-w-2xl
-                                    text-xs
-                                    leading-7
-                                    text-slate-300
-                                    sm:text-sm
-                                    sm:leading-8
-                                "
-                            >
-                                نمونه دوره‌های برگزارشده را ببینید،
-                                دوره مناسب را انتخاب کنید و مستقیماً
-                                درخواست برگزاری برای مجموعه خود ثبت کنید.
-                            </p>
-
-                            <div
-                                className="
-                                    mt-5
-                                    flex
-                                    flex-col
-                                    gap-2
-                                    sm:flex-row
-                                "
-                            >
-                                <a
-                                    href="#organization-courses"
-                                    className="
-                                        inline-flex
-                                        min-h-[46px]
-                                        items-center
-                                        justify-center
-                                        gap-2
-                                        rounded-full
-                                        bg-orange-400
-                                        px-6
-                                        text-xs
-                                        font-black
-                                        text-[#06192E]
-                                        transition
-                                        hover:bg-orange-300
-                                    "
-                                >
-                                    مشاهده دوره‌ها
-                                    <span>↓</span>
-                                </a>
-
-                                <button
-                                    type="button"
-                                    onClick={() =>
-                                        requestCourse(
-                                            "آموزش اختصاصی جدید"
-                                        )
-                                    }
-                                    className="
-                                        inline-flex
-                                        min-h-[46px]
-                                        items-center
-                                        justify-center
-                                        gap-2
-                                        rounded-full
-                                        border
-                                        border-white/10
-                                        bg-white/[0.04]
-                                        px-6
-                                        text-xs
-                                        font-black
-                                        text-white
-                                        transition
-                                        hover:bg-white/[0.08]
-                                    "
-                                >
-                                    درخواست دوره جدید
-                                    <ArrowIcon />
-                                </button>
-                            </div>
-                        </div>
-
-                        {/* QUICK VALUE PANEL */}
-
-                        <div
-                            className="
-                                grid
-                                grid-cols-3
-                                gap-2
-                                lg:grid-cols-1
-                            "
-                        >
-                            {[
-                                [
-                                    `${completedOrganizationCourses.length}`,
-                                    "دوره نمونه",
-                                ],
-                                [
-                                    `${Math.max(orgGroups.length - 1, 0)}`,
-                                    "حوزه آموزشی",
-                                ],
-                                [
-                                    "سازمانی",
-                                    "قابل سفارشی‌سازی",
-                                ],
-                            ].map((item, index) => (
-                                <div
-                                    key={item[1]}
-                                    className="
-                                        rounded-[18px]
-                                        border
-                                        border-white/[0.07]
-                                        bg-white/[0.035]
-                                        px-3
-                                        py-3
-                                        lg:flex
-                                        lg:items-center
-                                        lg:justify-between
-                                        lg:px-4
-                                    "
-                                >
-                                    <strong
-                                        className={`
-                                            block
-                                            text-base
-                                            font-black
-                                            sm:text-lg
-                                            ${index === 1
-                                                ? "text-cyan-200"
-                                                : "text-orange-200"
-                                            }
-                                        `}
-                                    >
-                                        {item[0]}
-                                    </strong>
-
-                                    <span
-                                        className="
-                                            mt-1
-                                            block
-                                            text-[8px]
-                                            leading-5
-                                            text-slate-400
-                                            sm:text-[10px]
-                                            lg:mt-0
-                                        "
-                                    >
-                                        {item[1]}
-                                    </span>
-                                </div>
-                            ))}
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            {/* =====================================================
                 SEARCH + FILTERS
             ====================================================== */}
+
+
 
             <section
                 id="organization-courses"
@@ -2321,9 +2005,10 @@ function OrganizationPage() {
                     max-w-[1450px]
                     scroll-mt-28
                     px-3
-                    pb-5
-                    pt-6
+                    pb-3
+                    pt-3
                     sm:px-5
+                    sm:pt-4
                     lg:px-10
                 "
             >
@@ -2331,57 +2016,81 @@ function OrganizationPage() {
                     className="
                         flex
                         flex-col
-                        gap-4
+                        gap-3
                         lg:flex-row
-                        lg:items-end
+                        lg:items-center
                         lg:justify-between
                     "
                 >
-                    <div>
-                        <span
-                            className="
-                                text-[9px]
-                                font-black
-                                tracking-[0.15em]
-                                text-orange-300
-                                sm:text-xs
-                            "
-                        >
-                            دوره‌های برگزارشده
-                        </span>
+                    <div
+                        className="
+                            flex
+                            items-center
+                            justify-between
+                            gap-3
+                        "
+                    >
+                        <div>
+                            <span
+                                className="
+                                    text-[9px]
+                                    font-black
+                                    text-orange-300
+                                    sm:text-[10px]
+                                "
+                            >
+                                دوره‌های اختصاصی
+                            </span>
 
-                        <h2
-                            className="
-                                mt-2
-                                text-2xl
-                                font-black
-                                leading-[1.6]
-                                text-white
-                                sm:text-3xl
-                            "
-                        >
-                            یک دوره را انتخاب کنید
-                        </h2>
+                            <h2
+                                className="
+                                    mt-1
+                                    text-lg
+                                    font-black
+                                    leading-7
+                                    text-white
+                                    sm:text-xl
+                                "
+                            >
+                                دوره موردنظر را انتخاب کنید
+                            </h2>
+                        </div>
 
-                        <p
+                        <button
+                            type="button"
+                            onClick={() =>
+                                requestCourse(
+                                    "آموزش اختصاصی جدید"
+                                )
+                            }
                             className="
-                                mt-1
+                                hidden
+                                min-h-[40px]
+                                shrink-0
+                                items-center
+                                justify-center
+                                gap-2
+                                rounded-full
+                                bg-orange-400
+                                px-4
                                 text-[10px]
-                                leading-6
-                                text-slate-500
-                                sm:text-xs
+                                font-black
+                                text-[#06192E]
+                                transition
+                                hover:bg-orange-300
+                                sm:inline-flex
                             "
                         >
-                            اطلاعات اصلی هر دوره بدون نیاز به خواندن پوستر،
-                            در کارت خلاصه شده است.
-                        </p>
+                            درخواست دوره جدید
+                            <ArrowIcon />
+                        </button>
                     </div>
 
                     <div
                         className="
                             relative
                             w-full
-                            lg:w-[360px]
+                            lg:w-[330px]
                         "
                     >
                         <span
@@ -2403,17 +2112,17 @@ function OrganizationPage() {
                                     event.target.value
                                 )
                             }
-                            placeholder="جستجو نام دوره یا مدرس..."
+                            placeholder="جستجو دوره یا مدرس..."
                             className="
-                                h-12
+                                h-11
                                 w-full
-                                rounded-[17px]
+                                rounded-[15px]
                                 border
                                 border-white/[0.08]
                                 bg-white/[0.035]
                                 pr-11
                                 pl-4
-                                text-xs
+                                text-[11px]
                                 text-white
                                 outline-none
                                 placeholder:text-slate-600
@@ -2425,7 +2134,7 @@ function OrganizationPage() {
 
                 <div
                     className="
-                        mt-4
+                        mt-3
                         flex
                         gap-2
                         overflow-x-auto
@@ -2445,12 +2154,12 @@ function OrganizationPage() {
                                 shrink-0
                                 rounded-full
                                 border
-                                px-4
-                                py-2.5
-                                text-[10px]
+                                px-3.5
+                                py-2
+                                text-[9px]
                                 font-black
                                 transition
-                                sm:text-xs
+                                sm:text-[10px]
 
                                 ${orgGroup === group
                                     ? `
@@ -2471,6 +2180,34 @@ function OrganizationPage() {
                         </button>
                     ))}
                 </div>
+
+                <button
+                    type="button"
+                    onClick={() =>
+                        requestCourse(
+                            "آموزش اختصاصی جدید"
+                        )
+                    }
+                    className="
+                        mt-3
+                        flex
+                        min-h-[42px]
+                        w-full
+                        items-center
+                        justify-center
+                        gap-2
+                        rounded-full
+                        bg-orange-400
+                        px-4
+                        text-[10px]
+                        font-black
+                        text-[#06192E]
+                        sm:hidden
+                    "
+                >
+                    درخواست دوره جدید
+                    <ArrowIcon />
+                </button>
             </section>
 
             {/* =====================================================
@@ -2483,13 +2220,14 @@ function OrganizationPage() {
                     max-w-[1450px]
                     px-3
                     pb-16
+                    pt-0
                     sm:px-5
                     lg:px-10
                 "
             >
                 <div
                     className="
-                        mb-4
+                        mb-2
                         flex
                         items-center
                         justify-between
@@ -2589,25 +2327,27 @@ function OrganizationPage() {
                                         className="
                                             relative
                                             block
-                                            h-[185px]
+                                            h-[190px]
                                             w-full
                                             overflow-hidden
-                                            bg-[#0B2137]
+                                            bg-[#081C2F]
                                             text-right
                                             sm:h-[210px]
+                                            lg:h-[220px]
                                         "
                                     >
+                                        {/* بک‌گراند محو برای حفظ ظاهر کارت */}
                                         <Image
                                             src={course.image}
-                                            alt={course.title}
+                                            alt=""
                                             fill
+                                            aria-hidden="true"
                                             sizes="(max-width: 640px) 100vw, (max-width: 1280px) 50vw, 33vw"
                                             className="
+                                                scale-110
                                                 object-cover
-                                                object-top
-                                                transition
-                                                duration-500
-                                                group-hover:scale-[1.025]
+                                                opacity-25
+                                                blur-[10px]
                                             "
                                         />
 
@@ -2615,8 +2355,40 @@ function OrganizationPage() {
                                             className="
                                                 absolute
                                                 inset-0
+                                                bg-[#06192E]/20
+                                            "
+                                        />
+
+                                        {/* خود پوستر کامل، بدون کراپ */}
+                                        <div
+                                            className="
+                                                absolute
+                                                inset-2.5
+                                                sm:inset-3
+                                            "
+                                        >
+                                            <Image
+                                                src={course.image}
+                                                alt={course.title}
+                                                fill
+                                                sizes="(max-width: 640px) 92vw, (max-width: 1280px) 46vw, 30vw"
+                                                className="
+                                                    object-contain
+                                                    object-center
+                                                    transition
+                                                    duration-500
+                                                    group-hover:scale-[1.015]
+                                                "
+                                            />
+                                        </div>
+
+                                        <div
+                                            className="
+                                                pointer-events-none
+                                                absolute
+                                                inset-0
                                                 bg-gradient-to-t
-                                                from-[#06192E]/55
+                                                from-[#06192E]/60
                                                 via-transparent
                                                 to-transparent
                                             "
@@ -2788,68 +2560,34 @@ function OrganizationPage() {
                                             </div>
                                         </div>
 
-                                        <div
+                                        <button
+                                            type="button"
+                                            onClick={() =>
+                                                requestCourse(
+                                                    course.title
+                                                )
+                                            }
                                             className="
                                                 mt-3
-                                                grid
-                                                grid-cols-[0.85fr_1.15fr]
+                                                flex
+                                                min-h-[46px]
+                                                w-full
+                                                items-center
+                                                justify-center
                                                 gap-2
+                                                rounded-[15px]
+                                                bg-orange-400
+                                                px-4
+                                                text-[11px]
+                                                font-black
+                                                text-[#06192E]
+                                                transition
+                                                hover:bg-orange-300
                                             "
                                         >
-                                            <button
-                                                type="button"
-                                                onClick={() =>
-                                                    setOutlineCourse(course)
-                                                }
-                                                className="
-                                                    flex
-                                                    min-h-[46px]
-                                                    items-center
-                                                    justify-center
-                                                    gap-2
-                                                    rounded-[15px]
-                                                    border
-                                                    border-white/[0.08]
-                                                    bg-white/[0.035]
-                                                    px-3
-                                                    text-[10px]
-                                                    font-black
-                                                    text-slate-200
-                                                    transition
-                                                    hover:bg-white/[0.07]
-                                                "
-                                            >
-                                                <ListIcon />
-                                                سرفصل‌ها
-                                            </button>
-
-                                            <button
-                                                type="button"
-                                                onClick={() =>
-                                                    requestCourse(
-                                                        course.title
-                                                    )
-                                                }
-                                                className="
-                                                    flex
-                                                    min-h-[46px]
-                                                    items-center
-                                                    justify-center
-                                                    gap-2
-                                                    rounded-[15px]
-                                                    bg-orange-400
-                                                    px-3
-                                                    text-[10px]
-                                                    font-black
-                                                    text-[#06192E]
-                                                    transition
-                                                    hover:bg-orange-300
-                                                "
-                                            >
-                                                درخواست برگزاری
-                                                <ArrowIcon />
-                                            </button>
-                                        </div>
+                                            درخواست برگزاری این دوره
+                                            <ArrowIcon />
+                                        </button>
                                     </div>
                                 </motion.article>
                             )
@@ -3394,173 +3132,6 @@ function OrganizationPage() {
             </section>
 
             {/* =====================================================
-                ORGANIZATION COURSE TOPICS
-            ====================================================== */}
-
-            <AnimatePresence>
-                {outlineCourse && (
-                    <Modal
-                        close={() =>
-                            setOutlineCourse(null)
-                        }
-                    >
-                        <div>
-                            <span
-                                className="
-                                    text-[9px]
-                                    font-black
-                                    text-orange-300
-                                    sm:text-xs
-                                "
-                            >
-                                دوره دوره‌های اختصاصی
-                            </span>
-
-                            <h2
-                                className="
-                                    mt-2
-                                    text-xl
-                                    font-black
-                                    leading-8
-                                    text-white
-                                    sm:text-2xl
-                                "
-                            >
-                                {outlineCourse.title}
-                            </h2>
-
-                            <p
-                                className="
-                                    mt-1
-                                    text-[10px]
-                                    leading-6
-                                    text-slate-500
-                                    sm:text-xs
-                                "
-                            >
-                                سرفصل‌های دوره
-                            </p>
-                        </div>
-
-                        <div className="mt-6 space-y-2.5">
-                            {(organizationTopics[
-                                outlineCourse.id
-                            ] || []).length > 0 ? (
-                                organizationTopics[
-                                    outlineCourse.id
-                                ].map(
-                                    (
-                                        topic,
-                                        index
-                                    ) => (
-                                        <div
-                                            key={`${outlineCourse.id}-${index}`}
-                                            className="
-                                                flex
-                                                gap-3
-                                                rounded-[16px]
-                                                border
-                                                border-white/[0.07]
-                                                bg-white/[0.03]
-                                                p-3.5
-                                                sm:p-4
-                                            "
-                                        >
-                                            <span
-                                                className="
-                                                    flex
-                                                    h-7
-                                                    w-7
-                                                    shrink-0
-                                                    items-center
-                                                    justify-center
-                                                    rounded-full
-                                                    bg-orange-400/[0.10]
-                                                    text-[9px]
-                                                    font-black
-                                                    text-orange-300
-                                                "
-                                            >
-                                                {String(
-                                                    index + 1
-                                                ).padStart(
-                                                    2,
-                                                    "0"
-                                                )}
-                                            </span>
-
-                                            <p
-                                                className="
-                                                    text-xs
-                                                    leading-7
-                                                    text-slate-200
-                                                    sm:text-sm
-                                                "
-                                            >
-                                                {topic}
-                                            </p>
-                                        </div>
-                                    )
-                                )
-                            ) : (
-                                <div
-                                    className="
-                                        rounded-[18px]
-                                        border
-                                        border-dashed
-                                        border-white/10
-                                        bg-white/[0.025]
-                                        p-5
-                                        text-xs
-                                        leading-7
-                                        text-slate-400
-                                    "
-                                >
-                                    سرفصل تفصیلی این دوره هنوز ثبت نشده است.
-                                </div>
-                            )}
-                        </div>
-
-                        <button
-                            type="button"
-                            onClick={() => {
-                                const title =
-                                    outlineCourse.title;
-
-                                setOutlineCourse(null);
-
-                                setTimeout(() => {
-                                    requestCourse(
-                                        title
-                                    );
-                                }, 80);
-                            }}
-                            className="
-                                mt-6
-                                flex
-                                min-h-[48px]
-                                w-full
-                                items-center
-                                justify-center
-                                gap-2
-                                rounded-full
-                                bg-orange-400
-                                px-5
-                                text-xs
-                                font-black
-                                text-[#06192E]
-                                transition
-                                hover:bg-orange-300
-                            "
-                        >
-                            درخواست برگزاری این دوره
-                            <ArrowIcon />
-                        </button>
-                    </Modal>
-                )}
-            </AnimatePresence>
-
-            {/* =====================================================
                 POSTER PREVIEW
             ====================================================== */}
 
@@ -3606,20 +3177,27 @@ function OrganizationPage() {
                         <div
                             className="
                                 relative
+                                mx-auto
                                 mt-5
-                                aspect-square
+                                h-[58dvh]
+                                max-h-[620px]
+                                min-h-[320px]
+                                w-full
+                                max-w-[500px]
                                 overflow-hidden
                                 rounded-[20px]
-                                bg-[#0B2137]
+                                bg-[#081C2F]
                             "
                         >
                             <Image
                                 src={previewCourse.image}
                                 alt={previewCourse.title}
                                 fill
-                                sizes="90vw"
+                                sizes="(max-width: 640px) 92vw, 500px"
                                 className="
                                     object-contain
+                                    object-center
+                                    p-2
                                 "
                             />
                         </div>
@@ -3863,8 +3441,7 @@ function CoursesContent() {
 
     const category:
         Category =
-        rawCategory === "international" ||
-            rawCategory === "oman"
+        rawCategory === "oman"
             ? "oman"
             : rawCategory ===
                 "organization"
