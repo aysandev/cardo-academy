@@ -208,7 +208,7 @@ function CategorySwitch({
 
         {
             id: "organization",
-            title: "اختصاصی سازمان‌ها",
+            title: "دوره‌های اختصاصی",
             href: "/courses?category=organization",
         },
 
@@ -1710,9 +1710,19 @@ function Catalog({
 
 const completedOrganizationCourses = [
     {
+        id: "pip-pre-incident-plan",
+        title: "PIP",
+        subtitle: "Pre Incident Plan | طرح‌ریزی پیش از رویداد",
+        instructor: "استعلام",
+        duration: "استعلام",
+        format: "اختصاصی",
+        image: "/images/organization/pip.jpg",
+        group: "HSE و ایمنی",
+    },
+    {
         id: "pssr",
         title: "PSSR",
-        subtitle: "بازبینی ایمنی پیش از راه‌اندازی",
+        subtitle: "Pre Start-Up Safety Review | بازبینی ایمنی پیش از راه‌اندازی",
         instructor: "دکتر هاشم ستاره",
         duration: "۱ روز",
         format: "نظری",
@@ -1721,8 +1731,8 @@ const completedOrganizationCourses = [
     },
     {
         id: "hse-risk-management",
-        title: "مدیریت ریسک",
-        subtitle: "بهداشت، ایمنی و محیط زیست",
+        title: "مدیریت ریسک‌های بهداشت، ایمنی و محیط زیست",
+        subtitle: "Risk Management",
         instructor: "دکتر هاشم ستاره",
         duration: "۲۴ ساعت",
         format: "نظری",
@@ -1731,8 +1741,8 @@ const completedOrganizationCourses = [
     },
     {
         id: "fire-extinguishing",
-        title: "اطفاء حریق",
-        subtitle: "اصول و تکنیک‌های عملیات اطفاء حریق",
+        title: "آموزش عملی اطفاء حریق در میدان",
+        subtitle: "بررسی میدانی، ارزیابی مخاطرات و تاکتیک‌های عملیات اطفاء حریق",
         instructor: "دکتر هاشم ستاره",
         duration: "۴۰ ساعت",
         format: "عملی",
@@ -1831,6 +1841,71 @@ const completedOrganizationCourses = [
     },
 ];
 
+
+/* =========================================================
+   ORGANIZATION COURSE TOPICS
+   سرفصل‌های دوره‌های دوره‌های اختصاصی
+========================================================= */
+
+const organizationTopics: Record<string, string[]> = {
+    "pip-pre-incident-plan": [
+        "اصول و مبانی طرح‌ریزی پیش از رویداد",
+        "مروری بر استانداردهای NFPA 1620، NFPA 1660 و راهنمای CCPS",
+        "بیان اجزای ۱۴ گانه PIP",
+    ],
+
+    "fire-risk-assessment": [
+        "بیان اصول و مبانی رفتارشناسی حریق و انفجار",
+        "بیان اصول و مبانی روش‌های ارزیابی ریسک حریق بر اساس NFPA 550",
+        "بیان اصول درخت ایمنی حریق بر اساس NFPA 551",
+        "بیان اصول و مبانی ارزیابی بار حریق بر اساس NFPA 557",
+        "بیان اصول و مبانی تکنیک FRAM و ETA در ارزیابی ریسک حریق",
+        "اصول مدیریت ریسک حریق با روش BowTie",
+    ],
+
+    "pssr": [
+        "اصول و مبانی PSSR و جایگاه آن در ایمنی فرایند",
+        "اصول و مبانی ایمنی در فازهای مختلف اتمام نصب مکانیکی تا راه‌اندازی نهایی",
+        "مروری بر انواع تست‌ها در مراحل مختلف راه‌اندازی",
+        "مروری بر انواع ریسک‌ها و مخاطرات بالقوه در مراحل مختلف راه‌اندازی",
+        "اصول بازبینی ایمنی پیش از راه‌اندازی بر اساس OSHA و CCPS",
+        "مروری بر الزامات قانونی PSSR بر اساس آیین‌نامه‌ها و مقررات",
+    ],
+
+    "incident-investigation": [
+        "بیان اصول و مبانی رویدادها و حوادث در محیط‌های کاری",
+        "مروری بر انواع تئوری‌ها و مدل‌های رویدادها و حوادث",
+        "بیان اصول، روش‌ها و تکنیک‌های بررسی رویداد",
+        "بیان تکنیک‌های Step، 5Why و Fish Bone در تحلیل عوامل رویداد",
+        "بیان تکنیک‌های Bow Tie، Tripod Beta و ETA در بررسی رویدادها",
+        "اصول و مبانی گزارش‌نویسی رویدادها و حوادث",
+    ],
+
+    "hse-risk-management": [
+        "بیان اصول و مبانی پایه در مدیریت ریسک",
+        "بیان اصول و مبانی شناسایی مخاطرات بالقوه Hazard Identification - HazID",
+        "بیان تکنیک FMEA در ارزیابی ریسک ناشی از تجهیزات",
+        "بیان تکنیک JHA در تحلیل ریسک‌ها و مخاطرات شغلی",
+        "بیان تکنیک Barrier Analysis و Bow-Tie در بررسی اثربخشی لایه‌های حفاظتی",
+        "اصول و مبانی ارزیابی روش‌های کنترل ریسک",
+        "اصول و مبانی اولویت‌بندی اقدامات پیشگیرانه و کاهش ریسک",
+    ],
+
+    "fire-extinguishing": [
+        "بررسی میدانی حریق و اصول Size Up در میدان",
+        "اصول ارزیابی مخاطرات میدان",
+        "بررسی و اتخاذ تاکتیک‌ها و تکنیک‌های عملیات اطفاء حریق",
+        "آموزش عملی تاکتیک‌های تدافعی و تهاجمی",
+    ],
+
+    "incident-command": [
+        "اصول و مبانی فرماندهی عملیات و ساختار فرمان و کنترل Command & Control",
+        "بیان اصول و مبانی انواع استراتژی‌ها، تاکتیک‌ها و تکنیک‌های عملیات اطفاء حریق",
+        "بیان اصول و مبانی انواع رویکردهای تدافعی، تهاجمی و ترکیبی",
+        "مروری بر اصول و مبانی روش‌های فرماندهی عملیات بر اساس مراجع فرماندهی معتبر همانند NFCC",
+    ],
+};
+
 /* =========================================================
    ORGANIZATION PAGE
 ========================================================= */
@@ -1842,6 +1917,9 @@ function OrganizationPage() {
     const [orgSearch, setOrgSearch] = useState("");
     const [orgGroup, setOrgGroup] = useState("همه");
     const [previewCourse, setPreviewCourse] =
+        useState<(typeof completedOrganizationCourses)[number] | null>(null);
+
+    const [outlineCourse, setOutlineCourse] =
         useState<(typeof completedOrganizationCourses)[number] | null>(null);
 
     const orgGroups = [
@@ -1932,7 +2010,7 @@ function OrganizationPage() {
                     courseTitle:
                         selectedOrgCourse ||
                         "درخواست آموزش اختصاصی سازمانی",
-                    courseGroup: "آموزش اختصاصی سازمان‌ها",
+                    courseGroup: "آموزش دوره‌های اختصاصی",
                     requestType: "organization",
                 }),
             });
@@ -2059,7 +2137,7 @@ function OrganizationPage() {
                                         bg-orange-400
                                     "
                                 />
-                                آموزش اختصاصی سازمان‌ها
+                                آموزش دوره‌های اختصاصی
                             </span>
 
                             <h1
@@ -2710,34 +2788,68 @@ function OrganizationPage() {
                                             </div>
                                         </div>
 
-                                        <button
-                                            type="button"
-                                            onClick={() =>
-                                                requestCourse(
-                                                    course.title
-                                                )
-                                            }
+                                        <div
                                             className="
                                                 mt-3
-                                                flex
-                                                min-h-[46px]
-                                                w-full
-                                                items-center
-                                                justify-center
+                                                grid
+                                                grid-cols-[0.85fr_1.15fr]
                                                 gap-2
-                                                rounded-[15px]
-                                                bg-orange-400
-                                                px-4
-                                                text-[11px]
-                                                font-black
-                                                text-[#06192E]
-                                                transition
-                                                hover:bg-orange-300
                                             "
                                         >
-                                            درخواست برگزاری این دوره
-                                            <ArrowIcon />
-                                        </button>
+                                            <button
+                                                type="button"
+                                                onClick={() =>
+                                                    setOutlineCourse(course)
+                                                }
+                                                className="
+                                                    flex
+                                                    min-h-[46px]
+                                                    items-center
+                                                    justify-center
+                                                    gap-2
+                                                    rounded-[15px]
+                                                    border
+                                                    border-white/[0.08]
+                                                    bg-white/[0.035]
+                                                    px-3
+                                                    text-[10px]
+                                                    font-black
+                                                    text-slate-200
+                                                    transition
+                                                    hover:bg-white/[0.07]
+                                                "
+                                            >
+                                                <ListIcon />
+                                                سرفصل‌ها
+                                            </button>
+
+                                            <button
+                                                type="button"
+                                                onClick={() =>
+                                                    requestCourse(
+                                                        course.title
+                                                    )
+                                                }
+                                                className="
+                                                    flex
+                                                    min-h-[46px]
+                                                    items-center
+                                                    justify-center
+                                                    gap-2
+                                                    rounded-[15px]
+                                                    bg-orange-400
+                                                    px-3
+                                                    text-[10px]
+                                                    font-black
+                                                    text-[#06192E]
+                                                    transition
+                                                    hover:bg-orange-300
+                                                "
+                                            >
+                                                درخواست برگزاری
+                                                <ArrowIcon />
+                                            </button>
+                                        </div>
                                     </div>
                                 </motion.article>
                             )
@@ -3280,6 +3392,173 @@ function OrganizationPage() {
                     )}
                 </div>
             </section>
+
+            {/* =====================================================
+                ORGANIZATION COURSE TOPICS
+            ====================================================== */}
+
+            <AnimatePresence>
+                {outlineCourse && (
+                    <Modal
+                        close={() =>
+                            setOutlineCourse(null)
+                        }
+                    >
+                        <div>
+                            <span
+                                className="
+                                    text-[9px]
+                                    font-black
+                                    text-orange-300
+                                    sm:text-xs
+                                "
+                            >
+                                دوره دوره‌های اختصاصی
+                            </span>
+
+                            <h2
+                                className="
+                                    mt-2
+                                    text-xl
+                                    font-black
+                                    leading-8
+                                    text-white
+                                    sm:text-2xl
+                                "
+                            >
+                                {outlineCourse.title}
+                            </h2>
+
+                            <p
+                                className="
+                                    mt-1
+                                    text-[10px]
+                                    leading-6
+                                    text-slate-500
+                                    sm:text-xs
+                                "
+                            >
+                                سرفصل‌های دوره
+                            </p>
+                        </div>
+
+                        <div className="mt-6 space-y-2.5">
+                            {(organizationTopics[
+                                outlineCourse.id
+                            ] || []).length > 0 ? (
+                                organizationTopics[
+                                    outlineCourse.id
+                                ].map(
+                                    (
+                                        topic,
+                                        index
+                                    ) => (
+                                        <div
+                                            key={`${outlineCourse.id}-${index}`}
+                                            className="
+                                                flex
+                                                gap-3
+                                                rounded-[16px]
+                                                border
+                                                border-white/[0.07]
+                                                bg-white/[0.03]
+                                                p-3.5
+                                                sm:p-4
+                                            "
+                                        >
+                                            <span
+                                                className="
+                                                    flex
+                                                    h-7
+                                                    w-7
+                                                    shrink-0
+                                                    items-center
+                                                    justify-center
+                                                    rounded-full
+                                                    bg-orange-400/[0.10]
+                                                    text-[9px]
+                                                    font-black
+                                                    text-orange-300
+                                                "
+                                            >
+                                                {String(
+                                                    index + 1
+                                                ).padStart(
+                                                    2,
+                                                    "0"
+                                                )}
+                                            </span>
+
+                                            <p
+                                                className="
+                                                    text-xs
+                                                    leading-7
+                                                    text-slate-200
+                                                    sm:text-sm
+                                                "
+                                            >
+                                                {topic}
+                                            </p>
+                                        </div>
+                                    )
+                                )
+                            ) : (
+                                <div
+                                    className="
+                                        rounded-[18px]
+                                        border
+                                        border-dashed
+                                        border-white/10
+                                        bg-white/[0.025]
+                                        p-5
+                                        text-xs
+                                        leading-7
+                                        text-slate-400
+                                    "
+                                >
+                                    سرفصل تفصیلی این دوره هنوز ثبت نشده است.
+                                </div>
+                            )}
+                        </div>
+
+                        <button
+                            type="button"
+                            onClick={() => {
+                                const title =
+                                    outlineCourse.title;
+
+                                setOutlineCourse(null);
+
+                                setTimeout(() => {
+                                    requestCourse(
+                                        title
+                                    );
+                                }, 80);
+                            }}
+                            className="
+                                mt-6
+                                flex
+                                min-h-[48px]
+                                w-full
+                                items-center
+                                justify-center
+                                gap-2
+                                rounded-full
+                                bg-orange-400
+                                px-5
+                                text-xs
+                                font-black
+                                text-[#06192E]
+                                transition
+                                hover:bg-orange-300
+                            "
+                        >
+                            درخواست برگزاری این دوره
+                            <ArrowIcon />
+                        </button>
+                    </Modal>
+                )}
+            </AnimatePresence>
 
             {/* =====================================================
                 POSTER PREVIEW
