@@ -59,7 +59,7 @@ const categories = [
         id: "international",
         title: "بین‌المللی",
         short: "دوره‌های بین‌المللی",
-        href: "/courses?category=oman",
+        href: "/courses?category=international",
         accent: "cyan",
     },
     {
@@ -136,37 +136,37 @@ export default function Hero() {
                                 آکادمی تخصصی آتش‌نشانی و HSE
                             </div>
 
-                            <h1 className="mt-3 text-[25px] font-black leading-[1.45] tracking-[-0.6px] text-white min-[390px]:text-[28px] sm:text-[34px]">
-                                قدرت واقعی
-                                <span className="mx-1.5 text-orange-400">با آموزش</span>
-                                ظاهر می‌شود
+                            <h1 className="mt-3 font-black tracking-[-0.4px] text-white">
+                                <span className="block text-[24px] leading-[1.35] min-[390px]:text-[27px] sm:text-[32px]">
+                                    قدرت واقعی
+                                </span>
+                                <span className="mt-1 block whitespace-nowrap text-[22px] leading-[1.4] text-orange-400 min-[390px]:text-[25px] sm:text-[30px]">
+                                    با آموزش ظاهر می‌شود
+                                </span>
                             </h1>
 
-                            <p className="mx-auto mt-2 max-w-[480px] text-[10px] leading-6 text-slate-300 sm:text-[11px] sm:leading-7">
-                                آموزش تخصصی آتش‌نشانی، HSE و دوره‌های مهارتی برای افراد و سازمان‌ها
+                            <p className="mx-auto mt-2 max-w-[430px] text-[9px] leading-5 text-slate-300 min-[390px]:text-[10px] sm:text-[11px] sm:leading-6">
+                                آموزش تخصصی آتش‌نشانی و HSE برای افراد و سازمان‌ها
                             </p>
                         </div>
 
                         {/* 3 TYPES - ALWAYS ABOVE THE MOBILE BANNER */}
-                        <div className="mt-4 grid grid-cols-3 gap-1.5 sm:gap-2.5">
+                        <div className="mt-4 grid grid-cols-[1.15fr_.85fr_1fr] gap-1.5 sm:gap-2.5">
                             {categories.map((item) => (
                                 <Link
                                     key={item.id}
                                     href={item.href}
-                                    className="group flex min-h-[58px] flex-col items-center justify-center rounded-[15px] border border-white/[0.09] bg-white/[0.045] px-1.5 py-2 text-center transition active:scale-[0.98] sm:min-h-[64px] sm:rounded-[18px] sm:px-3"
+                                    className="group flex min-h-[48px] items-center justify-center gap-1.5 rounded-[14px] border border-white/[0.09] bg-white/[0.045] px-1.5 py-2 text-center transition active:scale-[0.98] sm:min-h-[56px] sm:rounded-[17px] sm:px-2.5"
                                 >
                                     <span
-                                        className={`mb-1.5 h-1.5 w-1.5 rounded-full ${item.accent === "cyan"
+                                        className={`h-1.5 w-1.5 shrink-0 rounded-full ${item.accent === "cyan"
                                                 ? "bg-cyan-300"
                                                 : "bg-orange-400"
                                             }`}
                                     />
-                                    <strong className="text-[9px] font-black leading-[1.5] text-white min-[390px]:text-[10px] sm:text-[12px]">
+                                    <strong className="whitespace-nowrap text-[8px] font-black leading-none text-white min-[360px]:text-[8.5px] min-[390px]:text-[9.5px] sm:text-[11px]">
                                         {item.title}
                                     </strong>
-                                    <span className="mt-0.5 hidden text-[8px] leading-4 text-slate-500 sm:block">
-                                        {item.short}
-                                    </span>
                                 </Link>
                             ))}
                         </div>
@@ -174,7 +174,7 @@ export default function Hero() {
 
                     {/* COMPACT MOBILE BANNER */}
                     <div
-                        className="relative mx-3 mb-3 h-[135px] overflow-hidden rounded-[18px] border border-white/[0.08] bg-[#081C2F] min-[390px]:h-[150px] sm:mx-5 sm:mb-5 sm:h-[210px] sm:rounded-[22px]"
+                        className="relative mx-3 mb-3 h-[122px] overflow-hidden rounded-[18px] border border-white/[0.08] bg-[#081C2F] min-[390px]:h-[138px] sm:mx-5 sm:mb-5 sm:h-[190px] sm:rounded-[22px]"
                         onMouseEnter={() => setPaused(true)}
                         onMouseLeave={() => setPaused(false)}
                         onTouchStart={handleTouchStart}

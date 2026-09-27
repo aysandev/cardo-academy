@@ -203,16 +203,19 @@ function CategorySwitch({
         {
             id: "technical",
             title: "فنی و حرفه‌ای",
+            href: "/courses?category=technical",
         },
 
         {
             id: "organization",
             title: "اختصاصی سازمان‌ها",
+            href: "/courses?category=organization",
         },
 
         {
             id: "oman",
-            title: "دوره‌های عمان",
+            title: "بین‌المللی",
+            href: "/courses?category=international",
         },
     ] as const;
 
@@ -233,7 +236,7 @@ function CategorySwitch({
             {items.map((item) => (
                 <Link
                     key={item.id}
-                    href={`/courses?category=${item.id}`}
+                    href={item.href}
                     className={`
             shrink-0
             rounded-full
@@ -589,291 +592,6 @@ function CourseCard({
 }
 
 
-
-/* =========================================================
-   COMPACT TECHNICAL CARD
-========================================================= */
-
-function CompactCatalogCard({
-    course,
-    index,
-    onRequest,
-    onTopics,
-    onPreview,
-    oman,
-}: {
-    course: CatalogCourse;
-    index: number;
-    onRequest: (course: CatalogCourse) => void;
-    onTopics: (course: CatalogCourse) => void;
-    onPreview: (course: CatalogCourse) => void;
-    oman: boolean;
-}) {
-    const image =
-        course.image ||
-        getTechnicalImage(course, index);
-
-    return (
-        <motion.article
-            initial={{
-                opacity: 0,
-                y: 20,
-            }}
-            whileInView={{
-                opacity: 1,
-                y: 0,
-            }}
-            viewport={{
-                once: true,
-                amount: 0.08,
-            }}
-            transition={{
-                duration: 0.4,
-                delay: Math.min(index * 0.02, 0.14),
-            }}
-            className="
-                group
-                overflow-hidden
-                rounded-[22px]
-                border
-                border-white/[0.08]
-                bg-white/[0.03]
-                transition
-                duration-300
-                hover:-translate-y-1
-                hover:border-orange-300/20
-                hover:bg-white/[0.045]
-            "
-        >
-            <button
-                type="button"
-                onClick={() => onPreview(course)}
-                className="
-                    relative
-                    block
-                    aspect-[16/10]
-                    w-full
-                    overflow-hidden
-                    bg-[#0B2137]
-                    text-right
-                "
-            >
-                <Image
-                    src={image}
-                    alt={course.title}
-                    fill
-                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
-                    className="
-                        object-contain
-                        transition
-                        duration-500
-                        group-hover:scale-[1.02]
-                    "
-                />
-
-                <div
-                    className="
-                        pointer-events-none
-                        absolute
-                        inset-0
-                        bg-gradient-to-t
-                        from-[#06192E]/35
-                        via-transparent
-                        to-transparent
-                    "
-                />
-
-                <span
-                    className="
-                        absolute
-                        right-3
-                        top-3
-                        max-w-[72%]
-                        truncate
-                        rounded-full
-                        border
-                        border-white/10
-                        bg-[#06192E]/78
-                        px-3
-                        py-1.5
-                        text-[8px]
-                        font-black
-                        text-white
-                        backdrop-blur-md
-                    "
-                >
-                    {course.group}
-                </span>
-
-                <span
-                    className="
-                        absolute
-                        bottom-3
-                        left-3
-                        rounded-full
-                        border
-                        border-white/10
-                        bg-[#06192E]/78
-                        px-3
-                        py-1.5
-                        text-[8px]
-                        font-black
-                        text-white
-                        backdrop-blur-md
-                    "
-                >
-                    مشاهده کامل
-                </span>
-            </button>
-
-            <div className="p-3.5 sm:p-4">
-                {course.englishTitle && (
-                    <p
-                        dir="ltr"
-                        className={`
-                            truncate
-                            text-left
-                            text-[8px]
-                            font-bold
-                            uppercase
-                            tracking-[1px]
-                            ${oman ? "text-cyan-200/65" : "text-orange-300/60"}
-                        `}
-                    >
-                        {course.englishTitle}
-                    </p>
-                )}
-
-                <h3
-                    className="
-                        mt-1.5
-                        line-clamp-2
-                        min-h-[48px]
-                        text-sm
-                        font-black
-                        leading-6
-                        text-white
-                        sm:text-[15px]
-                    "
-                >
-                    {course.title}
-                </h3>
-
-                <div
-                    className="
-                        mt-3
-                        flex
-                        flex-wrap
-                        items-center
-                        gap-2
-                    "
-                >
-                    {course.duration && (
-                        <span
-                            className="
-                                rounded-full
-                                border
-                                border-white/[0.07]
-                                bg-white/[0.03]
-                                px-2.5
-                                py-1.5
-                                text-[8px]
-                                font-bold
-                                text-slate-300
-                            "
-                        >
-                            {course.duration}
-                        </span>
-                    )}
-
-                    {course.source && (
-                        <span
-                            className="
-                                max-w-[150px]
-                                truncate
-                                rounded-full
-                                border
-                                border-cyan-300/10
-                                bg-cyan-300/[0.05]
-                                px-2.5
-                                py-1.5
-                                text-[8px]
-                                font-bold
-                                text-cyan-200
-                            "
-                        >
-                            {course.source}
-                        </span>
-                    )}
-                </div>
-
-                <div
-                    className="
-                        mt-3
-                        grid
-                        grid-cols-[0.9fr_1.1fr]
-                        gap-2
-                    "
-                >
-                    <button
-                        type="button"
-                        onClick={() => onTopics(course)}
-                        className="
-                            flex
-                            min-h-[40px]
-                            items-center
-                            justify-center
-                            gap-1.5
-                            rounded-[13px]
-                            border
-                            border-white/[0.09]
-                            bg-white/[0.035]
-                            px-2
-                            text-[9px]
-                            font-black
-                            text-slate-200
-                            transition
-                            hover:bg-white/[0.07]
-                            sm:text-[10px]
-                        "
-                    >
-                        <ListIcon />
-                        سرفصل‌ها
-                    </button>
-
-                    <button
-                        type="button"
-                        onClick={() => onRequest(course)}
-                        className={`
-                            flex
-                            min-h-[40px]
-                            items-center
-                            justify-center
-                            gap-1.5
-                            rounded-[13px]
-                            px-2
-                            text-[9px]
-                            font-black
-                            text-[#06192E]
-                            transition
-                            sm:text-[10px]
-
-                            ${oman
-                                ? "bg-cyan-300 hover:bg-cyan-200"
-                                : "bg-orange-400 hover:bg-orange-300"
-                            }
-                        `}
-                    >
-                        درخواست دوره
-                        <ArrowIcon />
-                    </button>
-                </div>
-            </div>
-        </motion.article>
-    );
-}
-
-
 /* =========================================================
    TECH IMAGE
 ========================================================= */
@@ -990,15 +708,6 @@ function Catalog({
     const [
         topicsCourse,
         setTopicsCourse,
-    ] =
-        useState<CatalogCourse | null>(
-            null
-        );
-
-
-    const [
-        previewCatalogCourse,
-        setPreviewCatalogCourse,
     ] =
         useState<CatalogCourse | null>(
             null
@@ -1181,53 +890,47 @@ function Catalog({
 
     return (
         <>
-            {/* COMPACT COURSE HERO */}
+            {/* MODERN COURSE HERO */}
             <section
                 className="
                     mx-auto
-                    max-w-[1450px]
+                    max-w-[1500px]
                     px-3
                     pb-4
-                    pt-4
+                    pt-5
                     sm:px-5
-                    sm:pt-6
+                    sm:pt-7
                     lg:px-10
                 "
             >
                 <motion.div
-                    initial={{
-                        opacity: 0,
-                        y: 16,
-                    }}
-                    animate={{
-                        opacity: 1,
-                        y: 0,
-                    }}
-                    transition={{
-                        duration: 0.45,
-                    }}
+                    initial={{ opacity: 0, y: 18 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.5 }}
                     className={`
                         relative
                         overflow-hidden
                         rounded-[28px]
                         border
                         px-5
-                        py-6
-                        sm:rounded-[32px]
+                        py-7
+                        sm:rounded-[34px]
                         sm:px-8
-                        sm:py-8
+                        sm:py-9
+                        lg:px-11
+                        lg:py-11
 
                         ${isOman
                             ? `
-                                    border-cyan-300/[0.10]
-                                    bg-gradient-to-l
-                                    from-[#12364C]
-                                    via-[#0E293E]
-                                    to-[#091E31]
+                                    border-cyan-300/[0.12]
+                                    bg-gradient-to-br
+                                    from-[#0D2C43]
+                                    via-[#0A2338]
+                                    to-[#081C2F]
                                 `
                             : `
                                     border-white/[0.08]
-                                    bg-gradient-to-l
+                                    bg-gradient-to-br
                                     from-[#173953]
                                     via-[#102B43]
                                     to-[#0B2137]
@@ -1239,26 +942,40 @@ function Catalog({
                         className={`
                             pointer-events-none
                             absolute
-                            -right-20
-                            -top-20
-                            h-56
-                            w-56
+                            -left-24
+                            -top-24
+                            h-72
+                            w-72
                             rounded-full
-                            blur-[95px]
+                            blur-[110px]
                             ${isOman
-                                ? "bg-cyan-300/[0.08]"
-                                : "bg-orange-400/[0.08]"
+                                ? "bg-cyan-300/[0.10]"
+                                : "bg-orange-400/[0.10]"
                             }
                         `}
                     />
 
                     <div
                         className="
+                            pointer-events-none
+                            absolute
+                            -bottom-32
+                            right-20
+                            h-72
+                            w-72
+                            rounded-full
+                            bg-cyan-300/[0.04]
+                            blur-[120px]
+                        "
+                    />
+
+                    <div
+                        className="
                             relative
                             grid
-                            gap-5
-                            lg:grid-cols-[1fr_390px]
-                            lg:items-center
+                            gap-7
+                            lg:grid-cols-[1fr_430px]
+                            lg:items-end
                         "
                     >
                         <div>
@@ -1277,21 +994,21 @@ function Catalog({
                                         gap-2
                                         rounded-full
                                         border
-                                        px-3
-                                        py-1.5
-                                        text-[9px]
+                                        px-3.5
+                                        py-2
+                                        text-[10px]
                                         font-black
-                                        sm:text-[10px]
+                                        sm:text-xs
 
                                         ${isOman
                                             ? `
                                                     border-cyan-300/20
-                                                    bg-cyan-300/[0.06]
+                                                    bg-cyan-300/[0.07]
                                                     text-cyan-200
                                                 `
                                             : `
                                                     border-orange-300/20
-                                                    bg-orange-300/[0.06]
+                                                    bg-orange-300/[0.07]
                                                     text-orange-200
                                                 `
                                         }
@@ -1299,8 +1016,8 @@ function Catalog({
                                 >
                                     <span
                                         className={`
-                                            h-1.5
-                                            w-1.5
+                                            h-2
+                                            w-2
                                             rounded-full
                                             ${isOman
                                                 ? "bg-cyan-300"
@@ -1308,9 +1025,8 @@ function Catalog({
                                             }
                                         `}
                                     />
-
                                     {isOman
-                                        ? "دوره‌های بین‌المللی"
+                                        ? "آموزش‌های بین‌المللی"
                                         : "تحت نظر سازمان آموزش فنی و حرفه‌ای"}
                                 </span>
 
@@ -1319,12 +1035,13 @@ function Catalog({
                                         rounded-full
                                         border
                                         border-white/[0.08]
-                                        bg-white/[0.03]
-                                        px-3
-                                        py-1.5
-                                        text-[9px]
+                                        bg-white/[0.035]
+                                        px-3.5
+                                        py-2
+                                        text-[10px]
                                         font-bold
                                         text-slate-300
+                                        sm:text-xs
                                     "
                                 >
                                     {courses.length} دوره
@@ -1333,13 +1050,14 @@ function Catalog({
 
                             <h1
                                 className="
-                                    mt-4
-                                    text-[28px]
+                                    mt-5
+                                    max-w-[780px]
+                                    text-[30px]
                                     font-black
                                     leading-[1.55]
                                     text-white
                                     sm:text-4xl
-                                    lg:text-[42px]
+                                    lg:text-[48px]
                                 "
                             >
                                 {isOman ? (
@@ -1355,67 +1073,98 @@ function Catalog({
                                         <span className="text-orange-400">
                                             فنی و حرفه‌ای
                                         </span>
+                                        {" "}کاردو
                                     </>
                                 )}
                             </h1>
 
                             <p
                                 className="
-                                    mt-2
+                                    mt-3
                                     max-w-2xl
-                                    text-[10px]
-                                    leading-6
-                                    text-slate-400
-                                    sm:text-xs
-                                    sm:leading-7
+                                    text-xs
+                                    leading-7
+                                    text-slate-300
+                                    sm:text-sm
+                                    sm:leading-8
                                 "
                             >
-                                دوره را پیدا کنید، تصویر کامل دوره را ببینید،
-                                سرفصل‌ها را بررسی کنید و درخواست خود را ثبت کنید.
+                                {isOman
+                                    ? "دوره‌های تخصصی و کاربردی برای توسعه مهارت‌های حرفه‌ای و فرصت‌های بین‌المللی."
+                                    : "دوره موردنظر خود را بر اساس حوزه تخصصی پیدا کنید، سرفصل‌ها را ببینید و در چند ثانیه درخواست ثبت کنید."}
                             </p>
+
+                            <div
+                                className="
+                                    mt-6
+                                    flex
+                                    flex-wrap
+                                    gap-2
+                                "
+                            >
+                                <div
+                                    className="
+                                        rounded-2xl
+                                        border
+                                        border-white/[0.07]
+                                        bg-white/[0.035]
+                                        px-4
+                                        py-3
+                                    "
+                                >
+                                    <span className="block text-[9px] font-bold text-slate-500">
+                                        تعداد حوزه‌ها
+                                    </span>
+                                    <strong className="mt-1 block text-lg font-black text-white">
+                                        {Math.max(groups.length - 1, 0)}
+                                    </strong>
+                                </div>
+
+                                <div
+                                    className="
+                                        rounded-2xl
+                                        border
+                                        border-white/[0.07]
+                                        bg-white/[0.035]
+                                        px-4
+                                        py-3
+                                    "
+                                >
+                                    <span className="block text-[9px] font-bold text-slate-500">
+                                        نتیجه فعلی
+                                    </span>
+                                    <strong className="mt-1 block text-lg font-black text-white">
+                                        {filtered.length}
+                                    </strong>
+                                </div>
+                            </div>
                         </div>
 
                         <div>
-                            <label
-                                className="
-                                    mb-2
-                                    block
-                                    text-[9px]
-                                    font-bold
-                                    text-slate-500
-                                "
-                            >
+                            <label className="mb-2 block text-[10px] font-bold text-slate-400">
                                 جستجو بین دوره‌ها
                             </label>
 
                             <div
                                 className="
                                     relative
-                                    rounded-[18px]
+                                    overflow-hidden
+                                    rounded-[20px]
                                     border
-                                    border-white/[0.08]
+                                    border-white/[0.09]
                                     bg-[#06192E]/55
                                     p-1.5
+                                    shadow-[0_12px_35px_rgba(0,0,0,0.12)]
                                 "
                             >
-                                <span
-                                    className="
-                                        absolute
-                                        right-4
-                                        top-1/2
-                                        -translate-y-1/2
-                                        text-slate-500
-                                    "
-                                >
+                                <span className="absolute right-5 top-1/2 -translate-y-1/2 text-slate-500">
                                     <SearchIcon />
                                 </span>
 
                                 <input
                                     value={search}
                                     onChange={(event) =>
-                                        setSearch(
-                                            event.target.value
-                                        )
+                                        setSearch(event.target.value)
                                     }
                                     placeholder={
                                         isOman
@@ -1423,16 +1172,18 @@ function Catalog({
                                             : "مثلاً HSE، آتش‌نشانی، IOSH..."
                                     }
                                     className="
-                                        h-12
+                                        h-14
                                         w-full
-                                        rounded-[14px]
-                                        bg-white/[0.02]
-                                        pr-11
+                                        rounded-[15px]
+                                        bg-white/[0.025]
+                                        pr-12
                                         pl-4
                                         text-xs
+                                        font-bold
                                         text-white
                                         outline-none
                                         placeholder:text-slate-600
+                                        sm:text-sm
                                     "
                                 />
                             </div>
@@ -1527,10 +1278,10 @@ function Catalog({
                     mx-auto
                     max-w-[1500px]
                     px-3
-                    pb-24
-                    pt-6
+                    pb-32
+                    pt-7
                     sm:px-5
-                    sm:pt-7
+                    sm:pt-9
                     lg:px-10
                 "
             >
@@ -1575,18 +1326,17 @@ function Catalog({
 
                 {filtered.length > 0 ? (
                     <div
-                        className={`
+                        className="
                             grid
-                            gap-3
+                            grid-cols-1
+                            gap-4
                             sm:grid-cols-2
-                            lg:gap-4
-
-                            lg:grid-cols-3
-                            xl:grid-cols-4
-                        `}
+                            lg:gap-5
+                            xl:grid-cols-3
+                        "
                     >
                         {filtered.map((course, index) => (
-                            <CompactCatalogCard
+                            <CourseCard
                                 key={course.id}
                                 course={course}
                                 index={index}
@@ -1597,7 +1347,6 @@ function Catalog({
                                     setError("");
                                 }}
                                 onTopics={setTopicsCourse}
-                                onPreview={setPreviewCatalogCourse}
                             />
                         ))}
                     </div>
@@ -1660,178 +1409,6 @@ function Catalog({
                     </div>
                 )}
             </section>
-
-            {/* COURSE IMAGE PREVIEW */}
-            <AnimatePresence>
-                {previewCatalogCourse && (
-                    <Modal
-                        close={() =>
-                            setPreviewCatalogCourse(
-                                null
-                            )
-                        }
-                    >
-                        <div>
-                            <span
-                                className={`
-                                    inline-flex
-                                    rounded-full
-                                    border
-                                    px-3
-                                    py-1.5
-                                    text-[9px]
-                                    font-black
-                                    ${isOman
-                                        ? "border-cyan-300/15 bg-cyan-300/[0.06] text-cyan-200"
-                                        : "border-orange-300/15 bg-orange-300/[0.06] text-orange-200"
-                                    }
-                                `}
-                            >
-                                {previewCatalogCourse.group}
-                            </span>
-
-                            <h2
-                                className="
-                                    mt-3
-                                    text-xl
-                                    font-black
-                                    leading-8
-                                    text-white
-                                    sm:text-2xl
-                                "
-                            >
-                                {previewCatalogCourse.title}
-                            </h2>
-                        </div>
-
-                        <div
-                            className="
-                                relative
-                                mt-5
-                                aspect-[16/10]
-                                overflow-hidden
-                                rounded-[20px]
-                                border
-                                border-white/[0.08]
-                                bg-[#0B2137]
-                            "
-                        >
-                            <Image
-                                src={
-                                    previewCatalogCourse.image ||
-                                    getTechnicalImage(
-                                        previewCatalogCourse,
-                                        0
-                                    )
-                                }
-                                alt={
-                                    previewCatalogCourse.title
-                                }
-                                fill
-                                sizes="90vw"
-                                className="
-                                    object-contain
-                                "
-                            />
-                        </div>
-
-                        <div
-                            className="
-                                mt-4
-                                grid
-                                grid-cols-[0.9fr_1.1fr]
-                                gap-2
-                            "
-                        >
-                            <button
-                                type="button"
-                                onClick={() => {
-                                    const course =
-                                        previewCatalogCourse;
-
-                                    setPreviewCatalogCourse(
-                                        null
-                                    );
-
-                                    setTimeout(
-                                        () =>
-                                            setTopicsCourse(
-                                                course
-                                            ),
-                                        80
-                                    );
-                                }}
-                                className="
-                                    flex
-                                    min-h-[48px]
-                                    items-center
-                                    justify-center
-                                    gap-2
-                                    rounded-full
-                                    border
-                                    border-white/10
-                                    bg-white/[0.04]
-                                    px-3
-                                    text-[10px]
-                                    font-black
-                                    text-slate-200
-                                    transition
-                                    hover:bg-white/[0.08]
-                                    sm:text-xs
-                                "
-                            >
-                                <ListIcon />
-                                سرفصل‌ها
-                            </button>
-
-                            <button
-                                type="button"
-                                onClick={() => {
-                                    const course =
-                                        previewCatalogCourse;
-
-                                    setPreviewCatalogCourse(
-                                        null
-                                    );
-
-                                    setSelectedCourse(
-                                        course
-                                    );
-
-                                    setSubmitted(
-                                        false
-                                    );
-
-                                    setError("");
-                                }}
-                                className={`
-                                    flex
-                                    min-h-[48px]
-                                    items-center
-                                    justify-center
-                                    gap-2
-                                    rounded-full
-                                    px-3
-                                    text-[10px]
-                                    font-black
-                                    text-[#06192E]
-                                    transition
-                                    sm:text-xs
-
-                                    ${isOman
-                                        ? "bg-cyan-300 hover:bg-cyan-200"
-                                        : "bg-orange-400 hover:bg-orange-300"
-                                    }
-                                `}
-                            >
-                                درخواست دوره
-                                <ArrowIcon />
-                            </button>
-                        </div>
-                    </Modal>
-                )}
-            </AnimatePresence>
-
 
             {/* TOPICS */}
 
@@ -2267,34 +1844,46 @@ function OrganizationPage() {
     const [previewCourse, setPreviewCourse] =
         useState<(typeof completedOrganizationCourses)[number] | null>(null);
 
-    const [outlineCourse, setOutlineCourse] =
-        useState<(typeof completedOrganizationCourses)[number] | null>(null);
-
     const orgGroups = [
         "همه",
         ...Array.from(
             new Set(
-                completedOrganizationCourses.map((course) => course.group)
+                completedOrganizationCourses.map(
+                    (course) => course.group
+                )
             )
         ),
     ];
 
     const filteredOrgCourses = useMemo(() => {
-        const query = orgSearch.trim().toLowerCase();
+        const query = orgSearch
+            .trim()
+            .toLowerCase();
 
-        return completedOrganizationCourses.filter((course) => {
-            const groupMatch =
-                orgGroup === "همه" || course.group === orgGroup;
+        return completedOrganizationCourses.filter(
+            (course) => {
+                const groupMatch =
+                    orgGroup === "همه" ||
+                    course.group === orgGroup;
 
-            const searchMatch =
-                !query ||
-                course.title.toLowerCase().includes(query) ||
-                course.subtitle.toLowerCase().includes(query) ||
-                course.instructor.toLowerCase().includes(query) ||
-                course.group.toLowerCase().includes(query);
+                const searchMatch =
+                    !query ||
+                    course.title
+                        .toLowerCase()
+                        .includes(query) ||
+                    course.subtitle
+                        .toLowerCase()
+                        .includes(query) ||
+                    course.instructor
+                        .toLowerCase()
+                        .includes(query) ||
+                    course.group
+                        .toLowerCase()
+                        .includes(query);
 
-            return groupMatch && searchMatch;
-        });
+                return groupMatch && searchMatch;
+            }
+        );
     }, [orgSearch, orgGroup]);
 
     function requestCourse(courseTitle: string) {
@@ -2316,6 +1905,7 @@ function OrganizationPage() {
         event: React.FormEvent<HTMLFormElement>
     ) {
         event.preventDefault();
+
         if (submitting) return;
 
         setSubmitting(true);
@@ -2351,14 +1941,17 @@ function OrganizationPage() {
 
             if (!response.ok || !result.success) {
                 throw new Error(
-                    result.message || "ثبت درخواست انجام نشد."
+                    result.message ||
+                    "ثبت درخواست انجام نشد."
                 );
             }
 
             setSuccess(true);
         } catch (err) {
             setError(
-                err instanceof Error ? err.message : "خطایی رخ داد."
+                err instanceof Error
+                    ? err.message
+                    : "خطایی رخ داد."
             );
         } finally {
             setSubmitting(false);
@@ -2367,14 +1960,291 @@ function OrganizationPage() {
 
     return (
         <>
-            {/* COMPACT INTRO */}
+            {/* =====================================================
+                COMPACT HERO
+            ====================================================== */}
+
             <section
                 className="
                     mx-auto
                     max-w-[1450px]
                     px-3
-                    pb-4
+                    pb-5
                     pt-4
+                    sm:px-5
+                    sm:pt-6
+                    lg:px-10
+                "
+            >
+                <div
+                    className="
+                        relative
+                        overflow-hidden
+                        rounded-[28px]
+                        border
+                        border-white/[0.08]
+                        bg-gradient-to-l
+                        from-[#173953]
+                        via-[#102B43]
+                        to-[#0B2137]
+                        px-5
+                        py-7
+                        sm:rounded-[34px]
+                        sm:px-8
+                        sm:py-9
+                        lg:px-11
+                        lg:py-10
+                    "
+                >
+                    <div
+                        className="
+                            pointer-events-none
+                            absolute
+                            -right-24
+                            -top-24
+                            h-64
+                            w-64
+                            rounded-full
+                            bg-cyan-300/[0.08]
+                            blur-[100px]
+                        "
+                    />
+
+                    <div
+                        className="
+                            pointer-events-none
+                            absolute
+                            -bottom-24
+                            left-1/3
+                            h-64
+                            w-64
+                            rounded-full
+                            bg-orange-400/[0.08]
+                            blur-[100px]
+                        "
+                    />
+
+                    <div
+                        className="
+                            relative
+                            grid
+                            gap-7
+                            lg:grid-cols-[1fr_380px]
+                            lg:items-center
+                        "
+                    >
+                        <div>
+                            <span
+                                className="
+                                    inline-flex
+                                    items-center
+                                    gap-2
+                                    rounded-full
+                                    border
+                                    border-cyan-300/20
+                                    bg-cyan-300/[0.07]
+                                    px-3.5
+                                    py-2
+                                    text-[10px]
+                                    font-black
+                                    text-cyan-200
+                                    sm:text-xs
+                                "
+                            >
+                                <span
+                                    className="
+                                        h-2
+                                        w-2
+                                        rounded-full
+                                        bg-orange-400
+                                    "
+                                />
+                                آموزش اختصاصی سازمان‌ها
+                            </span>
+
+                            <h1
+                                className="
+                                    mt-4
+                                    max-w-3xl
+                                    text-[30px]
+                                    font-black
+                                    leading-[1.55]
+                                    text-white
+                                    sm:text-4xl
+                                    lg:text-[46px]
+                                "
+                            >
+                                آموزش تخصصی،
+                                <span className="text-orange-400">
+                                    {" "}متناسب با نیاز سازمان شما
+                                </span>
+                            </h1>
+
+                            <p
+                                className="
+                                    mt-3
+                                    max-w-2xl
+                                    text-xs
+                                    leading-7
+                                    text-slate-300
+                                    sm:text-sm
+                                    sm:leading-8
+                                "
+                            >
+                                نمونه دوره‌های برگزارشده را ببینید،
+                                دوره مناسب را انتخاب کنید و مستقیماً
+                                درخواست برگزاری برای مجموعه خود ثبت کنید.
+                            </p>
+
+                            <div
+                                className="
+                                    mt-5
+                                    flex
+                                    flex-col
+                                    gap-2
+                                    sm:flex-row
+                                "
+                            >
+                                <a
+                                    href="#organization-courses"
+                                    className="
+                                        inline-flex
+                                        min-h-[46px]
+                                        items-center
+                                        justify-center
+                                        gap-2
+                                        rounded-full
+                                        bg-orange-400
+                                        px-6
+                                        text-xs
+                                        font-black
+                                        text-[#06192E]
+                                        transition
+                                        hover:bg-orange-300
+                                    "
+                                >
+                                    مشاهده دوره‌ها
+                                    <span>↓</span>
+                                </a>
+
+                                <button
+                                    type="button"
+                                    onClick={() =>
+                                        requestCourse(
+                                            "آموزش اختصاصی جدید"
+                                        )
+                                    }
+                                    className="
+                                        inline-flex
+                                        min-h-[46px]
+                                        items-center
+                                        justify-center
+                                        gap-2
+                                        rounded-full
+                                        border
+                                        border-white/10
+                                        bg-white/[0.04]
+                                        px-6
+                                        text-xs
+                                        font-black
+                                        text-white
+                                        transition
+                                        hover:bg-white/[0.08]
+                                    "
+                                >
+                                    درخواست دوره جدید
+                                    <ArrowIcon />
+                                </button>
+                            </div>
+                        </div>
+
+                        {/* QUICK VALUE PANEL */}
+
+                        <div
+                            className="
+                                grid
+                                grid-cols-3
+                                gap-2
+                                lg:grid-cols-1
+                            "
+                        >
+                            {[
+                                [
+                                    `${completedOrganizationCourses.length}`,
+                                    "دوره نمونه",
+                                ],
+                                [
+                                    `${Math.max(orgGroups.length - 1, 0)}`,
+                                    "حوزه آموزشی",
+                                ],
+                                [
+                                    "سازمانی",
+                                    "قابل سفارشی‌سازی",
+                                ],
+                            ].map((item, index) => (
+                                <div
+                                    key={item[1]}
+                                    className="
+                                        rounded-[18px]
+                                        border
+                                        border-white/[0.07]
+                                        bg-white/[0.035]
+                                        px-3
+                                        py-3
+                                        lg:flex
+                                        lg:items-center
+                                        lg:justify-between
+                                        lg:px-4
+                                    "
+                                >
+                                    <strong
+                                        className={`
+                                            block
+                                            text-base
+                                            font-black
+                                            sm:text-lg
+                                            ${index === 1
+                                                ? "text-cyan-200"
+                                                : "text-orange-200"
+                                            }
+                                        `}
+                                    >
+                                        {item[0]}
+                                    </strong>
+
+                                    <span
+                                        className="
+                                            mt-1
+                                            block
+                                            text-[8px]
+                                            leading-5
+                                            text-slate-400
+                                            sm:text-[10px]
+                                            lg:mt-0
+                                        "
+                                    >
+                                        {item[1]}
+                                    </span>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            {/* =====================================================
+                SEARCH + FILTERS
+            ====================================================== */}
+
+            <section
+                id="organization-courses"
+                className="
+                    mx-auto
+                    max-w-[1450px]
+                    scroll-mt-28
+                    px-3
+                    pb-5
+                    pt-6
                     sm:px-5
                     lg:px-10
                 "
@@ -2383,122 +2253,59 @@ function OrganizationPage() {
                     className="
                         flex
                         flex-col
-                        gap-5
-                        rounded-[26px]
-                        border
-                        border-white/[0.08]
-                        bg-gradient-to-l
-                        from-[#15364F]
-                        to-[#0B2239]
-                        px-5
-                        py-6
-                        sm:px-7
+                        gap-4
                         lg:flex-row
-                        lg:items-center
+                        lg:items-end
                         lg:justify-between
-                        lg:px-9
-                        lg:py-7
                     "
                 >
-                    <div className="max-w-3xl">
+                    <div>
                         <span
                             className="
-                                inline-flex
-                                items-center
-                                gap-2
-                                rounded-full
-                                border
-                                border-cyan-300/20
-                                bg-cyan-300/[0.06]
-                                px-3
-                                py-1.5
                                 text-[9px]
                                 font-black
-                                text-cyan-200
+                                tracking-[0.15em]
+                                text-orange-300
+                                sm:text-xs
                             "
                         >
-                            <span className="h-1.5 w-1.5 rounded-full bg-orange-400" />
-                            آموزش اختصاصی سازمان‌ها
+                            دوره‌های برگزارشده
                         </span>
 
-                        <h1
+                        <h2
                             className="
-                                mt-3
+                                mt-2
                                 text-2xl
                                 font-black
                                 leading-[1.6]
                                 text-white
                                 sm:text-3xl
-                                lg:text-[38px]
                             "
                         >
-                            دوره‌های برگزارشده کاردو
-                        </h1>
+                            یک دوره را انتخاب کنید
+                        </h2>
 
                         <p
                             className="
-                                mt-2
-                                max-w-2xl
-                                text-[11px]
-                                leading-7
-                                text-slate-400
+                                mt-1
+                                text-[10px]
+                                leading-6
+                                text-slate-500
                                 sm:text-xs
                             "
                         >
-                            پوستر کامل هر دوره را ببینید و اگر برای سازمان شما مناسب بود،
-                            مستقیماً درخواست برگزاری همان دوره را ثبت کنید.
+                            اطلاعات اصلی هر دوره بدون نیاز به خواندن پوستر،
+                            در کارت خلاصه شده است.
                         </p>
                     </div>
 
-                    <button
-                        type="button"
-                        onClick={() => requestCourse("آموزش اختصاصی جدید")}
+                    <div
                         className="
-                            inline-flex
-                            min-h-[46px]
-                            shrink-0
-                            items-center
-                            justify-center
-                            gap-2
-                            rounded-full
-                            bg-orange-400
-                            px-6
-                            text-xs
-                            font-black
-                            text-[#06192E]
-                            transition
-                            hover:bg-orange-300
+                            relative
+                            w-full
+                            lg:w-[360px]
                         "
                     >
-                        درخواست دوره اختصاصی
-                        <ArrowIcon />
-                    </button>
-                </div>
-            </section>
-
-            {/* SEARCH + FILTER */}
-            <section
-                className="
-                    mx-auto
-                    max-w-[1450px]
-                    px-3
-                    pb-4
-                    pt-3
-                    sm:px-5
-                    lg:px-10
-                "
-            >
-                <div
-                    className="
-                        flex
-                        flex-col
-                        gap-3
-                        lg:flex-row
-                        lg:items-center
-                        lg:justify-between
-                    "
-                >
-                    <div className="relative w-full lg:max-w-[360px]">
                         <span
                             className="
                                 absolute
@@ -2513,12 +2320,16 @@ function OrganizationPage() {
 
                         <input
                             value={orgSearch}
-                            onChange={(event) => setOrgSearch(event.target.value)}
-                            placeholder="جستجو دوره یا مدرس..."
+                            onChange={(event) =>
+                                setOrgSearch(
+                                    event.target.value
+                                )
+                            }
+                            placeholder="جستجو نام دوره یا مدرس..."
                             className="
                                 h-12
                                 w-full
-                                rounded-[16px]
+                                rounded-[17px]
                                 border
                                 border-white/[0.08]
                                 bg-white/[0.035]
@@ -2532,45 +2343,62 @@ function OrganizationPage() {
                             "
                         />
                     </div>
+                </div>
 
-                    <div
-                        className="
-                            flex
-                            gap-2
-                            overflow-x-auto
-                            pb-1
-                            [scrollbar-width:none]
-                            [&::-webkit-scrollbar]:hidden
-                        "
-                    >
-                        {orgGroups.map((group) => (
-                            <button
-                                key={group}
-                                type="button"
-                                onClick={() => setOrgGroup(group)}
-                                className={`
-                                    shrink-0
-                                    rounded-full
-                                    border
-                                    px-4
-                                    py-2.5
-                                    text-[10px]
-                                    font-black
-                                    transition
-                                    ${orgGroup === group
-                                        ? "border-orange-400 bg-orange-400 text-[#06192E]"
-                                        : "border-white/[0.08] bg-white/[0.03] text-slate-300 hover:bg-white/[0.06]"
-                                    }
-                                `}
-                            >
-                                {group}
-                            </button>
-                        ))}
-                    </div>
+                <div
+                    className="
+                        mt-4
+                        flex
+                        gap-2
+                        overflow-x-auto
+                        pb-1
+                        [scrollbar-width:none]
+                        [&::-webkit-scrollbar]:hidden
+                    "
+                >
+                    {orgGroups.map((group) => (
+                        <button
+                            key={group}
+                            type="button"
+                            onClick={() =>
+                                setOrgGroup(group)
+                            }
+                            className={`
+                                shrink-0
+                                rounded-full
+                                border
+                                px-4
+                                py-2.5
+                                text-[10px]
+                                font-black
+                                transition
+                                sm:text-xs
+
+                                ${orgGroup === group
+                                    ? `
+                                            border-orange-400
+                                            bg-orange-400
+                                            text-[#06192E]
+                                        `
+                                    : `
+                                            border-white/[0.08]
+                                            bg-white/[0.03]
+                                            text-slate-300
+                                            hover:bg-white/[0.06]
+                                        `
+                                }
+                            `}
+                        >
+                            {group}
+                        </button>
+                    ))}
                 </div>
             </section>
 
-            {/* COMPACT FULL-POSTER GALLERY */}
+            {/* =====================================================
+                FRIENDLY COURSE GRID
+            ====================================================== */}
+
             <section
                 className="
                     mx-auto
@@ -2583,15 +2411,22 @@ function OrganizationPage() {
             >
                 <div
                     className="
-                        mb-3
+                        mb-4
                         flex
                         items-center
                         justify-between
                         gap-3
                     "
                 >
-                    <p className="text-[10px] font-bold text-slate-500 sm:text-xs">
-                        {filteredOrgCourses.length} دوره
+                    <p
+                        className="
+                            text-[10px]
+                            font-bold
+                            text-slate-500
+                            sm:text-xs
+                        "
+                    >
+                        {filteredOrgCourses.length} دوره نمایش داده می‌شود
                     </p>
 
                     {(orgSearch || orgGroup !== "همه") && (
@@ -2621,222 +2456,343 @@ function OrganizationPage() {
                     <div
                         className="
                             grid
-                            grid-cols-2
                             gap-3
-                            sm:grid-cols-3
-                            lg:grid-cols-4
-                            xl:grid-cols-5
+                            sm:grid-cols-2
+                            lg:gap-4
+                            xl:grid-cols-3
                         "
                     >
-                        {filteredOrgCourses.map((course, index) => (
-                            <motion.article
-                                key={course.id}
-                                initial={{ opacity: 0, y: 16 }}
-                                whileInView={{ opacity: 1, y: 0 }}
-                                viewport={{ once: true, amount: 0.08 }}
-                                transition={{
-                                    duration: 0.35,
-                                    delay: Math.min(index * 0.02, 0.12),
-                                }}
-                                className="
-                                    group
-                                    overflow-hidden
-                                    rounded-[20px]
-                                    border
-                                    border-white/[0.08]
-                                    bg-white/[0.025]
-                                    transition
-                                    hover:-translate-y-1
-                                    hover:border-orange-300/20
-                                "
-                            >
-                                <button
-                                    type="button"
-                                    onClick={() => setPreviewCourse(course)}
+                        {filteredOrgCourses.map(
+                            (course, index) => (
+                                <motion.article
+                                    key={course.id}
+                                    initial={{
+                                        opacity: 0,
+                                        y: 20,
+                                    }}
+                                    whileInView={{
+                                        opacity: 1,
+                                        y: 0,
+                                    }}
+                                    viewport={{
+                                        once: true,
+                                        amount: 0.08,
+                                    }}
+                                    transition={{
+                                        duration: 0.4,
+                                        delay: Math.min(
+                                            index * 0.025,
+                                            0.15
+                                        ),
+                                    }}
                                     className="
-                                        relative
-                                        block
-                                        aspect-[4/5]
-                                        w-full
+                                        group
                                         overflow-hidden
-                                        bg-[#081C2F]
+                                        rounded-[24px]
+                                        border
+                                        border-white/[0.08]
+                                        bg-white/[0.032]
+                                        transition
+                                        duration-300
+                                        hover:-translate-y-1
+                                        hover:border-orange-300/20
+                                        hover:bg-white/[0.045]
                                     "
                                 >
-                                    <Image
-                                        src={course.image}
-                                        alt={course.title}
-                                        fill
-                                        sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 20vw"
-                                        className="
-                                            object-contain
-                                            transition
-                                            duration-500
-                                            group-hover:scale-[1.015]
-                                        "
-                                    />
+                                    {/* POSTER PREVIEW */}
 
-                                    <div
+                                    <button
+                                        type="button"
+                                        onClick={() =>
+                                            setPreviewCourse(
+                                                course
+                                            )
+                                        }
                                         className="
-                                            absolute
-                                            inset-x-0
-                                            bottom-0
-                                            h-16
-                                            bg-gradient-to-t
-                                            from-[#06192E]/85
-                                            to-transparent
-                                        "
-                                    />
-
-                                    <span
-                                        className="
-                                            absolute
-                                            bottom-2
-                                            left-2
-                                            rounded-full
-                                            border
-                                            border-white/10
-                                            bg-[#06192E]/75
-                                            px-2.5
-                                            py-1.5
-                                            text-[8px]
-                                            font-black
-                                            text-white
-                                            backdrop-blur-md
+                                            relative
+                                            block
+                                            h-[185px]
+                                            w-full
+                                            overflow-hidden
+                                            bg-[#0B2137]
+                                            text-right
+                                            sm:h-[210px]
                                         "
                                     >
-                                        بزرگ‌نمایی
-                                    </span>
-                                </button>
+                                        <Image
+                                            src={course.image}
+                                            alt={course.title}
+                                            fill
+                                            sizes="(max-width: 640px) 100vw, (max-width: 1280px) 50vw, 33vw"
+                                            className="
+                                                object-cover
+                                                object-top
+                                                transition
+                                                duration-500
+                                                group-hover:scale-[1.025]
+                                            "
+                                        />
 
-                                <div className="p-3">
-                                    <div
-                                        className="
-                                            flex
-                                            items-start
-                                            justify-between
-                                            gap-2
-                                        "
-                                    >
-                                        <div className="min-w-0">
-                                            <h3
-                                                className="
-                                                    truncate
-                                                    text-[12px]
-                                                    font-black
-                                                    text-white
-                                                    sm:text-sm
-                                                "
-                                            >
-                                                {course.title}
-                                            </h3>
-
-                                            <p
-                                                className="
-                                                    mt-1
-                                                    truncate
-                                                    text-[8px]
-                                                    text-slate-500
-                                                    sm:text-[9px]
-                                                "
-                                            >
-                                                {course.duration} · {course.format}
-                                            </p>
-                                        </div>
+                                        <div
+                                            className="
+                                                absolute
+                                                inset-0
+                                                bg-gradient-to-t
+                                                from-[#06192E]/55
+                                                via-transparent
+                                                to-transparent
+                                            "
+                                        />
 
                                         <span
                                             className="
-                                                shrink-0
+                                                absolute
+                                                bottom-3
+                                                left-3
                                                 rounded-full
-                                                bg-cyan-300/[0.07]
-                                                px-2
-                                                py-1
-                                                text-[7px]
-                                                font-black
-                                                text-cyan-200
-                                            "
-                                        >
-                                            {course.group}
-                                        </span>
-                                    </div>
-
-                                    <div
-                                        className="
-                                            mt-3
-                                            grid
-                                            grid-cols-[0.9fr_1.1fr]
-                                            gap-2
-                                        "
-                                    >
-                                        <button
-                                            type="button"
-                                            onClick={() => setOutlineCourse(course)}
-                                            className="
-                                                flex
-                                                min-h-[40px]
-                                                items-center
-                                                justify-center
-                                                gap-1.5
-                                                rounded-[13px]
                                                 border
-                                                border-white/[0.09]
-                                                bg-white/[0.035]
-                                                px-2
+                                                border-white/10
+                                                bg-[#06192E]/75
+                                                px-3
+                                                py-2
                                                 text-[9px]
                                                 font-black
-                                                text-slate-200
-                                                transition
-                                                hover:bg-white/[0.07]
-                                                sm:text-[10px]
+                                                text-white
+                                                backdrop-blur-md
                                             "
                                         >
-                                            <ListIcon />
-                                            سرفصل‌ها
-                                        </button>
+                                            مشاهده پوستر
+                                        </span>
+                                    </button>
+
+                                    {/* COURSE INFO */}
+
+                                    <div className="p-4">
+                                        <div
+                                            className="
+                                                flex
+                                                items-start
+                                                justify-between
+                                                gap-3
+                                            "
+                                        >
+                                            <div className="min-w-0">
+                                                <span
+                                                    className="
+                                                        inline-flex
+                                                        rounded-full
+                                                        border
+                                                        border-cyan-300/15
+                                                        bg-cyan-300/[0.06]
+                                                        px-2.5
+                                                        py-1.5
+                                                        text-[8px]
+                                                        font-black
+                                                        text-cyan-200
+                                                    "
+                                                >
+                                                    {course.group}
+                                                </span>
+
+                                                <h3
+                                                    className="
+                                                        mt-2
+                                                        text-base
+                                                        font-black
+                                                        leading-7
+                                                        text-white
+                                                        sm:text-lg
+                                                    "
+                                                >
+                                                    {course.title}
+                                                </h3>
+
+                                                <p
+                                                    className="
+                                                        mt-1
+                                                        line-clamp-2
+                                                        text-[10px]
+                                                        leading-6
+                                                        text-slate-400
+                                                    "
+                                                >
+                                                    {course.subtitle}
+                                                </p>
+                                            </div>
+
+                                            <span
+                                                className="
+                                                    shrink-0
+                                                    rounded-full
+                                                    bg-emerald-300/[0.08]
+                                                    px-2.5
+                                                    py-1.5
+                                                    text-[8px]
+                                                    font-black
+                                                    text-emerald-200
+                                                "
+                                            >
+                                                برگزارشده
+                                            </span>
+                                        </div>
+
+                                        <div
+                                            className="
+                                                mt-4
+                                                grid
+                                                grid-cols-2
+                                                gap-2
+                                            "
+                                        >
+                                            <div
+                                                className="
+                                                    rounded-[14px]
+                                                    bg-white/[0.025]
+                                                    px-3
+                                                    py-2.5
+                                                "
+                                            >
+                                                <span
+                                                    className="
+                                                        block
+                                                        text-[8px]
+                                                        text-slate-600
+                                                    "
+                                                >
+                                                    مدرس
+                                                </span>
+
+                                                <strong
+                                                    className="
+                                                        mt-1
+                                                        block
+                                                        truncate
+                                                        text-[10px]
+                                                        font-black
+                                                        text-slate-200
+                                                    "
+                                                >
+                                                    {course.instructor}
+                                                </strong>
+                                            </div>
+
+                                            <div
+                                                className="
+                                                    rounded-[14px]
+                                                    bg-white/[0.025]
+                                                    px-3
+                                                    py-2.5
+                                                "
+                                            >
+                                                <span
+                                                    className="
+                                                        block
+                                                        text-[8px]
+                                                        text-slate-600
+                                                    "
+                                                >
+                                                    مدت / شیوه
+                                                </span>
+
+                                                <strong
+                                                    className="
+                                                        mt-1
+                                                        block
+                                                        text-[10px]
+                                                        font-black
+                                                        text-slate-200
+                                                    "
+                                                >
+                                                    {course.duration}
+                                                    {" · "}
+                                                    {course.format}
+                                                </strong>
+                                            </div>
+                                        </div>
 
                                         <button
                                             type="button"
-                                            onClick={() => requestCourse(course.title)}
+                                            onClick={() =>
+                                                requestCourse(
+                                                    course.title
+                                                )
+                                            }
                                             className="
+                                                mt-3
                                                 flex
-                                                min-h-[40px]
+                                                min-h-[46px]
+                                                w-full
                                                 items-center
                                                 justify-center
-                                                gap-1.5
-                                                rounded-[13px]
+                                                gap-2
+                                                rounded-[15px]
                                                 bg-orange-400
-                                                px-2
-                                                text-[9px]
+                                                px-4
+                                                text-[11px]
                                                 font-black
                                                 text-[#06192E]
                                                 transition
                                                 hover:bg-orange-300
-                                                sm:text-[10px]
                                             "
                                         >
-                                            درخواست برگزاری
+                                            درخواست برگزاری این دوره
                                             <ArrowIcon />
                                         </button>
                                     </div>
-                                </div>
-                            </motion.article>
-                        ))}
+                                </motion.article>
+                            )
+                        )}
                     </div>
                 ) : (
                     <div
                         className="
-                            rounded-[22px]
+                            rounded-[24px]
                             border
                             border-dashed
                             border-white/10
-                            bg-white/[0.02]
+                            bg-white/[0.025]
                             px-5
                             py-12
                             text-center
                         "
                     >
-                        <h3 className="text-base font-black text-white">
+                        <div
+                            className="
+                                mx-auto
+                                flex
+                                h-12
+                                w-12
+                                items-center
+                                justify-center
+                                rounded-full
+                                bg-white/[0.04]
+                                text-xl
+                            "
+                        >
+                            ⌕
+                        </div>
+
+                        <h3
+                            className="
+                                mt-4
+                                text-base
+                                font-black
+                                text-white
+                            "
+                        >
                             دوره‌ای پیدا نشد
                         </h3>
+
+                        <p
+                            className="
+                                mt-2
+                                text-[10px]
+                                text-slate-500
+                            "
+                        >
+                            عبارت جستجو یا دسته‌بندی را تغییر دهید.
+                        </p>
+
                         <button
                             type="button"
                             onClick={() => {
@@ -2860,68 +2816,214 @@ function OrganizationPage() {
                 )}
             </section>
 
-            {/* REQUEST FORM */}
+            {/* =====================================================
+                SIMPLE PROCESS
+            ====================================================== */}
+
             <section
-                id="organization-request"
                 className="
                     mx-auto
-                    max-w-[1000px]
-                    scroll-mt-32
+                    max-w-[1200px]
                     px-3
-                    pb-28
+                    pb-10
                     sm:px-5
                     lg:px-10
                 "
             >
                 <div
                     className="
-                        rounded-[28px]
+                        rounded-[26px]
+                        border
+                        border-white/[0.07]
+                        bg-white/[0.025]
+                        p-4
+                        sm:p-6
+                    "
+                >
+                    <div
+                        className="
+                            grid
+                            gap-3
+                            sm:grid-cols-3
+                        "
+                    >
+                        {[
+                            [
+                                "01",
+                                "انتخاب دوره",
+                                "یکی از نمونه‌های برگزارشده یا یک موضوع جدید را انتخاب کنید.",
+                            ],
+                            [
+                                "02",
+                                "ثبت نیاز سازمان",
+                                "تعداد نفرات، محل برگزاری و توضیحات موردنیاز را وارد کنید.",
+                            ],
+                            [
+                                "03",
+                                "هماهنگی اجرا",
+                                "درخواست برای بررسی و هماهنگی برگزاری ثبت می‌شود.",
+                            ],
+                        ].map((item) => (
+                            <div
+                                key={item[0]}
+                                className="
+                                    rounded-[18px]
+                                    border
+                                    border-white/[0.06]
+                                    bg-white/[0.025]
+                                    p-4
+                                "
+                            >
+                                <span
+                                    className="
+                                        text-[9px]
+                                        font-black
+                                        text-orange-300
+                                    "
+                                >
+                                    {item[0]}
+                                </span>
+
+                                <h3
+                                    className="
+                                        mt-2
+                                        text-sm
+                                        font-black
+                                        text-white
+                                    "
+                                >
+                                    {item[1]}
+                                </h3>
+
+                                <p
+                                    className="
+                                        mt-2
+                                        text-[10px]
+                                        leading-6
+                                        text-slate-500
+                                    "
+                                >
+                                    {item[2]}
+                                </p>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            </section>
+
+            {/* =====================================================
+                ORGANIZATION REQUEST FORM
+            ====================================================== */}
+
+            <section
+                id="organization-request"
+                className="
+                    mx-auto
+                    max-w-[1100px]
+                    scroll-mt-32
+                    px-3
+                    pb-28
+                    pt-4
+                    sm:px-5
+                    lg:px-10
+                "
+            >
+                <div
+                    className="
+                        overflow-hidden
+                        rounded-[30px]
                         border
                         border-orange-300/15
                         bg-gradient-to-bl
                         from-orange-400/[0.05]
-                        via-white/[0.025]
-                        to-cyan-300/[0.035]
+                        via-white/[0.03]
+                        to-cyan-300/[0.04]
                         p-5
-                        sm:p-7
+                        sm:p-8
                     "
                 >
                     {!success ? (
-                        <>
+                        <div>
                             <div
                                 className="
                                     flex
                                     flex-col
-                                    gap-3
+                                    gap-4
                                     sm:flex-row
                                     sm:items-end
                                     sm:justify-between
                                 "
                             >
                                 <div>
-                                    <span className="text-[9px] font-black text-orange-300">
+                                    <span
+                                        className="
+                                            text-[9px]
+                                            font-black
+                                            text-orange-300
+                                            sm:text-xs
+                                        "
+                                    >
                                         درخواست سازمانی
                                     </span>
-                                    <h2 className="mt-2 text-2xl font-black text-white">
+
+                                    <h2
+                                        className="
+                                            mt-2
+                                            text-2xl
+                                            font-black
+                                            leading-[1.6]
+                                            text-white
+                                            sm:text-3xl
+                                        "
+                                    >
                                         درخواست برگزاری دوره
                                     </h2>
+
+                                    <p
+                                        className="
+                                            mt-1
+                                            max-w-xl
+                                            text-[10px]
+                                            leading-6
+                                            text-slate-500
+                                            sm:text-xs
+                                        "
+                                    >
+                                        فقط اطلاعات اصلی را وارد کنید؛
+                                        جزئیات تکمیلی در ادامه هماهنگ می‌شود.
+                                    </p>
                                 </div>
 
                                 {selectedOrgCourse && (
                                     <div
                                         className="
-                                            rounded-[14px]
+                                            rounded-[16px]
                                             border
                                             border-orange-300/15
                                             bg-orange-300/[0.06]
                                             px-4
-                                            py-2.5
+                                            py-3
                                         "
                                     >
-                                        <span className="block text-[8px] text-slate-500">
+                                        <span
+                                            className="
+                                                block
+                                                text-[8px]
+                                                text-slate-500
+                                            "
+                                        >
                                             دوره انتخاب‌شده
                                         </span>
-                                        <strong className="mt-1 block text-xs font-black text-orange-200">
+
+                                        <strong
+                                            className="
+                                                mt-1
+                                                block
+                                                text-xs
+                                                font-black
+                                                text-orange-200
+                                            "
+                                        >
                                             {selectedOrgCourse}
                                         </strong>
                                     </div>
@@ -2930,32 +3032,42 @@ function OrganizationPage() {
 
                             <form
                                 onSubmit={submitOrganizationRequest}
-                                className="mt-5 grid gap-3 sm:grid-cols-2"
+                                className="
+                                    mt-6
+                                    grid
+                                    gap-3
+                                    sm:grid-cols-2
+                                "
                             >
                                 <Input
                                     name="organizationName"
                                     placeholder="نام سازمان / شرکت *"
                                     required
                                 />
+
                                 <Input
                                     name="contactName"
                                     placeholder="نام فرد رابط *"
                                     required
                                 />
+
                                 <Input
                                     name="phone"
                                     placeholder="شماره تماس *"
                                     required
                                 />
+
                                 <Input
                                     name="city"
                                     placeholder="شهر *"
                                     required
                                 />
+
                                 <Input
                                     name="industry"
                                     placeholder="حوزه فعالیت سازمان"
                                 />
+
                                 <Input
                                     name="participantCount"
                                     type="number"
@@ -2965,7 +3077,9 @@ function OrganizationPage() {
                                 <select
                                     value={selectedOrgCourse}
                                     onChange={(event) =>
-                                        setSelectedOrgCourse(event.target.value)
+                                        setSelectedOrgCourse(
+                                            event.target.value
+                                        )
                                     }
                                     className="
                                         h-14
@@ -2980,12 +3094,21 @@ function OrganizationPage() {
                                         focus:border-orange-400/40
                                     "
                                 >
-                                    <option value="">انتخاب دوره</option>
-                                    {completedOrganizationCourses.map((course) => (
-                                        <option key={course.id} value={course.title}>
-                                            {course.title}
-                                        </option>
-                                    ))}
+                                    <option value="">
+                                        انتخاب دوره
+                                    </option>
+
+                                    {completedOrganizationCourses.map(
+                                        (course) => (
+                                            <option
+                                                key={course.id}
+                                                value={course.title}
+                                            >
+                                                {course.title}
+                                            </option>
+                                        )
+                                    )}
+
                                     <option value="آموزش اختصاصی جدید">
                                         آموزش اختصاصی جدید
                                     </option>
@@ -3006,13 +3129,27 @@ function OrganizationPage() {
                                         focus:border-orange-400/40
                                     "
                                 >
-                                    <option value="">حوزه آموزشی</option>
-                                    <option value="HSE و ایمنی">HSE و ایمنی</option>
-                                    <option value="آتش‌نشانی">آتش‌نشانی</option>
-                                    <option value="مواد خطرناک">مواد خطرناک</option>
-                                    <option value="امداد و نجات">امداد و نجات</option>
-                                    <option value="مدیریت بحران">مدیریت بحران</option>
-                                    <option value="سایر">سایر</option>
+                                    <option value="">
+                                        حوزه آموزشی
+                                    </option>
+                                    <option value="HSE و ایمنی">
+                                        HSE و ایمنی
+                                    </option>
+                                    <option value="آتش‌نشانی">
+                                        آتش‌نشانی
+                                    </option>
+                                    <option value="مواد خطرناک">
+                                        مواد خطرناک
+                                    </option>
+                                    <option value="امداد و نجات">
+                                        امداد و نجات
+                                    </option>
+                                    <option value="مدیریت بحران">
+                                        مدیریت بحران
+                                    </option>
+                                    <option value="سایر">
+                                        سایر
+                                    </option>
                                 </select>
 
                                 <select
@@ -3031,17 +3168,25 @@ function OrganizationPage() {
                                         sm:col-span-2
                                     "
                                 >
-                                    <option value="">محل پیشنهادی برگزاری</option>
-                                    <option value="organization">محل سازمان / شرکت</option>
-                                    <option value="academy">مجتمع آموزشی کاردو</option>
-                                    <option value="negotiable">قابل هماهنگی</option>
+                                    <option value="">
+                                        محل پیشنهادی برگزاری
+                                    </option>
+                                    <option value="organization">
+                                        محل سازمان / شرکت
+                                    </option>
+                                    <option value="academy">
+                                        مجتمع آموزشی کاردو
+                                    </option>
+                                    <option value="negotiable">
+                                        قابل هماهنگی
+                                    </option>
                                 </select>
 
                                 <textarea
                                     name="notes"
                                     placeholder="توضیحات تکمیلی، زمان پیشنهادی یا نیاز خاص مجموعه..."
                                     className="
-                                        min-h-[110px]
+                                        min-h-[120px]
                                         rounded-2xl
                                         border
                                         border-white/10
@@ -3060,6 +3205,8 @@ function OrganizationPage() {
                                     <div
                                         className="
                                             rounded-2xl
+                                            border
+                                            border-red-300/10
                                             bg-red-400/[0.08]
                                             p-4
                                             text-xs
@@ -3075,8 +3222,12 @@ function OrganizationPage() {
                                     type="submit"
                                     disabled={submitting}
                                     className="
+                                        flex
                                         min-h-14
-                                        rounded-full
+                                        items-center
+                                        justify-center
+                                        gap-3
+                                        rounded-2xl
                                         bg-orange-400
                                         px-6
                                         text-xs
@@ -3084,19 +3235,24 @@ function OrganizationPage() {
                                         text-[#06192E]
                                         transition
                                         hover:bg-orange-300
+                                        disabled:cursor-not-allowed
                                         disabled:opacity-50
                                         sm:col-span-2
+                                        sm:rounded-full
                                     "
                                 >
                                     {submitting
                                         ? "در حال ثبت درخواست..."
                                         : "ارسال درخواست سازمانی"}
+
+                                    {!submitting && <ArrowIcon />}
                                 </button>
                             </form>
-                        </>
+                        </div>
                     ) : (
                         <div className="py-8">
                             <Success />
+
                             <button
                                 type="button"
                                 onClick={() => {
@@ -3125,105 +3281,17 @@ function OrganizationPage() {
                 </div>
             </section>
 
-            {/* POSTER MODAL */}
+            {/* =====================================================
+                POSTER PREVIEW
+            ====================================================== */}
+
             <AnimatePresence>
                 {previewCourse && (
-                    <Modal close={() => setPreviewCourse(null)}>
-                        <h2 className="text-xl font-black text-white">
-                            {previewCourse.title}
-                        </h2>
-
-                        <div
-                            className="
-                                relative
-                                mt-4
-                                aspect-[4/5]
-                                overflow-hidden
-                                rounded-[18px]
-                                bg-[#081C2F]
-                            "
-                        >
-                            <Image
-                                src={previewCourse.image}
-                                alt={previewCourse.title}
-                                fill
-                                sizes="90vw"
-                                className="object-contain"
-                            />
-                        </div>
-
-                        <div
-                            className="
-                                mt-4
-                                grid
-                                grid-cols-[0.9fr_1.1fr]
-                                gap-2
-                            "
-                        >
-                            <button
-                                type="button"
-                                onClick={() => {
-                                    const course = previewCourse;
-                                    setPreviewCourse(null);
-                                    setTimeout(
-                                        () => setOutlineCourse(course),
-                                        80
-                                    );
-                                }}
-                                className="
-                                    flex
-                                    min-h-[48px]
-                                    items-center
-                                    justify-center
-                                    gap-2
-                                    rounded-full
-                                    border
-                                    border-white/10
-                                    bg-white/[0.04]
-                                    px-3
-                                    text-[10px]
-                                    font-black
-                                    text-slate-200
-                                    transition
-                                    hover:bg-white/[0.08]
-                                    sm:text-xs
-                                "
-                            >
-                                <ListIcon />
-                                سرفصل‌ها
-                            </button>
-
-                            <button
-                                type="button"
-                                onClick={() => {
-                                    const title = previewCourse.title;
-                                    setPreviewCourse(null);
-                                    setTimeout(() => requestCourse(title), 80);
-                                }}
-                                className="
-                                    min-h-[48px]
-                                    rounded-full
-                                    bg-orange-400
-                                    px-3
-                                    text-[10px]
-                                    font-black
-                                    text-[#06192E]
-                                    transition
-                                    hover:bg-orange-300
-                                    sm:text-xs
-                                "
-                            >
-                                درخواست برگزاری
-                            </button>
-                        </div>
-                    </Modal>
-                )}
-            </AnimatePresence>
-
-            {/* COURSE OUTLINE MODAL */}
-            <AnimatePresence>
-                {outlineCourse && (
-                    <Modal close={() => setOutlineCourse(null)}>
+                    <Modal
+                        close={() =>
+                            setPreviewCourse(null)
+                        }
+                    >
                         <div
                             className="
                                 flex
@@ -3235,212 +3303,86 @@ function OrganizationPage() {
                             <div>
                                 <span
                                     className="
-                                        inline-flex
-                                        rounded-full
-                                        border
-                                        border-cyan-300/15
-                                        bg-cyan-300/[0.06]
-                                        px-3
-                                        py-1.5
                                         text-[9px]
-                                        font-black
-                                        text-cyan-200
-                                    "
-                                >
-                                    {outlineCourse.group}
-                                </span>
-
-                                <h2
-                                    className="
-                                        mt-3
-                                        text-xl
-                                        font-black
-                                        leading-8
-                                        text-white
-                                        sm:text-2xl
-                                    "
-                                >
-                                    سرفصل‌های {outlineCourse.title}
-                                </h2>
-
-                                <p
-                                    className="
-                                        mt-1
-                                        text-[10px]
-                                        text-slate-500
-                                        sm:text-xs
-                                    "
-                                >
-                                    {outlineCourse.duration}
-                                    {" · "}
-                                    {outlineCourse.format}
-                                </p>
-                            </div>
-                        </div>
-
-                        <div
-                            className="
-                                mt-6
-                                rounded-[20px]
-                                border
-                                border-white/[0.08]
-                                bg-white/[0.03]
-                                p-4
-                            "
-                        >
-                            <span
-                                className="
-                                    text-[9px]
-                                    font-black
-                                    text-orange-300
-                                "
-                            >
-                                محور اصلی دوره
-                            </span>
-
-                            <p
-                                className="
-                                    mt-2
-                                    text-sm
-                                    font-bold
-                                    leading-7
-                                    text-white
-                                "
-                            >
-                                {outlineCourse.subtitle}
-                            </p>
-                        </div>
-
-                        <div
-                            className="
-                                mt-3
-                                rounded-[20px]
-                                border
-                                border-dashed
-                                border-white/[0.10]
-                                bg-white/[0.02]
-                                p-4
-                            "
-                        >
-                            <div
-                                className="
-                                    flex
-                                    gap-3
-                                "
-                            >
-                                <span
-                                    className="
-                                        mt-0.5
-                                        flex
-                                        h-7
-                                        w-7
-                                        shrink-0
-                                        items-center
-                                        justify-center
-                                        rounded-full
-                                        bg-orange-400/[0.10]
-                                        text-[11px]
                                         font-black
                                         text-orange-300
                                     "
                                 >
-                                    i
+                                    پوستر دوره
                                 </span>
 
-                                <p
+                                <h2
                                     className="
-                                        text-[10px]
-                                        leading-6
-                                        text-slate-400
-                                        sm:text-xs
-                                        sm:leading-7
+                                        mt-2
+                                        text-xl
+                                        font-black
+                                        text-white
                                     "
                                 >
-                                    سرفصل تفصیلی این دوره در اطلاعات فعلی
-                                    پوستر درج نشده است. برای دریافت برنامه
-                                    کامل آموزشی و جزئیات سرفصل‌ها، درخواست
-                                    برگزاری دوره را ثبت کنید.
-                                </p>
+                                    {previewCourse.title}
+                                </h2>
                             </div>
                         </div>
 
                         <div
                             className="
+                                relative
                                 mt-5
-                                grid
-                                grid-cols-[0.85fr_1.15fr]
-                                gap-2
+                                aspect-square
+                                overflow-hidden
+                                rounded-[20px]
+                                bg-[#0B2137]
                             "
                         >
-                            <button
-                                type="button"
-                                onClick={() => {
-                                    const course = outlineCourse;
-                                    setOutlineCourse(null);
-                                    setTimeout(
-                                        () => setPreviewCourse(course),
-                                        80
-                                    );
-                                }}
+                            <Image
+                                src={previewCourse.image}
+                                alt={previewCourse.title}
+                                fill
+                                sizes="90vw"
                                 className="
-                                    flex
-                                    min-h-[48px]
-                                    items-center
-                                    justify-center
-                                    rounded-full
-                                    border
-                                    border-white/10
-                                    bg-white/[0.04]
-                                    px-3
-                                    text-[10px]
-                                    font-black
-                                    text-slate-200
-                                    transition
-                                    hover:bg-white/[0.08]
-                                    sm:text-xs
+                                    object-contain
                                 "
-                            >
-                                مشاهده پوستر
-                            </button>
-
-                            <button
-                                type="button"
-                                onClick={() => {
-                                    const title = outlineCourse.title;
-                                    setOutlineCourse(null);
-                                    setTimeout(
-                                        () => requestCourse(title),
-                                        80
-                                    );
-                                }}
-                                className="
-                                    flex
-                                    min-h-[48px]
-                                    items-center
-                                    justify-center
-                                    gap-2
-                                    rounded-full
-                                    bg-orange-400
-                                    px-3
-                                    text-[10px]
-                                    font-black
-                                    text-[#06192E]
-                                    transition
-                                    hover:bg-orange-300
-                                    sm:text-xs
-                                "
-                            >
-                                درخواست برگزاری
-                                <ArrowIcon />
-                            </button>
+                            />
                         </div>
+
+                        <button
+                            type="button"
+                            onClick={() => {
+                                const title =
+                                    previewCourse.title;
+
+                                setPreviewCourse(null);
+
+                                setTimeout(() => {
+                                    requestCourse(
+                                        title
+                                    );
+                                }, 80);
+                            }}
+                            className="
+                                mt-4
+                                flex
+                                min-h-[48px]
+                                w-full
+                                items-center
+                                justify-center
+                                gap-2
+                                rounded-full
+                                bg-orange-400
+                                text-xs
+                                font-black
+                                text-[#06192E]
+                            "
+                        >
+                            درخواست برگزاری این دوره
+                            <ArrowIcon />
+                        </button>
                     </Modal>
                 )}
             </AnimatePresence>
         </>
     );
 }
-
 
 /* =========================================================
    GENERIC UI
@@ -3642,7 +3584,8 @@ function CoursesContent() {
 
     const category:
         Category =
-        rawCategory === "oman"
+        rawCategory === "international" ||
+            rawCategory === "oman"
             ? "oman"
             : rawCategory ===
                 "organization"
