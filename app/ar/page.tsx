@@ -123,8 +123,8 @@ export default function ArabicLandingPage() {
                         ...common,
                         job: data.get("job"),
                         courseId: "oman-general",
-                        courseTitle: "طلب معلومات عن برامج عمان",
-                        courseGroup: "برامج عمان",
+                        courseTitle: "طلب معلومات عن البرامج الدولية",
+                        courseGroup: "البرامج الدولية",
                         requestType: "oman",
                     };
 
@@ -187,7 +187,7 @@ export default function ArabicLandingPage() {
                             التدريب المؤسسي
                         </a>
                         <a href="#oman" className="transition hover:text-white">
-                            برامج عمان
+                            البرامج الدولية
                         </a>
                         <a href="#process" className="transition hover:text-white">
                             آلية العمل
@@ -223,13 +223,13 @@ export default function ArabicLandingPage() {
                             تدريب متخصص
                             <br />
                             <span className="bg-gradient-to-l from-orange-300 via-orange-400 to-cyan-300 bg-clip-text text-transparent">
-                                للمؤسسات وبرامج عمان
+                                للمؤسسات والبرامج الدولية
                             </span>
                         </h1>
 
                         <p className="mt-5 max-w-2xl text-sm leading-8 text-slate-300 sm:text-base sm:leading-9">
                             نصمم برامج تدريبية حسب احتياجات المؤسسات، ونوفر مساراً
-                            مخصصاً للتعرف على برامج كاردو المتعلقة بعُمان.
+                            مخصصاً للتعرف على برامج كاردو الدولية.
                         </p>
 
                         <div className="mt-7 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
@@ -246,7 +246,7 @@ export default function ArabicLandingPage() {
                                 href="#oman"
                                 className="inline-flex min-h-[50px] items-center justify-center gap-2 rounded-full border border-white/10 bg-white/[0.04] px-6 text-sm font-black text-white transition hover:bg-white/[0.08]"
                             >
-                                استكشف برامج عمان
+                                استكشف البرامج الدولية
                             </a>
                         </div>
 
@@ -274,10 +274,10 @@ export default function ArabicLandingPage() {
                                     02
                                 </span>
                                 <h2 className="mt-2 text-sm font-black text-white">
-                                    برامج عمان
+                                    البرامج الدولية
                                 </h2>
                                 <p className="mt-1 text-[10px] leading-6 text-slate-500">
-                                    مسار مخصص للاستفسار والتسجيل في البرامج المرتبطة بعُمان.
+                                    مسار مخصص للاستفسار والتسجيل في البرامج المرتبطة بالبرامج الدولية.
                                 </p>
                             </a>
                         </div>
@@ -308,17 +308,17 @@ export default function ArabicLandingPage() {
                             <div className="absolute inset-0 bg-gradient-to-br from-[#0D344A] to-[#071A2D]" />
                             <SafeImage
                                 src="/images/ar/oman.jpg"
-                                alt="برامج عمان"
+                                alt="البرامج الدولية"
                                 className="absolute inset-0 h-full w-full object-cover"
                             />
                             <div className="absolute inset-0 bg-gradient-to-t from-[#06192E]/95 via-[#06192E]/25 to-transparent" />
 
                             <div className="absolute inset-x-0 bottom-0 p-5">
                                 <span className="inline-flex rounded-full border border-cyan-300/20 bg-cyan-300/[0.08] px-3 py-1.5 text-[9px] font-black text-cyan-200">
-                                    عُمان
+                                    البرامج الدولية
                                 </span>
                                 <h3 className="mt-3 text-xl font-black text-white sm:text-2xl">
-                                    برامج كاردو المرتبطة بعُمان
+                                    برامج كاردو الدولية
                                 </h3>
                             </div>
                         </div>
@@ -404,7 +404,7 @@ export default function ArabicLandingPage() {
                         </span>
 
                         <h2 className="mt-4 text-[30px] font-black leading-[1.6] text-white sm:text-[40px] lg:text-[48px]">
-                            برامج عمان
+                            البرامج الدولية
                             <br />
                             <span className="text-orange-300">
                                 مسار واضح للاستفسار والتسجيل
@@ -412,7 +412,7 @@ export default function ArabicLandingPage() {
                         </h2>
 
                         <p className="mt-4 max-w-2xl text-xs leading-7 text-slate-300 sm:text-sm sm:leading-8">
-                            هذا القسم مخصص لبرامج كاردو المرتبطة بعُمان. يمكنكم إرسال
+                            هذا القسم مخصص لبرامج كاردو الدولية. يمكنكم إرسال
                             بياناتكم واهتماماتكم ليتم التواصل معكم حول البرنامج المناسب.
                         </p>
 
@@ -437,7 +437,7 @@ export default function ArabicLandingPage() {
                             onClick={() => setMode("oman")}
                             className="mt-7 inline-flex min-h-[48px] items-center justify-center gap-2 rounded-full bg-cyan-300 px-6 text-xs font-black text-[#07192D] transition hover:-translate-y-0.5 hover:bg-cyan-200"
                         >
-                            الاستفسار عن برامج عمان
+                            الاستفسار عن البرامج الدولية
                             <span>←</span>
                         </a>
                     </div>
@@ -446,14 +446,14 @@ export default function ArabicLandingPage() {
                         <div className="absolute inset-0 bg-gradient-to-br from-[#0F3A50] to-[#071A2D]" />
                         <SafeImage
                             src="/images/ar/oman.jpg"
-                            alt="برامج عمان"
+                            alt="البرامج الدولية"
                             className="absolute inset-0 h-full w-full object-cover"
                         />
                         <div className="absolute inset-0 bg-gradient-to-t from-[#06192E]/90 via-transparent to-transparent" />
 
                         <div className="absolute inset-x-0 bottom-0 p-5 sm:p-6">
                             <span className="text-[9px] font-black text-cyan-200">
-                                CARDO / OMAN
+                                CARDO / INTERNATIONAL
                             </span>
                             <p className="mt-2 max-w-md text-sm font-black leading-7 text-white sm:text-base">
                                 تعرف على البرامج المتاحة واختر المسار المناسب لاحتياجك.
@@ -571,7 +571,7 @@ export default function ArabicLandingPage() {
                                         : "border-white/10 bg-white/[0.03] text-slate-300"
                                     }`}
                             >
-                                برامج عمان
+                                البرامج الدولية
                             </button>
                         </div>
                     </div>
@@ -658,7 +658,7 @@ export default function ArabicLandingPage() {
                                         placeholder={
                                             mode === "organization"
                                                 ? "اكتب باختصار نوع التدريب الذي تحتاجه مؤسستك..."
-                                                : "اكتب ما الذي تريد معرفته عن برامج عمان..."
+                                                : "اكتب ما الذي تريد معرفته عن البرامج الدولية..."
                                         }
                                         className="w-full resize-none rounded-[18px] border border-white/10 bg-[#071A2D]/65 px-4 py-3 text-xs text-white outline-none transition placeholder:text-slate-600 focus:border-cyan-300/35"
                                     />
@@ -681,7 +681,7 @@ export default function ArabicLandingPage() {
                                         ? "جارٍ الإرسال..."
                                         : mode === "organization"
                                             ? "إرسال طلب التدريب المؤسسي"
-                                            : "إرسال طلب برامج عمان"}
+                                            : "إرسال طلب البرامج الدولية"}
                                 </button>
                             </form>
                         )}
@@ -697,7 +697,7 @@ export default function ArabicLandingPage() {
                             CARDO
                         </strong>
                         <p className="mt-1 text-[9px] text-slate-600">
-                            التدريب المؤسسي المتخصص وبرامج عمان
+                            التدريب المؤسسي المتخصص والبرامج الدولية
                         </p>
                     </div>
 
