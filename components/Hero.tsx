@@ -82,7 +82,7 @@ const heroSlides: HeroSlide[] = [
 
         id: 5,
 
-        title: "دوره تخصصی بین‌المللی آتش‌نشانی | Grand Fire",
+        title: "دوره تخصصی بین‌المللی آتش‌نشانی |  Fire Ground",
 
         subtitle: "سازمان امداد و نجات جمعیت هلال احمر",
 
