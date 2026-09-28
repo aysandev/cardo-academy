@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 
 type Instructor = {
     id: string;
@@ -11,8 +11,6 @@ type Instructor = {
     bio: string;
     image?: string;
 };
-
-const AUTO_PLAY_MS = 3800;
 
 const instructors: Instructor[] = [
     {
@@ -96,6 +94,7 @@ const instructors: Instructor[] = [
         bio: "کارشناس رسمی دادگستری در رشته آتش‌سوزی، مؤلف، مشاور و مدرس علوم آتش‌نشانی با سوابق متعدد آموزشی و عملیاتی.",
         image: "/images/instructors/naser-rahbar.jpg",
     },
+
 ];
 
 function initials(name: string) {
@@ -112,22 +111,35 @@ function initials(name: string) {
 export default function WhyKardo() {
     const [active, setActive] = useState(0);
     const [paused, setPaused] = useState(false);
+    const teacherStripRef = useRef<HTMLDivElement>(null);
 
-    /*
-     * AUTO SLIDER
-     *
-     * هیچ Scroll وجود ندارد.
-     * فقط state کارت فعال عوض می‌شود.
-     */
     useEffect(() => {
         if (paused) return;
 
-        const timer = window.setTimeout(() => {
-            setActive((current) => (current + 1) % instructors.length);
-        }, AUTO_PLAY_MS);
+        const timer = setInterval(() => {
+            setActive((prev) =>
+                prev === 0 ? instructors.length - 1 : prev - 1
+            );
+        }, 5000);
 
-        return () => window.clearTimeout(timer);
-    }, [active, paused]);
+        return () => clearInterval(timer);
+    }, [paused]);
+
+
+    useEffect(() => {
+        const strip = teacherStripRef.current;
+        if (!strip) return;
+
+        const activeButton = strip.querySelector<HTMLButtonElement>(
+            `[data-teacher-index="${active}"]`
+        );
+
+        activeButton?.scrollIntoView({
+            behavior: "smooth",
+            block: "nearest",
+            inline: "center",
+        });
+    }, [active]);
 
     const current = instructors[active];
 
@@ -140,139 +152,111 @@ export default function WhyKardo() {
     const previous = instructors[previousIndex];
     const next = instructors[nextIndex];
 
+    const goNext = () => {
+        setActive((prev) => (prev + 1) % instructors.length);
+    };
+
+    const goPrevious = () => {
+        setActive((prev) =>
+            prev === 0 ? instructors.length - 1 : prev - 1
+        );
+    };
+
     const progress = useMemo(
         () => `${active + 1}`.padStart(2, "0"),
         [active]
     );
 
-    function goNext() {
-        setActive((current) => (current + 1) % instructors.length);
-    }
-
-    function goPrevious() {
-        setActive((current) =>
-            current === 0 ? instructors.length - 1 : current - 1
-        );
-    }
-
     return (
         <section
             dir="rtl"
             className="
-                relative
-                w-full
-                max-w-full
-                overflow-hidden
-                bg-gradient-to-b
-                from-[#0B2239]
-                via-[#14314A]
-                to-[#0B2239]
-                px-3
-                py-10
-                sm:px-5
-                sm:py-12
-                md:px-6
-                md:py-14
-                lg:px-8
-                lg:py-16
-                xl:px-10
-            "
+        relative
+        overflow-hidden
+        bg-gradient-to-b
+        from-[#0B2239]
+        via-[#14314A]
+        to-[#0B2239]
+        px-4
+        py-10
+        sm:px-6
+        sm:py-12
+        md:py-14
+        lg:px-10
+        lg:py-16
+      "
         >
-            {/* BACKGROUND GLOW */}
             <div
                 className="
-                    pointer-events-none
-                    absolute
-                    -right-40
-                    top-20
-                    h-[420px]
-                    w-[420px]
-                    rounded-full
-                    bg-cyan-300/[0.06]
-                    blur-[150px]
-                    lg:h-[520px]
-                    lg:w-[520px]
-                "
+          pointer-events-none
+          absolute
+          -right-40
+          top-24
+          h-[500px]
+          w-[500px]
+          rounded-full
+          bg-cyan-300/[0.06]
+          blur-[160px]
+        "
             />
 
             <div
                 className="
-                    pointer-events-none
-                    absolute
-                    -left-40
-                    bottom-0
-                    h-[420px]
-                    w-[420px]
-                    rounded-full
-                    bg-orange-400/[0.07]
-                    blur-[150px]
-                    lg:h-[520px]
-                    lg:w-[520px]
-                "
+          pointer-events-none
+          absolute
+          -left-40
+          bottom-10
+          h-[500px]
+          w-[500px]
+          rounded-full
+          bg-orange-400/[0.07]
+          blur-[160px]
+        "
             />
 
-            <div
-                className="
-                    relative
-                    mx-auto
-                    w-full
-                    max-w-[1450px]
-                    min-w-0
-                "
-            >
-                {/* HEADER */}
+            <div className="relative mx-auto max-w-[1450px]">
                 <div className="mx-auto max-w-3xl text-center">
                     <span
                         className="
-                            inline-flex
-                            items-center
-                            gap-2
-                            rounded-full
-                            border
-                            border-cyan-300/20
-                            bg-cyan-300/[0.06]
-                            px-3.5
-                            py-2
-                            text-[9px]
-                            font-black
-                            text-cyan-200
-                            sm:px-4
-                            sm:text-xs
-                        "
+              inline-flex
+              items-center
+              gap-2
+              rounded-full
+              border
+              border-cyan-300/20
+              bg-cyan-300/[0.06]
+              px-4
+              py-2
+              text-[10px]
+              font-black
+              text-cyan-200
+              sm:text-xs
+            "
                     >
-                        <span
-                            className="
-                                h-2
-                                w-2
-                                rounded-full
-                                bg-orange-400
-                            "
-                        />
-
+                        <span className="h-2 w-2 rounded-full bg-orange-400" />
                         اساتید مجتمع آموزشی کاردو
                     </span>
 
                     <h2
                         className="
-                            mt-4
-                            text-[28px]
-                            font-black
-                            leading-[1.65]
-                            text-white
-                            sm:mt-5
-                            sm:text-4xl
-                            lg:text-5xl
-                        "
+              mt-5
+              text-3xl
+              font-black
+              leading-[1.6]
+              text-white
+              sm:text-4xl
+              lg:text-5xl
+            "
                     >
                         تجربه‌ای که{" "}
                         <span
                             className="
-                                bg-gradient-to-l
-                                from-cyan-300
-                                to-orange-300
-                                bg-clip-text
-                                text-transparent
-                            "
+                bg-gradient-to-l
+                from-cyan-300
+                to-orange-300
+                bg-clip-text
+                text-transparent
+              "
                         >
                             به آموزش تبدیل می‌شود
                         </span>
@@ -280,281 +264,323 @@ export default function WhyKardo() {
 
                     <p
                         className="
-                            mx-auto
-                            mt-3
-                            max-w-2xl
-                            px-2
-                            text-xs
-                            leading-7
-                            text-slate-400
-                            sm:mt-4
-                            sm:text-sm
-                            sm:leading-8
-                        "
+              mx-auto
+              mt-4
+              max-w-2xl
+              text-sm
+              leading-8
+              text-slate-400
+            "
                     >
-                        بخشی از تیم مدرسان و متخصصان کاردو در حوزه‌های
-                        HSE، آتش‌نشانی، سلامت، مدیریت بحران، امداد و نجات
-                        و خدمات حقوقی.
+                        بخشی از تیم مدرسان و متخصصان کاردو در حوزه‌های HSE،
+                        آتش‌نشانی، سلامت، مدیریت بحران، امداد و نجات و خدمات حقوقی.
                     </p>
                 </div>
 
-                {/* ================================================= */}
-                {/* DESKTOP SLIDER */}
-                {/* ================================================= */}
-
+                {/* DESKTOP */}
                 <div
                     className="
-                        mt-9
-                        hidden
-                        grid-cols-[0.72fr_1fr_0.72fr]
-                        items-center
-                        gap-5
-                        lg:grid
-                        xl:gap-6
-                    "
+            mt-8
+            hidden
+            grid-cols-[0.72fr_1fr_0.72fr]
+            items-center
+            gap-6
+            lg:grid
+          "
                     onMouseEnter={() => setPaused(true)}
                     onMouseLeave={() => setPaused(false)}
                 >
-                    {/* PREVIOUS */}
                     <button
                         type="button"
                         onClick={() => setActive(previousIndex)}
                         className="
-                            group
-                            min-w-0
-                            overflow-hidden
-                            rounded-[30px]
-                            border
-                            border-white/[0.07]
-                            bg-white/[0.025]
-                            p-4
-                            text-right
-                            opacity-45
-                            transition
-                            duration-500
-                            hover:-translate-y-1
-                            hover:opacity-90
-                            xl:p-5
-                        "
+              group
+              relative
+              min-h-[390px] xl:min-h-[430px]
+              overflow-hidden
+              rounded-[32px]
+              border
+              border-white/[0.07]
+              bg-white/[0.025]
+              p-5
+              text-right
+              opacity-55
+              transition
+              duration-500
+              hover:-translate-y-1
+              hover:opacity-90
+            "
                     >
-                        <InstructorVisual
-                            instructor={previous}
-                            muted
-                        />
+                        <InstructorVisual key={`previous-${previous.id}`} instructor={previous} muted />
 
-                        <h3
-                            className="
-                                mt-4
-                                truncate
-                                text-lg
-                                font-black
-                                text-white
-                                xl:text-xl
-                            "
-                        >
+                        <h3 className="mt-5 text-xl font-black text-white">
                             {previous.name}
                         </h3>
 
-                        <p
-                            className="
-                                mt-2
-                                truncate
-                                text-[11px]
-                                text-cyan-200
-                                xl:text-xs
-                            "
-                        >
+                        <p className="mt-2 text-xs text-cyan-200">
                             {previous.role}
                         </p>
                     </button>
 
-                    {/* CURRENT */}
                     <article
-                        key={`desktop-${current.id}`}
                         className="
-                            instructor-slide
-                            relative
-                            min-w-0
-                            overflow-hidden
-                            rounded-[36px]
-                            border
-                            border-orange-300/20
-                            bg-white/[0.045]
-                            p-5
-                            shadow-[0_35px_100px_rgba(0,0,0,0.22)]
-                            backdrop-blur-xl
-                            xl:p-7
-                        "
+              relative
+              overflow-hidden
+              rounded-[38px]
+              border
+              border-orange-300/20
+              bg-white/[0.045]
+              p-6
+              shadow-[0_35px_100px_rgba(0,0,0,0.22)]
+              backdrop-blur-xl
+              sm:p-8
+            "
                     >
                         <div
                             className="
-                                absolute
-                                left-5
-                                top-5
-                                z-20
-                                text-[9px]
-                                font-black
-                                tracking-[0.22em]
-                                text-orange-300
-                                xl:text-xs
-                            "
+                absolute
+                left-6
+                top-6
+                text-xs
+                font-black
+                tracking-[0.25em]
+                text-orange-300
+              "
                         >
-                            {progress} /{" "}
-                            {String(instructors.length).padStart(2, "0")}
+                            {progress} / {String(instructors.length).padStart(2, "0")}
                         </div>
 
-                        <InstructorVisual instructor={current} />
+                        <InstructorVisual key={`current-${current.id}`} instructor={current} />
 
-                        <InstructorContent instructor={current} />
+                        <div className="mt-7">
+                            <span
+                                className="
+                  inline-flex
+                  rounded-full
+                  border
+                  border-cyan-300/15
+                  bg-cyan-300/[0.06]
+                  px-3
+                  py-1.5
+                  text-[10px]
+                  font-black
+                  text-cyan-200
+                "
+                            >
+                                {current.role}
+                            </span>
 
-                        <SliderNavigation
-                            active={active}
-                            onPrevious={goPrevious}
-                            onNext={goNext}
-                            onSelect={setActive}
-                        />
+                            <h3
+                                className="
+                  mt-4
+                  text-3xl
+                  font-black
+                  text-white
+                "
+                            >
+                                {current.name}
+                            </h3>
 
-                        <SliderTimer
-                            id={`desktop-${current.id}`}
-                            paused={paused}
-                        />
+                            <p
+                                className="
+                  mt-2
+                  text-sm
+                  font-bold
+                  text-orange-200
+                "
+                            >
+                                {current.degree}
+                            </p>
+
+                            <div
+                                className="
+                  mt-5
+                  inline-flex
+                  rounded-full
+                  border
+                  border-white/[0.08]
+                  bg-white/[0.03]
+                  px-4
+                  py-2
+                  text-xs
+                  font-bold
+                  text-slate-300
+                "
+                            >
+                                {current.experience}
+                            </div>
+
+                            <p
+                                className="
+                  mt-5
+                  text-sm
+                  leading-8
+                  text-slate-400
+                "
+                            >
+                                {current.bio}
+                            </p>
+                        </div>
+
+                        <div
+                            className="
+                mt-7
+                flex
+                items-center
+                justify-between
+                gap-3
+              "
+                        >
+                            <button
+                                type="button"
+                                onClick={goPrevious}
+                                aria-label="استاد قبلی"
+                                className="
+                  flex
+                  h-12
+                  w-12
+                  items-center
+                  justify-center
+                  rounded-full
+                  border
+                  border-white/10
+                  bg-white/[0.04]
+                  text-xl
+                  text-white
+                  transition
+                  hover:bg-white/[0.08]
+                "
+                            >
+                                →
+                            </button>
+
+                            <div className="flex flex-wrap justify-center gap-1.5">
+                                {instructors.map((_, index) => (
+                                    <button
+                                        key={index}
+                                        type="button"
+                                        onClick={() => setActive(index)}
+                                        aria-label={`استاد ${index + 1}`}
+                                        className={`
+                      h-2
+                      rounded-full
+                      transition-all
+                      ${active === index
+                                                ? "w-7 bg-orange-400"
+                                                : "w-2 bg-white/20"
+                                            }
+                    `}
+                                    />
+                                ))}
+                            </div>
+
+                            <button
+                                type="button"
+                                onClick={goNext}
+                                aria-label="استاد بعدی"
+                                className="
+                  flex
+                  h-12
+                  w-12
+                  items-center
+                  justify-center
+                  rounded-full
+                  border
+                  border-white/10
+                  bg-white/[0.04]
+                  text-xl
+                  text-white
+                  transition
+                  hover:bg-white/[0.08]
+                "
+                            >
+                                ←
+                            </button>
+                        </div>
                     </article>
 
-                    {/* NEXT */}
                     <button
                         type="button"
                         onClick={() => setActive(nextIndex)}
                         className="
-                            group
-                            min-w-0
-                            overflow-hidden
-                            rounded-[30px]
-                            border
-                            border-white/[0.07]
-                            bg-white/[0.025]
-                            p-4
-                            text-right
-                            opacity-45
-                            transition
-                            duration-500
-                            hover:-translate-y-1
-                            hover:opacity-90
-                            xl:p-5
-                        "
+              group
+              relative
+              min-h-[390px] xl:min-h-[430px]
+              overflow-hidden
+              rounded-[32px]
+              border
+              border-white/[0.07]
+              bg-white/[0.025]
+              p-5
+              text-right
+              opacity-55
+              transition
+              duration-500
+              hover:-translate-y-1
+              hover:opacity-90
+            "
                     >
-                        <InstructorVisual
-                            instructor={next}
-                            muted
-                        />
+                        <InstructorVisual key={`next-${next.id}`} instructor={next} muted />
 
-                        <h3
-                            className="
-                                mt-4
-                                truncate
-                                text-lg
-                                font-black
-                                text-white
-                                xl:text-xl
-                            "
-                        >
+                        <h3 className="mt-5 text-xl font-black text-white">
                             {next.name}
                         </h3>
 
-                        <p
-                            className="
-                                mt-2
-                                truncate
-                                text-[11px]
-                                text-cyan-200
-                                xl:text-xs
-                            "
-                        >
+                        <p className="mt-2 text-xs text-cyan-200">
                             {next.role}
                         </p>
                     </button>
                 </div>
 
-                {/* ================================================= */}
-                {/* MOBILE / TABLET SLIDER */}
-                {/* ================================================= */}
-
-                <div
-                    className="
-                        mx-auto
-                        mt-7
-                        w-full
-                        max-w-[760px]
-                        min-w-0
-                        lg:hidden
-                    "
-                >
-                    <article
-                        key={`mobile-${current.id}`}
+                {/* MOBILE / TABLET */}
+                <div className="mt-7 sm:mt-8 lg:hidden">
+                    <div
                         className="
-                            instructor-slide
-                            w-full
-                            min-w-0
-                            overflow-hidden
-                            rounded-[25px]
-                            border
-                            border-white/[0.08]
-                            bg-white/[0.035]
-                            p-3
-                            shadow-[0_20px_70px_rgba(0,0,0,0.18)]
-                            sm:rounded-[30px]
-                            sm:p-5
-                            md:p-6
-                        "
+              overflow-hidden
+              rounded-[28px]
+              border
+              border-white/[0.08]
+              bg-white/[0.035]
+              p-4
+              sm:p-6
+            "
                     >
-                        <InstructorVisual instructor={current} />
+                        <InstructorVisual key={`current-${current.id}`} instructor={current} />
 
                         <div className="mt-5">
                             <div
                                 className="
-                                    flex
-                                    flex-col
-                                    gap-3
-                                    sm:flex-row
-                                    sm:items-start
-                                    sm:justify-between
-                                "
+                  flex
+                  items-start
+                  justify-between
+                  gap-4
+                "
                             >
-                                <div className="min-w-0">
-                                    <span
-                                        className="
-                                            text-[9px]
-                                            font-black
-                                            text-orange-300
-                                        "
-                                    >
-                                        {progress} /{" "}
-                                        {String(
-                                            instructors.length
-                                        ).padStart(2, "0")}
+                                <div>
+                                    <span className="text-[9px] font-black text-orange-300">
+                                        {progress} / {String(instructors.length).padStart(2, "0")}
                                     </span>
 
                                     <h3
                                         className="
-                                            mt-1.5
-                                            text-xl
-                                            font-black
-                                            leading-8
-                                            text-white
-                                            sm:text-2xl
-                                        "
+                      mt-2
+                      text-xl
+                      font-black
+                      leading-8
+                      text-white
+                      sm:text-2xl
+                    "
                                     >
                                         {current.name}
                                     </h3>
 
                                     <p
                                         className="
-                                            mt-1
-                                            text-[11px]
-                                            font-bold
-                                            leading-6
-                                            text-cyan-200
-                                            sm:text-xs
-                                        "
+                      mt-1
+                      text-xs
+                      font-bold
+                      text-cyan-200
+                    "
                                     >
                                         {current.role}
                                     </p>
@@ -562,362 +588,130 @@ export default function WhyKardo() {
 
                                 <span
                                     className="
-                                        w-fit
-                                        shrink-0
-                                        rounded-full
-                                        bg-orange-400/[0.10]
-                                        px-3
-                                        py-2
-                                        text-[9px]
-                                        font-black
-                                        text-orange-200
-                                    "
+                    shrink-0
+                    rounded-full
+                    bg-orange-400/[0.10]
+                    px-3
+                    py-2
+                    text-[9px]
+                    font-black
+                    text-orange-200
+                  "
                                 >
                                     {current.experience}
                                 </span>
                             </div>
 
-                            <p
-                                className="
-                                    mt-4
-                                    text-[11px]
-                                    font-bold
-                                    leading-6
-                                    text-orange-200
-                                    sm:text-xs
-                                "
-                            >
+                            <p className="mt-4 text-xs font-bold text-orange-200">
                                 {current.degree}
                             </p>
 
                             <p
                                 className="
-                                    mt-3
-                                    text-[11px]
-                                    leading-7
-                                    text-slate-400
-                                    sm:text-xs
-                                    md:text-sm
-                                    md:leading-8
-                                "
+                  mt-4
+                  text-xs
+                  leading-7
+                  text-slate-400
+                  sm:text-sm
+                "
                             >
                                 {current.bio}
                             </p>
                         </div>
 
-                        <SliderNavigation
-                            active={active}
-                            onPrevious={goPrevious}
-                            onNext={goNext}
-                            onSelect={setActive}
-                            compact
-                        />
-
-                        <SliderTimer
-                            id={`mobile-${current.id}`}
-                            paused={false}
-                        />
-                    </article>
-                </div>
-            </div>
-
-            {/* ================================================= */}
-            {/* ANIMATION */}
-            {/* ================================================= */}
-
-            <style jsx global>{`
-                @keyframes instructorSlide {
-                    0% {
-                        opacity: 0;
-                        transform: translateX(-28px) scale(0.985);
-                    }
-
-                    100% {
-                        opacity: 1;
-                        transform: translateX(0) scale(1);
-                    }
-                }
-
-                @keyframes instructorTimer {
-                    from {
-                        transform: scaleX(0);
-                    }
-
-                    to {
-                        transform: scaleX(1);
-                    }
-                }
-
-                .instructor-slide {
-                    animation: instructorSlide
-                        550ms
-                        cubic-bezier(0.22, 1, 0.36, 1);
-                }
-
-                .instructor-timer {
-                    width: 100%;
-                    animation-name: instructorTimer;
-                    animation-timing-function: linear;
-                    animation-fill-mode: forwards;
-                }
-
-                @media (prefers-reduced-motion: reduce) {
-                    .instructor-slide,
-                    .instructor-timer {
-                        animation: none !important;
-                    }
-                }
-            `}</style>
-        </section>
-    );
-}
-
-/* ========================================================= */
-/* CONTENT */
-/* ========================================================= */
-
-function InstructorContent({
-    instructor,
-}: {
-    instructor: Instructor;
-}) {
-    return (
-        <div className="mt-6">
-            <span
-                className="
-                    inline-flex
-                    rounded-full
-                    border
-                    border-cyan-300/15
-                    bg-cyan-300/[0.06]
-                    px-3
-                    py-1.5
-                    text-[10px]
-                    font-black
-                    text-cyan-200
-                "
-            >
-                {instructor.role}
-            </span>
-
-            <h3
-                className="
-                    mt-4
-                    text-2xl
-                    font-black
-                    text-white
-                    xl:text-3xl
-                "
-            >
-                {instructor.name}
-            </h3>
-
-            <p
-                className="
-                    mt-2
-                    text-xs
-                    font-bold
-                    text-orange-200
-                    xl:text-sm
-                "
-            >
-                {instructor.degree}
-            </p>
-
-            <span
-                className="
-                    mt-4
-                    inline-flex
-                    rounded-full
-                    border
-                    border-white/[0.08]
-                    bg-white/[0.03]
-                    px-4
-                    py-2
-                    text-[11px]
-                    font-bold
-                    text-slate-300
-                "
-            >
-                {instructor.experience}
-            </span>
-
-            <p
-                className="
-                    mt-4
-                    text-xs
-                    leading-7
-                    text-slate-400
-                    xl:text-sm
-                    xl:leading-8
-                "
-            >
-                {instructor.bio}
-            </p>
-        </div>
-    );
-}
-
-/* ========================================================= */
-/* NAVIGATION */
-/* ========================================================= */
-
-function SliderNavigation({
-    active,
-    onPrevious,
-    onNext,
-    onSelect,
-    compact = false,
-}: {
-    active: number;
-    onPrevious: () => void;
-    onNext: () => void;
-    onSelect: (index: number) => void;
-    compact?: boolean;
-}) {
-    return (
-        <div
-            className={`
+                        <div
+                            className="
+                mt-6
                 flex
                 items-center
                 justify-between
-                gap-3
-                ${compact ? "mt-5" : "mt-7"}
-            `}
-        >
-            <button
-                type="button"
-                onClick={onPrevious}
-                aria-label="استاد قبلی"
-                className={`
-                    flex
-                    shrink-0
-                    items-center
-                    justify-center
-                    rounded-full
-                    border
-                    border-white/10
-                    bg-white/[0.04]
-                    text-white
-                    transition
-                    hover:bg-white/[0.08]
-                    active:scale-95
-                    ${compact
-                        ? "h-10 w-10 text-base"
-                        : "h-12 w-12 text-xl"
-                    }
-                `}
-            >
-                →
-            </button>
-
-            <div
-                className="
-                    flex
-                    min-w-0
-                    flex-wrap
-                    justify-center
-                    gap-1.5
+              "
+                        >
+                            <button
+                                type="button"
+                                onClick={goPrevious}
+                                className="
+                  flex
+                  h-11
+                  w-11
+                  items-center
+                  justify-center
+                  rounded-full
+                  border
+                  border-white/10
+                  bg-white/[0.04]
+                  text-white
                 "
-            >
-                {instructors.map((teacher, index) => (
-                    <button
-                        key={teacher.id}
-                        type="button"
-                        onClick={() => onSelect(index)}
-                        aria-label={`نمایش ${teacher.name}`}
-                        className={`
-                            h-2
-                            rounded-full
-                            transition-all
-                            duration-300
+                            >
+                                →
+                            </button>
 
-                            ${active === index
-                                ? "w-7 bg-orange-400"
-                                : "w-2 bg-white/20 hover:bg-white/40"
-                            }
-                        `}
-                    />
-                ))}
-            </div>
+                            <div className="text-[10px] font-bold text-slate-500">
+                                برای مشاهده اساتید ورق بزنید
+                            </div>
 
-            <button
-                type="button"
-                onClick={onNext}
-                aria-label="استاد بعدی"
-                className={`
-                    flex
-                    shrink-0
-                    items-center
-                    justify-center
-                    rounded-full
-                    bg-orange-400
-                    text-[#07192D]
-                    transition
-                    hover:bg-orange-300
-                    active:scale-95
+                            <button
+                                type="button"
+                                onClick={goNext}
+                                className="
+                  flex
+                  h-11
+                  w-11
+                  items-center
+                  justify-center
+                  rounded-full
+                  bg-orange-400
+                  text-[#07192D]
+                "
+                            >
+                                ←
+                            </button>
+                        </div>
+                    </div>
 
-                    ${compact
-                        ? "h-10 w-10 text-base"
-                        : "h-12 w-12 text-xl"
-                    }
-                `}
-            >
-                ←
-            </button>
-        </div>
-    );
-}
-
-/* ========================================================= */
-/* TIMER */
-/* ========================================================= */
-
-function SliderTimer({
-    id,
-    paused,
-}: {
-    id: string;
-    paused: boolean;
-}) {
-    return (
-        <div
-            className="
-                mt-4
-                h-[3px]
-                w-full
-                overflow-hidden
-                rounded-full
-                bg-white/[0.06]
+                    <div
+                        ref={teacherStripRef}
+                        className="
+              mt-4
+              flex
+              gap-2
+              overflow-x-auto
+              scroll-smooth
+              pb-2
+              [scrollbar-width:none]
+              [&::-webkit-scrollbar]:hidden
             "
-        >
-            <span
-                key={id}
-                className="
-                    instructor-timer
-                    block
-                    h-full
-                    origin-right
-                    rounded-full
-                    bg-gradient-to-l
-                    from-orange-400
-                    via-orange-300
-                    to-cyan-300
-                "
-                style={{
-                    animationDuration: `${AUTO_PLAY_MS}ms`,
-                    animationPlayState: paused
-                        ? "paused"
-                        : "running",
-                }}
-            />
-        </div>
+                    >
+                        {instructors.map((teacher, index) => (
+                            <button
+                                key={teacher.id}
+                                data-teacher-index={index}
+                                type="button"
+                                onClick={() => setActive(index)}
+                                className={`
+                  shrink-0
+                  rounded-full
+                  border
+                  px-3.5
+                  py-2.5
+                  text-[10px]
+                  font-black
+                  transition
+                  ${active === index
+                                        ? "border-orange-400 bg-orange-400 text-[#07192D]"
+                                        : "border-white/10 bg-white/[0.03] text-slate-300"
+                                    }
+                `}
+                            >
+                                {teacher.name}
+                            </button>
+                        ))}
+                    </div>
+                </div>
+            </div>
+        </section>
     );
 }
-
-/* ========================================================= */
-/* PHOTO */
-/* ========================================================= */
 
 function InstructorVisual({
     instructor,
@@ -929,74 +723,64 @@ function InstructorVisual({
     return (
         <div
             className={`
-                relative
-                w-full
-                overflow-hidden
-                rounded-[20px]
-                border
-                border-white/[0.08]
-                bg-[#091D31]
-                sm:rounded-[24px]
-
-                ${muted
-                    ? "aspect-[4/4.7]"
-                    : "aspect-[4/4.5] sm:aspect-[16/11] md:aspect-[16/10] lg:aspect-[4/4.8]"
+        relative
+        overflow-hidden
+        rounded-[26px]
+        border
+        border-white/[0.08]
+        bg-[#091D31]
+        ${muted
+                    ? "h-[260px] xl:h-[300px]"
+                    : "h-[280px] sm:h-[330px] md:h-[360px] xl:h-[390px]"
                 }
-            `}
+      `}
         >
             {instructor.image ? (
                 <img
+                    key={`${instructor.id}-${muted ? "muted" : "main"}`}
                     src={instructor.image}
                     alt={instructor.name}
-                    loading="lazy"
                     className={`
-                        absolute
-                        inset-0
-                        h-full
-                        w-full
-                        object-cover
-                        object-top
-                        transition
-                        duration-700
-
-                        ${muted
-                            ? "grayscale-[35%] group-hover:grayscale-0"
-                            : ""
-                        }
-                    `}
+            absolute
+            inset-0
+            h-full
+            w-full
+            object-cover
+            object-top
+            transition
+            duration-700
+            ${muted ? "grayscale-[35%]" : ""}
+          `}
                 />
             ) : (
                 <div
                     className="
-                        absolute
-                        inset-0
-                        flex
-                        items-center
-                        justify-center
-                        bg-gradient-to-br
-                        from-[#102E49]
-                        via-[#0B2239]
-                        to-[#07192D]
-                    "
+            absolute
+            inset-0
+            flex
+            items-center
+            justify-center
+            bg-gradient-to-br
+            from-[#102E49]
+            via-[#0B2239]
+            to-[#07192D]
+          "
                 >
                     <div
                         className="
-                            flex
-                            h-24
-                            w-24
-                            items-center
-                            justify-center
-                            rounded-full
-                            border
-                            border-orange-300/20
-                            bg-orange-400/[0.08]
-                            text-3xl
-                            font-black
-                            text-orange-200
-                            sm:h-28
-                            sm:w-28
-                            sm:text-4xl
-                        "
+              flex
+              h-28
+              w-28
+              items-center
+              justify-center
+              rounded-full
+              border
+              border-orange-300/20
+              bg-orange-400/[0.08]
+              text-4xl
+              font-black
+              text-orange-200
+            "
                     >
                         {initials(instructor.name)}
                     </div>
@@ -1005,37 +789,31 @@ function InstructorVisual({
 
             <div
                 className="
-                    absolute
-                    inset-0
-                    bg-gradient-to-t
-                    from-[#07192D]
-                    via-transparent
-                    to-transparent
-                "
+          absolute
+          inset-0
+          bg-gradient-to-t
+          from-[#07192D]
+          via-transparent
+          to-transparent
+        "
             />
 
             <div
                 className="
-                    absolute
-                    bottom-3
-                    right-3
-                    rounded-full
-                    border
-                    border-white/10
-                    bg-[#07192D]/75
-                    px-2.5
-                    py-1.5
-                    text-[7px]
-                    font-black
-                    tracking-[0.08em]
-                    text-white
-                    backdrop-blur-lg
-                    sm:bottom-4
-                    sm:right-4
-                    sm:px-3
-                    sm:py-2
-                    sm:text-[9px]
-                "
+          absolute
+          bottom-4
+          right-4
+          rounded-full
+          border
+          border-white/10
+          bg-[#07192D]/75
+          px-3
+          py-2
+          text-[9px]
+          font-black
+          text-white
+          backdrop-blur-lg
+        "
             >
                 CARDO INSTRUCTOR
             </div>
