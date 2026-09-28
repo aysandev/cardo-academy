@@ -195,7 +195,7 @@ const instructors: Instructor[] = [
         bio:
             "خبير ومدرب في الصحة المهنية والسلامة والإدارة البيئية، وله خبرة في التدريب الجامعي والاستشارات للمشروعات الصناعية.",
         image:
-            "/images/instructors/hashem-setareh.jpg",
+            "/images/instructors/hashem-setareh.png",
     },
 
     {
@@ -227,7 +227,7 @@ const instructors: Instructor[] = [
         bio:
             "رجل إطفاء محترف ومدرب متخصص، وله خبرة عملية في منظمة إطفاء طهران والتدريب المهني.",
         image:
-            "/images/instructors/hamidreza-faraji.jpg",
+            "/images/instructors/hamidreza-faraji.jpeg",
     },
 
     {
@@ -243,7 +243,7 @@ const instructors: Instructor[] = [
         bio:
             "خبرة واسعة في السلامة والصحة المهنية والتدريب في الصناعات المختلفة ومجالات الإطفاء والسلامة.",
         image:
-            "/images/instructors/ebrahim-panahizadeh.jpg",
+            "/images/instructors/ebrahim-panahizadeh.jpeg",
     },
 
     {
@@ -291,7 +291,7 @@ const instructors: Instructor[] = [
         bio:
             "متخصص في HSE وإدارة الأزمات والدفاع غير النشط، وله خبرة في التدريس الجامعي والتأليف والترجمة التخصصية.",
         image:
-            "/images/instructors/ahmad-akrami.jpg",
+            "/images/instructors/ahmad-akrami.jpeg",
     },
 
     {
@@ -2180,7 +2180,7 @@ export default function ArabicPage() {
                         <span className="text-[9px] font-black tracking-[0.16em] text-cyan-300">
                             EXPERT INSTRUCTORS
                         </span>
-                        <h2 className="mt-3 text-[28px] font-black sm:text-[36px]">
+                        <h2 className="mt-3 text-[28px] font-black text-white sm:text-[36px]">
                             تعرف على مدربي كاردو
                         </h2>
                         <p className="mx-auto mt-3 max-w-xl text-xs leading-7 text-slate-400 sm:text-sm">
@@ -2188,7 +2188,7 @@ export default function ArabicPage() {
                         </p>
                     </div>
 
-                    <div className="mt-7 overflow-hidden rounded-[26px] border border-white/[0.08] bg-slate-50">
+                    <div className="mt-7 overflow-hidden rounded-[26px] border border-white/[0.08] bg-[#102B43] shadow-[0_22px_70px_rgba(0,0,0,0.20)]">
                         <div className="grid lg:grid-cols-[340px_1fr] lg:items-stretch">
                             <SafePhoto
                                 src={currentInstructor.image}
@@ -2196,11 +2196,11 @@ export default function ArabicPage() {
                                 className="h-[280px] w-full lg:h-[360px] lg:rounded-none"
                             />
 
-                            <div className="flex flex-col justify-center p-5 sm:p-7 lg:p-9">
+                            <div className="flex flex-col justify-center bg-[#102B43] p-5 sm:p-7 lg:p-9">
                                 <span className="text-[9px] font-black text-orange-300">
                                     {currentInstructor.role}
                                 </span>
-                                <h3 className="mt-2 text-[24px] font-black leading-[1.45] sm:text-[32px]">
+                                <h3 className="mt-2 text-[24px] font-black leading-[1.45] text-white sm:text-[32px]">
                                     {currentInstructor.name}
                                 </h3>
 
@@ -2219,7 +2219,7 @@ export default function ArabicPage() {
                             </div>
                         </div>
 
-                        <div className="border-t border-white/[0.07] p-3 sm:p-4">
+                        <div className="border-t border-white/[0.07] bg-[#0D263D] p-3 sm:p-4">
                             <div className="flex gap-2 overflow-x-auto pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
                                 {instructors.map((item) => (
                                     <button
