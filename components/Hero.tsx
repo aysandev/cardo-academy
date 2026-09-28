@@ -82,7 +82,7 @@ const heroSlides: HeroSlide[] = [
 
         id: 5,
 
-        title: "آموزش کار با موتورسیکلت آتش‌نشانی",
+        title: "دوره تخصصی بین‌المللی آتش‌نشانی | Grand Fire",
 
         subtitle: "سازمان امداد و نجات جمعیت هلال احمر",
 
@@ -274,7 +274,7 @@ export default function Hero() {
 
                                     <span className="block text-[22px] text-white min-[380px]:text-[25px] sm:text-[32px]">
 
-                                        آموزشگاه تخصصی
+                                        آکادمی  تخصصی
 
                                     </span>
 
@@ -711,7 +711,7 @@ export default function Hero() {
 
                                 <span className="block text-[36px] text-white xl:text-[46px] 2xl:text-[50px]">
 
-                                    آموزشگاه تخصصی
+                                    آکادمی  تخصصی
 
                                 </span>
 

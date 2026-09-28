@@ -356,6 +356,59 @@ const partnerLogos = [
     "/images/partners/samt.png",
 ];
 
+const arabicHeroSlides = [
+    {
+        id: "fire-behavior",
+        eyebrow: "SPECIALIZED TRAINING",
+        title: "أكاديمية تدريب",
+        highlight: "بصور واقعية",
+        description:
+            "برامج تدريبية متخصصة للمؤسسات والأفراد في مجالات مكافحة الحريق والسلامة وHSE، مع محتوى عملي وصور من بيئة التدريب الحقيقية.",
+        image: "/images/hero/hero-fire-behavior.jpg",
+        caption: "دورة رفتارشناسی حریق",
+    },
+    {
+        id: "urban-firefighting",
+        eyebrow: "SPECIALIZED TRAINING",
+        title: "أكاديمية تدريب",
+        highlight: "بصور واقعية",
+        description:
+            "برامج تدريبية متخصصة للمؤسسات والأفراد في مجالات مكافحة الحريق والسلامة وHSE، مع محتوى عملي وصور من بيئة التدريب الحقيقية.",
+        image: "/images/hero/hero-urban-firefighting.jpg",
+        caption: "دورة آتش‌نشانی شهری",
+    },
+    {
+        id: "rescue-equipment",
+        eyebrow: "SPECIALIZED TRAINING",
+        title: "أكاديمية تدريب",
+        highlight: "بصور واقعية",
+        description:
+            "برامج تدريبية متخصصة للمؤسسات والأفراد في مجالات مكافحة الحريق والسلامة وHSE، مع محتوى عملي وصور من بيئة التدريب الحقيقية.",
+        image: "/images/hero/hero-rescue-equipment.jpg",
+        caption: "آموزش نگهداری تجهیزات نجات",
+    },
+    {
+        id: "rescue-cushion-hydraulic",
+        eyebrow: "SPECIALIZED TRAINING",
+        title: "أكاديمية تدريب",
+        highlight: "بصور واقعية",
+        description:
+            "برامج تدريبية متخصصة للمؤسسات والأفراد في مجالات مكافحة الحريق والسلامة وHSE، مع محتوى عملي وصور من بيئة التدريب الحقيقية.",
+        image: "/images/hero/hero-rescue-cushion-hydraulic.jpg",
+        caption: "آموزش تست وراه‌اندازی تشک‌های نجات و ست هیدرولیک",
+    },
+    {
+        id: "fire-motorcycle",
+        eyebrow: "SPECIALIZED TRAINING",
+        title: "أكاديمية تدريب",
+        highlight: "بصور واقعية",
+        description:
+            "برامج تدريبية متخصصة للمؤسسات والأفراد في مجالات مكافحة الحريق والسلامة وHSE، مع محتوى عملي وصور من بيئة التدريب الحقيقية.",
+        image: "/images/hero/hero-fire-motorcycle.jpg",
+        caption: "آموزش کار با موتورسیکلت آتش‌نشانی",
+    },
+];
+
 function initials(
     name: string
 ) {
@@ -551,6 +604,38 @@ export default function ArabicPage() {
         setError,
     ] =
         useState("");
+
+    const [
+        activeHero,
+        setActiveHero,
+    ] = useState(0);
+
+    const [
+        pauseHero,
+        setPauseHero,
+    ] = useState(false);
+
+    useEffect(() => {
+        if (pauseHero) {
+            return;
+        }
+
+        const timer = window.setInterval(
+            () => {
+                setActiveHero((prev) =>
+                    (prev + 1) %
+                    arabicHeroSlides.length
+                );
+            },
+            6000
+        );
+
+        return () =>
+            window.clearInterval(timer);
+    }, [pauseHero]);
+
+    const currentHero =
+        arabicHeroSlides[activeHero];
 
     const currentInstructor =
         useMemo(
@@ -972,413 +1057,673 @@ export default function ArabicPage() {
           relative
           overflow-hidden
 
-          px-4
-          pb-12
-          pt-10
+          px-3
+          pb-8
+          pt-3
 
-          sm:px-6
-          sm:pb-16
-          sm:pt-14
+          sm:px-5
+          sm:pb-10
 
           lg:px-8
-          lg:pb-20
-          lg:pt-16
+          lg:pb-14
+          lg:pt-4
         "
             >
                 <div
                     className="
-            pointer-events-none
-            absolute
-            -right-40
-            top-0
-
-            h-[420px]
-            w-[420px]
-
-            rounded-full
-            bg-orange-400/[0.08]
-            blur-[150px]
-          "
-                />
-
-                <div
-                    className="
-            pointer-events-none
-            absolute
-            -left-44
-            bottom-0
-
-            h-[440px]
-            w-[440px]
-
-            rounded-full
-            bg-cyan-300/[0.06]
-            blur-[150px]
-          "
-                />
-
-                <div
-                    className="
-            relative
-
             mx-auto
-            grid
-            max-w-[1320px]
-            gap-8
+            max-w-[1500px]
+            overflow-hidden
 
-            lg:grid-cols-[1fr_.9fr]
-            lg:items-center
-            lg:gap-12
+            rounded-[26px]
+
+            border
+            border-white/[0.08]
+
+            bg-gradient-to-bl
+            from-[#173953]
+            via-[#102B43]
+            to-[#0B2137]
+
+            shadow-[0_28px_90px_rgba(0,0,0,0.20)]
+
+            sm:rounded-[34px]
+            lg:rounded-[40px]
           "
                 >
-                    <div>
-                        <span
-                            className="
-                inline-flex
-                items-center
-                gap-2
-
-                rounded-full
-
-                border
-                border-cyan-300/20
-
-                bg-cyan-300/[0.06]
-
-                px-3.5
-                py-2
-
-                text-[9px]
-                font-black
-                text-cyan-100
-
-                sm:text-[10px]
-              "
-                        >
-                            <span
-                                className="
-                  h-1.5
-                  w-1.5
-                  rounded-full
-                  bg-orange-400
-                "
-                            />
-
-                            أكاديمية متخصصة في مكافحة الحريق و HSE
-                        </span>
-
-                        <h1
-                            className="
-                mt-5
-
-                text-[38px]
-                font-black
-                leading-[1.45]
-
-                sm:text-[48px]
-                lg:text-[58px]
-              "
-                        >
-                            التدريب المتخصص
-
-                            <br />
-
-                            <span
-                                className="
-                  bg-gradient-to-l
-                  from-orange-300
-                  via-orange-400
-                  to-cyan-300
-
-                  bg-clip-text
-                  text-transparent
-                "
-                            >
-                                حسب احتياج مؤسستك
-                            </span>
-                        </h1>
-
-                        <p
-                            className="
-                mt-5
-                max-w-2xl
-
-                text-sm
-                leading-8
-                text-slate-300
-
-                sm:text-base
-                sm:leading-9
-              "
-                        >
-                            نصمم برامج تدريبية مخصصة للمؤسسات
-                            في مجالات HSE، مكافحة الحريق،
-                            إدارة المخاطر، التحقيق في الحوادث
-                            وقيادة العمليات.
-                        </p>
-
+                    <div className="lg:hidden">
                         <div
                             className="
-                mt-7
-                flex
-                flex-col
-                gap-3
+                px-5
+                pb-5
+                pt-6
 
-                sm:flex-row
+                sm:px-7
+                sm:pt-7
               "
                         >
-                            <a
-                                href="#request"
-                                className="
-                  inline-flex
-                  min-h-[50px]
+                            <div className="text-center">
+                                <span
+                                    className="
+                    inline-flex
+                    items-center
+                    gap-2
 
-                  items-center
-                  justify-center
-                  gap-2
+                    rounded-full
 
-                  rounded-full
+                    border
+                    border-cyan-300/20
 
-                  bg-orange-400
+                    bg-cyan-300/[0.07]
 
-                  px-6
+                    px-3.5
+                    py-2
 
-                  text-sm
-                  font-black
-                  text-[#06192E]
+                    text-[9px]
+                    font-black
+                    text-cyan-100
 
-                  transition
-
-                  hover:-translate-y-0.5
-                  hover:bg-orange-300
-                "
-                            >
-                                اطلب برنامجاً لمؤسستك
-
-                                <span>
-                                    ←
+                    sm:text-[10px]
+                  "
+                                >
+                                    <span
+                                        className="
+                      h-1.5
+                      w-1.5
+                      rounded-full
+                      bg-orange-400
+                    "
+                                    />
+                                    أكاديمية متخصصة في مكافحة الحريق و HSE
                                 </span>
-                            </a>
 
-                            <a
-                                href="#instructors"
-                                className="
-                  inline-flex
-                  min-h-[50px]
+                                <h1
+                                    className="
+                    mt-4
 
-                  items-center
-                  justify-center
+                    text-[31px]
+                    font-black
+                    leading-[1.55]
+                    tracking-[-0.6px]
+                    text-white
 
-                  rounded-full
+                    sm:text-[38px]
+                  "
+                                >
+                                    {currentHero.title}
+                                    <br />
 
-                  border
-                  border-white/10
+                                    <span
+                                        className="
+                      bg-gradient-to-l
+                      from-orange-300
+                      via-orange-400
+                      to-[#ff825d]
 
-                  bg-white/[0.04]
+                      bg-clip-text
+                      text-transparent
+                    "
+                                    >
+                                        {currentHero.highlight}
+                                    </span>
+                                </h1>
 
-                  px-6
+                                <p
+                                    className="
+                    mx-auto
+                    mt-3
+                    max-w-[470px]
 
-                  text-sm
-                  font-black
-                  text-white
+                    text-[11px]
+                    leading-7
+                    text-slate-300
 
-                  transition
+                    sm:text-xs
+                  "
+                                >
+                                    {currentHero.description}
+                                </p>
 
-                  hover:bg-white/[0.08]
-                "
-                            >
-                                تعرف على المدربين
-                            </a>
+                                <div
+                                    className="
+                    mt-5
+                    flex
+                    flex-col
+                    gap-2.5
+
+                    sm:flex-row
+                    sm:justify-center
+                  "
+                                >
+                                    <a
+                                        href="#request"
+                                        className="
+                      inline-flex
+                      min-h-[48px]
+                      items-center
+                      justify-center
+                      gap-2
+
+                      rounded-full
+
+                      bg-orange-400
+
+                      px-5
+
+                      text-[11px]
+                      font-black
+                      text-[#06192E]
+
+                      transition
+                      hover:bg-orange-300
+                    "
+                                    >
+                                        اطلب برنامجاً لمؤسستك
+                                        <span>←</span>
+                                    </a>
+
+                                    <a
+                                        href="#instructors"
+                                        className="
+                      inline-flex
+                      min-h-[48px]
+                      items-center
+                      justify-center
+
+                      rounded-full
+
+                      border
+                      border-white/[0.10]
+
+                      bg-white/[0.04]
+
+                      px-5
+
+                      text-[11px]
+                      font-black
+                      text-white
+
+                      transition
+                      hover:bg-white/[0.08]
+                    "
+                                    >
+                                        تعرف على المدربين
+                                    </a>
+                                </div>
+                            </div>
+
+                            <div className="mt-5 flex justify-center gap-2">
+                                {arabicHeroSlides.map((item, index) => (
+                                    <button
+                                        key={item.id}
+                                        type="button"
+                                        aria-label={`عرض ${item.title}`}
+                                        onClick={() => setActiveHero(index)}
+                                        className={`h-2 rounded-full transition-all ${activeHero === index
+                                                ? "w-8 bg-orange-400"
+                                                : "w-2 bg-white/30"
+                                            }`}
+                                    />
+                                ))}
+                            </div>
                         </div>
 
                         <div
                             className="
-                mt-8
-                grid
-                grid-cols-3
-                gap-2
+                relative
+                mx-3
+                mb-3
+                h-[230px]
+                overflow-hidden
+
+                rounded-[22px]
+
+                border
+                border-white/[0.08]
+
+                bg-[#081C2F]
+
+                sm:mx-5
+                sm:h-[285px]
               "
                         >
-                            {[
-                                [
-                                    "محتوى مخصص",
-                                    "حسب بيئة العمل",
-                                ],
+                            <ResilientImage
+                                src={currentHero.image}
+                                alt={currentHero.title}
+                                className="absolute inset-0 h-full w-full object-cover"
+                            />
 
-                                [
-                                    "مدربون متخصصون",
-                                    "خبرة عملية",
-                                ],
+                            <div
+                                className="
+                  pointer-events-none
+                  absolute
+                  inset-0
 
-                                [
-                                    "تنفيذ مرن",
-                                    "نظري وعملي",
-                                ],
-                            ].map(
-                                ([
-                                    title,
-                                    text,
-                                ]) => (
-                                    <div
-                                        key={
-                                            title
-                                        }
-                                        className="
-                      rounded-[18px]
+                  bg-gradient-to-t
+                  from-[#04101f]/95
+                  via-[#06192E]/15
+                  to-transparent
+                "
+                            />
 
-                      border
-                      border-white/[0.08]
+                            <div
+                                className="
+                  absolute
+                  inset-x-0
+                  bottom-0
+                  z-10
 
-                      bg-white/[0.035]
+                  p-5
+                "
+                            >
+                                <span
+                                    className="
+                    inline-flex
 
-                      p-3
+                    rounded-full
 
-                      text-center
+                    border
+                    border-white/10
 
-                      sm:p-4
-                    "
-                                    >
-                                        <strong
-                                            className="
-                        block
+                    bg-[#06192E]/65
 
-                        text-[10px]
-                        font-black
-                        text-white
+                    px-3
+                    py-1.5
 
-                        sm:text-xs
-                      "
-                                        >
-                                            {
-                                                title
-                                            }
-                                        </strong>
+                    text-[8px]
+                    font-black
+                    text-orange-200
 
-                                        <span
-                                            className="
-                        mt-1
-                        block
+                    backdrop-blur-md
+                  "
+                                >
+                                    {currentHero.eyebrow}
+                                </span>
 
-                        text-[8px]
-                        text-slate-500
-
-                        sm:text-[9px]
-                      "
-                                        >
-                                            {
-                                                text
-                                            }
-                                        </span>
-                                    </div>
-                                )
-                            )}
+                                '                                <p className="mt-2 text-[13px] font-black leading-6 text-white">
+                                    {currentHero.caption}
+                                </p>
+                            </div>
                         </div>
                     </div>
 
                     <div
                         className="
-              relative
+              hidden
+              min-h-[540px]
+              grid-cols-[0.86fr_1.14fr]
+              items-stretch
+              gap-0
 
-              min-h-[300px]
-
-              overflow-hidden
-
-              rounded-[30px]
-
-              border
-              border-white/10
-
-              bg-[#0B2941]
-
-              sm:min-h-[420px]
+              lg:grid
             "
                     >
                         <div
                             className="
-                absolute
-                inset-0
+                relative
+                z-10
 
-                bg-gradient-to-br
-                from-[#173953]
-                to-[#081D31]
-              "
-                        />
+                flex
+                flex-col
+                justify-center
 
-                        <ResilientImage
-                            src="/images/organization/fire-extinguishing.jpg"
-                            alt="التدريب المؤسسي المتخصص"
-                            className="
-                absolute
-                inset-0
+                px-9
+                py-9
 
-                h-full
-                w-full
-
-                object-cover
-              "
-                        />
-
-                        <div
-                            className="
-                absolute
-                inset-0
-
-                bg-gradient-to-t
-                from-[#06192E]/95
-                via-[#06192E]/20
-                to-transparent
-              "
-                        />
-
-                        <div
-                            className="
-                absolute
-                inset-x-0
-                bottom-0
-
-                p-5
-
-                sm:p-7
+                xl:px-12
+                xl:py-10
               "
                         >
                             <span
                                 className="
                   inline-flex
+                  w-fit
+                  items-center
+                  gap-2
 
                   rounded-full
 
                   border
-                  border-orange-300/20
+                  border-cyan-300/20
 
-                  bg-orange-400/[0.10]
+                  bg-cyan-300/[0.07]
 
-                  px-3
-                  py-1.5
+                  px-4
+                  py-2.5
 
-                  text-[9px]
+                  text-xs
                   font-black
-                  text-orange-200
+                  text-cyan-100
                 "
                             >
-                                TRAINING ON REQUEST
+                                <span
+                                    className="
+                    h-2
+                    w-2
+                    rounded-full
+                    bg-orange-400
+                  "
+                                />
+                                أكاديمية متخصصة في مكافحة الحريق و HSE
                             </span>
 
-                            <h2
+                            <h1
                                 className="
-                  mt-3
-                  max-w-xl
+                  mt-6
 
-                  text-xl
+                  text-[44px]
                   font-black
-                  leading-8
+                  leading-[1.48]
+                  tracking-[-1px]
                   text-white
 
-                  sm:text-2xl
+                  xl:text-[52px]
                 "
                             >
-                                برنامج تدريبي مصمم وفق المخاطر
-                                والاحتياجات الفعلية لفريقك
-                            </h2>
+                                {currentHero.title}
+                                <br />
+
+                                <span
+                                    className="
+                    bg-gradient-to-l
+                    from-orange-300
+                    via-orange-400
+                    to-[#ff825d]
+
+                    bg-clip-text
+                    text-transparent
+                  "
+                                >
+                                    {currentHero.highlight}
+                                </span>
+                            </h1>
+
+                            <p
+                                className="
+                  mt-5
+                  max-w-[610px]
+
+                  text-sm
+                  leading-8
+                  text-slate-300
+
+                  xl:text-base
+                  xl:leading-9
+                "
+                            >
+                                {currentHero.description}
+                            </p>
+
+                            <div
+                                className="
+                  mt-7
+                  flex
+                  flex-wrap
+                  gap-3
+                "
+                            >
+                                <a
+                                    href="#request"
+                                    className="
+                    group
+
+                    inline-flex
+                    min-h-[52px]
+                    items-center
+                    justify-center
+                    gap-3
+
+                    rounded-full
+
+                    bg-orange-400
+
+                    px-6
+
+                    text-sm
+                    font-black
+                    text-[#06192E]
+
+                    shadow-[0_12px_32px_rgba(251,146,60,0.20)]
+
+                    transition
+                    hover:-translate-y-1
+                    hover:bg-orange-300
+                  "
+                                >
+                                    اطلب برنامجاً لمؤسستك
+                                    <span
+                                        className="
+                      transition
+                      group-hover:-translate-x-1
+                    "
+                                    >
+                                        ←
+                                    </span>
+                                </a>
+
+                                <a
+                                    href="#instructors"
+                                    className="
+                    inline-flex
+                    min-h-[52px]
+                    items-center
+                    justify-center
+
+                    rounded-full
+
+                    border
+                    border-white/[0.10]
+
+                    bg-white/[0.04]
+
+                    px-6
+
+                    text-sm
+                    font-black
+                    text-white
+
+                    transition
+                    hover:-translate-y-1
+                    hover:bg-white/[0.08]
+                  "
+                                >
+                                    تعرف على المدربين
+                                </a>
+                            </div>
+
+                            <div
+                                className="
+                  mt-7
+                  grid
+                  grid-cols-3
+                  gap-2
+                "
+                            >
+                                {[
+                                    [
+                                        "01",
+                                        "محتوى مخصص",
+                                        "حسب بيئة العمل",
+                                    ],
+                                    [
+                                        "02",
+                                        "مدربون متخصصون",
+                                        "خبرة عملية",
+                                    ],
+                                    [
+                                        "03",
+                                        "تنفيذ مرن",
+                                        "نظري وعملي",
+                                    ],
+                                ].map(
+                                    ([number, title, text]) => (
+                                        <div
+                                            key={number}
+                                            className="
+                        rounded-[15px]
+
+                        border
+                        border-white/[0.06]
+
+                        bg-white/[0.018]
+
+                        px-3
+                        py-3
+                      "
+                                        >
+                                            <span
+                                                className="
+                          block
+                          text-[9px]
+                          font-black
+                          text-orange-300
+                        "
+                                            >
+                                                {number}
+                                            </span>
+
+                                            <strong
+                                                className="
+                          mt-1.5
+                          block
+                          text-[11px]
+                          font-black
+                          text-white
+                        "
+                                            >
+                                                {title}
+                                            </strong>
+
+                                            <span
+                                                className="
+                          mt-1
+                          block
+                          text-[8px]
+                          leading-5
+                          text-slate-500
+                        "
+                                            >
+                                                {text}
+                                            </span>
+                                        </div>
+                                    )
+                                )}
+                            </div>
+                        </div>
+
+                        <div
+                            className="
+                relative
+                min-h-[540px]
+                overflow-hidden
+                bg-[#081C2F]
+              "
+                            onMouseEnter={() =>
+                                setPauseHero(true)
+                            }
+                            onMouseLeave={() =>
+                                setPauseHero(false)
+                            }
+                        >
+                            <ResilientImage
+                                src={currentHero.image}
+                                alt={currentHero.title}
+                                className="absolute inset-0 h-full w-full object-cover"
+                            />
+
+                            <div
+                                className="
+                  pointer-events-none
+                  absolute
+                  inset-0
+
+                  bg-gradient-to-r
+                  from-transparent
+                  via-[#0D2942]/10
+                  to-[#102B43]/95
+                "
+                            />
+
+                            <div
+                                className="
+                  pointer-events-none
+                  absolute
+                  inset-0
+
+                  bg-gradient-to-t
+                  from-[#04101f]/95
+                  via-transparent
+                  to-[#06192E]/5
+                "
+                            />
+
+                            <div
+                                className="
+                  absolute
+                  inset-x-0
+                  bottom-0
+                  z-20
+
+                  p-6
+                  xl:p-7
+                "
+                            >
+                                <span
+                                    className="
+                    inline-flex
+
+                    rounded-full
+
+                    border
+                    border-white/10
+
+                    bg-[#06192E]/65
+
+                    px-3
+                    py-1.5
+
+                    text-[8px]
+                    font-black
+                    text-orange-200
+
+                    backdrop-blur-md
+                  "
+                                >
+                                    {currentHero.eyebrow}
+                                </span>
+
+                                <h2
+                                    className="
+                    mt-3
+                    max-w-[560px]
+
+                    text-[22px]
+                    font-black
+                    leading-8
+                    text-white
+
+                    xl:text-[26px]
+                  "
+                                >
+                                    {currentHero.caption}
+                                </h2>
+
+                            </div>
+
+                            <div className="absolute bottom-6 left-6 z-30 flex gap-2">
+                                {arabicHeroSlides.map((item, index) => (
+                                    <button
+                                        key={item.id}
+                                        type="button"
+                                        onClick={() => setActiveHero(index)}
+                                        aria-label={`عرض ${item.title}`}
+                                        className={`h-2 rounded-full transition-all ${activeHero === index
+                                                ? "w-8 bg-orange-400"
+                                                : "w-2 bg-white/30"
+                                            }`}
+                                    />
+                                ))}
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -1394,15 +1739,15 @@ export default function ArabicPage() {
           bg-[#F6FAFC]
 
           px-4
-          py-14
+          py-12
 
           text-[#07192D]
 
           sm:px-6
-          sm:py-16
+          sm:py-12
 
           lg:px-8
-          lg:py-20
+          lg:py-12
         "
             >
                 <div
@@ -1483,7 +1828,7 @@ export default function ArabicPage() {
 
                     overflow-hidden
 
-                    rounded-[24px]
+                    rounded-[20px]
 
                     border
                     border-slate-200
@@ -1502,7 +1847,7 @@ export default function ArabicPage() {
                                         className="
                       relative
 
-                      h-[170px]
+                      h-[152px]
 
                       overflow-hidden
 
@@ -1599,11 +1944,11 @@ export default function ArabicPage() {
                                         <h3
                                             className="
                         mt-2
-                        min-h-[52px]
+                        min-h-[44px]
 
-                        text-[15px]
+                        text-[14px]
                         font-black
-                        leading-7
+                        leading-6
                         text-[#07192D]
                       "
                                         >
@@ -1615,7 +1960,7 @@ export default function ArabicPage() {
                                         <p
                                             className="
                         mt-2
-                        min-h-[72px]
+                        min-h-[54px]
 
                         text-[10px]
                         leading-6
@@ -1646,7 +1991,7 @@ export default function ArabicPage() {
 
                                         <div
                                             className="
-                        mt-4
+                        mt-3
                         grid
                         grid-cols-2
                         gap-2
@@ -1733,7 +2078,7 @@ export default function ArabicPage() {
                 items-center
                 justify-center
 
-                rounded-[24px]
+                rounded-[20px]
 
                 border
                 border-dashed
@@ -1828,364 +2173,79 @@ export default function ArabicPage() {
 
             <section
                 id="instructors"
-                className="
-          relative
-          overflow-hidden
-
-          bg-[#0B2439]
-
-          px-4
-          py-14
-
-          sm:px-6
-          sm:py-16
-
-          lg:px-8
-          lg:py-20
-        "
+                className="bg-[#0B2439] px-4 py-12 sm:px-6 sm:py-14 lg:px-8"
             >
-                <div
-                    className="
-            pointer-events-none
-            absolute
-            -left-40
-            top-0
-
-            h-[420px]
-            w-[420px]
-
-            rounded-full
-
-            bg-cyan-300/[0.05]
-
-            blur-[150px]
-          "
-                />
-
-                <div
-                    className="
-            relative
-            mx-auto
-            max-w-[1240px]
-          "
-                >
-                    <div className="text-center">
-                        <span
-                            className="
-                text-[9px]
-                font-black
-                tracking-[0.16em]
-                text-cyan-300
-              "
-                        >
+                <div className="mx-auto max-w-[1180px]">
+                    <div className="mx-auto max-w-2xl text-center">
+                        <span className="text-[9px] font-black tracking-[0.16em] text-cyan-300">
                             EXPERT INSTRUCTORS
                         </span>
-
-                        <h2
-                            className="
-                mt-3
-
-                text-[30px]
-                font-black
-
-                sm:text-[40px]
-              "
-                        >
+                        <h2 className="mt-3 text-[28px] font-black sm:text-[36px]">
                             تعرف على مدربي كاردو
                         </h2>
-
-                        <p
-                            className="
-                mx-auto
-                mt-3
-                max-w-2xl
-
-                text-xs
-                leading-7
-                text-slate-400
-
-                sm:text-sm
-              "
-                        >
-                            نخبة من المدربين ذوي الخبرة
-                            المهنية والأكاديمية في مجالات
-                            السلامة، HSE، مكافحة الحريق
-                            وإدارة العمليات.
+                        <p className="mx-auto mt-3 max-w-xl text-xs leading-7 text-slate-400 sm:text-sm">
+                            خبرة مهنية وأكاديمية في HSE، السلامة، مكافحة الحريق وإدارة العمليات.
                         </p>
                     </div>
 
-                    <div
-                        className="
-              mt-9
-              grid
-              gap-4
-
-              lg:grid-cols-[.72fr_1.28fr]
-              lg:items-stretch
-            "
-                    >
-                        <div
-                            className="
-                rounded-[28px]
-
-                border
-                border-white/[0.08]
-
-                bg-white/[0.04]
-
-                p-3
-
-                sm:p-4
-              "
-                        >
+                    <div className="mt-7 overflow-hidden rounded-[26px] border border-white/[0.08] bg-slate-50">
+                        <div className="grid lg:grid-cols-[340px_1fr] lg:items-stretch">
                             <SafePhoto
-                                src={
-                                    currentInstructor.image
-                                }
-                                alt={
-                                    currentInstructor.name
-                                }
-                                className="
-                  h-[260px]
-
-                  rounded-[22px]
-
-                  sm:h-[340px]
-
-                  lg:h-full
-                  lg:min-h-[390px]
-                "
+                                src={currentInstructor.image}
+                                alt={currentInstructor.name}
+                                className="h-[280px] w-full lg:h-[360px] lg:rounded-none"
                             />
+
+                            <div className="flex flex-col justify-center p-5 sm:p-7 lg:p-9">
+                                <span className="text-[9px] font-black text-orange-300">
+                                    {currentInstructor.role}
+                                </span>
+                                <h3 className="mt-2 text-[24px] font-black leading-[1.45] sm:text-[32px]">
+                                    {currentInstructor.name}
+                                </h3>
+
+                                <div className="mt-4 flex flex-wrap gap-2">
+                                    <span className="rounded-full border border-white/[0.08] bg-white/[0.04] px-3 py-2 text-[9px] text-slate-300">
+                                        {currentInstructor.degree}
+                                    </span>
+                                    <span className="rounded-full border border-cyan-300/15 bg-cyan-300/[0.05] px-3 py-2 text-[9px] text-cyan-200">
+                                        {currentInstructor.experience}
+                                    </span>
+                                </div>
+
+                                <p className="mt-5 max-w-2xl text-xs leading-7 text-slate-300 sm:text-sm sm:leading-8">
+                                    {currentInstructor.bio}
+                                </p>
+                            </div>
                         </div>
 
-                        <div
-                            className="
-                flex
-                flex-col
-                justify-center
-
-                rounded-[28px]
-
-                border
-                border-white/[0.08]
-
-                bg-white/[0.035]
-
-                p-5
-
-                sm:p-7
-              "
-                        >
-                            <span
-                                className="
-                  text-[9px]
-                  font-black
-                  text-orange-300
-                "
-                            >
-                                {
-                                    currentInstructor.role
-                                }
-                            </span>
-
-                            <h3
-                                className="
-                  mt-2
-
-                  text-[25px]
-                  font-black
-                  leading-[1.5]
-
-                  sm:text-[34px]
-                "
-                            >
-                                {
-                                    currentInstructor.name
-                                }
-                            </h3>
-
-                            <div
-                                className="
-                  mt-4
-                  flex
-                  flex-wrap
-                  gap-2
-                "
-                            >
-                                <span
-                                    className="
-                    rounded-full
-
-                    border
-                    border-white/[0.08]
-
-                    bg-white/[0.04]
-
-                    px-3
-                    py-2
-
-                    text-[9px]
-                    text-slate-300
-                  "
-                                >
-                                    {
-                                        currentInstructor.degree
-                                    }
-                                </span>
-
-                                <span
-                                    className="
-                    rounded-full
-
-                    border
-                    border-cyan-300/15
-
-                    bg-cyan-300/[0.05]
-
-                    px-3
-                    py-2
-
-                    text-[9px]
-                    text-cyan-200
-                  "
-                                >
-                                    {
-                                        currentInstructor.experience
-                                    }
-                                </span>
-                            </div>
-
-                            <p
-                                className="
-                  mt-5
-                  max-w-2xl
-
-                  text-xs
-                  leading-8
-                  text-slate-300
-
-                  sm:text-sm
-                  sm:leading-9
-                "
-                            >
-                                {
-                                    currentInstructor.bio
-                                }
-                            </p>
-
-                            <div
-                                className="
-                  mt-7
-                  flex
-                  gap-2
-
-                  overflow-x-auto
-
-                  pb-1
-
-                  [scrollbar-width:none]
-
-                  [&::-webkit-scrollbar]:hidden
-                "
-                            >
-                                {instructors.map(
-                                    (item) => (
-                                        <button
-                                            key={
-                                                item.id
-                                            }
-                                            type="button"
-                                            onClick={() =>
-                                                setActiveInstructor(
-                                                    item.id
-                                                )
-                                            }
-                                            className={`
-                        flex
-                        min-w-[148px]
-
-                        items-center
-                        gap-2
-
-                        rounded-[16px]
-
-                        border
-
-                        p-2
-
-                        text-right
-
-                        transition
-
-                        ${currentInstructor.id ===
-                                                    item.id
-                                                    ? `
-                              border-orange-400/40
-                              bg-orange-400/[0.08]
-                            `
-                                                    : `
-                              border-white/[0.07]
-                              bg-white/[0.025]
-
-                              hover:bg-white/[0.05]
-                            `
-                                                }
-                      `}
-                                        >
-                                            <SafePhoto
-                                                src={
-                                                    item.image
-                                                }
-                                                alt={
-                                                    item.name
-                                                }
-                                                className="
-                          h-10
-                          w-10
-                          shrink-0
-
-                          rounded-xl
-                        "
-                                            />
-
-                                            <span
-                                                className="
-                          min-w-0
-                        "
-                                            >
-                                                <strong
-                                                    className="
-                            block
-                            truncate
-
-                            text-[9px]
-                            font-black
-                            text-white
-                          "
-                                                >
-                                                    {
-                                                        item.name
-                                                    }
-                                                </strong>
-
-                                                <span
-                                                    className="
-                            mt-1
-                            block
-                            truncate
-
-                            text-[7px]
-                            text-slate-500
-                          "
-                                                >
-                                                    {
-                                                        item.role
-                                                    }
-                                                </span>
+                        <div className="border-t border-white/[0.07] p-3 sm:p-4">
+                            <div className="flex gap-2 overflow-x-auto pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+                                {instructors.map((item) => (
+                                    <button
+                                        key={item.id}
+                                        type="button"
+                                        onClick={() => setActiveInstructor(item.id)}
+                                        className={`flex min-w-[150px] items-center gap-2 rounded-[14px] border p-2 text-right transition ${currentInstructor.id === item.id
+                                                ? "border-orange-400/40 bg-orange-400/[0.08]"
+                                                : "border-white/[0.07] bg-white/[0.025] hover:bg-white/[0.05]"
+                                            }`}
+                                    >
+                                        <SafePhoto
+                                            src={item.image}
+                                            alt={item.name}
+                                            className="h-9 w-9 shrink-0 rounded-[10px]"
+                                        />
+                                        <span className="min-w-0">
+                                            <strong className="block truncate text-[9px] font-black text-white">
+                                                {item.name}
+                                            </strong>
+                                            <span className="mt-0.5 block truncate text-[7px] text-slate-500">
+                                                {item.role}
                                             </span>
-                                        </button>
-                                    )
-                                )}
+                                        </span>
+                                    </button>
+                                ))}
                             </div>
                         </div>
                     </div>
@@ -2202,15 +2262,15 @@ export default function ArabicPage() {
           bg-[#F6FAFC]
 
           px-4
-          py-14
+          py-12
 
           text-[#07192D]
 
           sm:px-6
-          sm:py-16
+          sm:py-12
 
           lg:px-8
-          lg:py-20
+          lg:py-12
         "
             >
                 <div
@@ -2253,7 +2313,7 @@ export default function ArabicPage() {
 
                     <div
                         className="
-              mt-8
+              mt-7
               grid
               gap-3
 
@@ -2268,14 +2328,14 @@ export default function ArabicPage() {
                                         item.number
                                     }
                                     className="
-                    rounded-[22px]
+                    rounded-[18px]
 
                     border
                     border-slate-200
 
                     bg-white
 
-                    p-5
+                    p-4
 
                     shadow-[0_12px_35px_rgba(20,45,65,.04)]
                   "
@@ -2333,12 +2393,12 @@ export default function ArabicPage() {
                 id="partners"
                 className="
           border-y
-          border-white/[0.06]
+          border-slate-200
 
-          bg-[#081E33]
+          bg-white
 
           px-4
-          py-10
+          py-8
 
           sm:px-6
           lg:px-8
@@ -2357,7 +2417,7 @@ export default function ArabicPage() {
               text-[9px]
               font-black
               tracking-[0.12em]
-              text-slate-500
+              text-slate-600
             "
                     >
                         بعض الجهات التي عملت معها كاردو
@@ -2382,7 +2442,7 @@ export default function ArabicPage() {
                                     }
                                     className="
                     flex
-                    h-14
+                    h-12
 
                     items-center
                     justify-center
@@ -2390,9 +2450,9 @@ export default function ArabicPage() {
                     rounded-2xl
 
                     border
-                    border-white/[0.06]
+                    border-slate-200
 
-                    bg-white/[0.035]
+                    bg-slate-50
 
                     p-2
                   "
@@ -2408,7 +2468,7 @@ export default function ArabicPage() {
 
                       object-contain
 
-                      opacity-75
+                      opacity-95
                     "
                                     />
                                 </div>
@@ -2431,13 +2491,13 @@ export default function ArabicPage() {
           bg-[#06192E]
 
           px-4
-          py-14
+          py-12
 
           sm:px-6
-          sm:py-16
+          sm:py-12
 
           lg:px-8
-          lg:py-20
+          lg:py-12
         "
             >
                 <div
@@ -2449,9 +2509,9 @@ export default function ArabicPage() {
             max-w-[1180px]
             gap-7
 
-            lg:grid-cols-[.75fr_1.25fr]
+            lg:grid-cols-[.8fr_1.2fr]
             lg:items-start
-            lg:gap-10
+            lg:gap-8
           "
                 >
                     <div>
@@ -2470,11 +2530,11 @@ export default function ArabicPage() {
                             className="
                 mt-3
 
-                text-[30px]
+                text-[28px]
                 font-black
-                leading-[1.55]
+                leading-[1.5]
 
-                sm:text-[38px]
+                sm:text-[34px]
               "
                         >
                             أخبرنا باحتياج مؤسستك
@@ -2500,7 +2560,7 @@ export default function ArabicPage() {
 
                     <div
                         className="
-              rounded-[28px]
+              rounded-[22px]
 
               border
               border-white/[0.09]
@@ -2509,7 +2569,7 @@ export default function ArabicPage() {
 
               p-4
 
-              shadow-[0_28px_80px_rgba(0,0,0,.20)]
+              shadow-[0_18px_50px_rgba(0,0,0,.16)]
 
               backdrop-blur-xl
 
@@ -2519,7 +2579,7 @@ export default function ArabicPage() {
                         {success ? (
                             <div
                                 className="
-                  py-10
+                  py-8
                   text-center
                 "
                             >
@@ -2528,7 +2588,7 @@ export default function ArabicPage() {
                     mx-auto
 
                     flex
-                    h-14
+                    h-12
                     w-14
 
                     items-center
@@ -3013,7 +3073,7 @@ export default function ArabicPage() {
                       border
                       border-white/[0.07]
 
-                      bg-white/[0.035]
+                      bg-white/[0.055]
 
                       p-3.5
 

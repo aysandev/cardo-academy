@@ -1642,6 +1642,7 @@ const organizationTopics: Record<string, string[]> = {
 ========================================================= */
 function OrganizationPage() {
     const [selectedOrgCourse, setSelectedOrgCourse] = useState("");
+    const [orgRequestOpen, setOrgRequestOpen] = useState(false);
     const [submitting, setSubmitting] = useState(false);
     const [success, setSuccess] = useState(false);
     const [error, setError] = useState("");
@@ -1699,15 +1700,7 @@ function OrganizationPage() {
         setSelectedOrgCourse(courseTitle);
         setSuccess(false);
         setError("");
-
-        setTimeout(() => {
-            document
-                .getElementById("organization-request")
-                ?.scrollIntoView({
-                    behavior: "smooth",
-                    block: "start",
-                });
-        }, 50);
+        setOrgRequestOpen(true);
     }
 
     async function submitOrganizationRequest(
@@ -2518,374 +2511,184 @@ function OrganizationPage() {
             </section>
 
             {/* =====================================================
-                ORGANIZATION REQUEST FORM
+                ORGANIZATION REQUEST MODAL
             ====================================================== */}
 
-            <section
-                id="organization-request"
-                className="
-                    mx-auto
-                    max-w-[1100px]
-                    scroll-mt-32
-                    px-3
-                    pb-28
-                    pt-4
-                    sm:px-5
-                    lg:px-10
-                "
-            >
-                <div
-                    className="
-                        overflow-hidden
-                        rounded-[30px]
-                        border
-                        border-orange-300/15
-                        bg-gradient-to-bl
-                        from-orange-400/[0.05]
-                        via-white/[0.03]
-                        to-cyan-300/[0.04]
-                        p-5
-                        sm:p-8
-                    "
-                >
-                    {!success ? (
-                        <div>
-                            <div
-                                className="
-                                    flex
-                                    flex-col
-                                    gap-4
-                                    sm:flex-row
-                                    sm:items-end
-                                    sm:justify-between
-                                "
-                            >
-                                <div>
-                                    <span
-                                        className="
-                                            text-[9px]
-                                            font-black
-                                            text-orange-300
-                                            sm:text-xs
-                                        "
-                                    >
-                                        درخواست سازمانی
-                                    </span>
+            <AnimatePresence>
+                {orgRequestOpen && (
+                    <Modal
+                        close={() => {
+                            if (!submitting) {
+                                setOrgRequestOpen(false);
+                            }
+                        }}
+                    >
+                        {!success ? (
+                            <div>
+                                <div className="flex items-start justify-between gap-4">
+                                    <div>
+                                        <span className="text-[9px] font-black text-orange-300 sm:text-xs">
+                                            درخواست سازمانی
+                                        </span>
 
-                                    <h2
-                                        className="
-                                            mt-2
-                                            text-2xl
-                                            font-black
-                                            leading-[1.6]
-                                            text-white
-                                            sm:text-3xl
-                                        "
-                                    >
-                                        درخواست برگزاری دوره
-                                    </h2>
+                                        <h2 className="mt-2 text-2xl font-black leading-[1.6] text-white sm:text-3xl">
+                                            درخواست برگزاری دوره
+                                        </h2>
 
-                                    <p
-                                        className="
-                                            mt-1
-                                            max-w-xl
-                                            text-[10px]
-                                            leading-6
-                                            text-slate-500
-                                            sm:text-xs
-                                        "
-                                    >
-                                        فقط اطلاعات اصلی را وارد کنید؛
-                                        جزئیات تکمیلی در ادامه هماهنگ می‌شود.
-                                    </p>
+                                        <p className="mt-1 max-w-xl text-[10px] leading-6 text-slate-500 sm:text-xs">
+                                            اطلاعات اصلی را وارد کنید؛ جزئیات تکمیلی در ادامه هماهنگ می‌شود.
+                                        </p>
+                                    </div>
+
                                 </div>
 
                                 {selectedOrgCourse && (
-                                    <div
-                                        className="
-                                            rounded-[16px]
-                                            border
-                                            border-orange-300/15
-                                            bg-orange-300/[0.06]
-                                            px-4
-                                            py-3
-                                        "
-                                    >
-                                        <span
-                                            className="
-                                                block
-                                                text-[8px]
-                                                text-slate-500
-                                            "
-                                        >
+                                    <div className="mt-5 rounded-[16px] border border-orange-300/15 bg-orange-300/[0.06] px-4 py-3">
+                                        <span className="block text-[8px] text-slate-500">
                                             دوره انتخاب‌شده
                                         </span>
-
-                                        <strong
-                                            className="
-                                                mt-1
-                                                block
-                                                text-xs
-                                                font-black
-                                                text-orange-200
-                                            "
-                                        >
+                                        <strong className="mt-1 block text-xs font-black text-orange-200">
                                             {selectedOrgCourse}
                                         </strong>
                                     </div>
                                 )}
-                            </div>
 
-                            <form
-                                onSubmit={submitOrganizationRequest}
-                                className="
-                                    mt-6
-                                    grid
-                                    gap-3
-                                    sm:grid-cols-2
-                                "
-                            >
-                                <Input
-                                    name="organizationName"
-                                    placeholder="نام سازمان / شرکت *"
-                                    required
-                                />
-
-                                <Input
-                                    name="contactName"
-                                    placeholder="نام فرد رابط *"
-                                    required
-                                />
-
-                                <Input
-                                    name="phone"
-                                    placeholder="شماره تماس *"
-                                    required
-                                />
-
-                                <Input
-                                    name="city"
-                                    placeholder="شهر *"
-                                    required
-                                />
-
-                                <Input
-                                    name="industry"
-                                    placeholder="حوزه فعالیت سازمان"
-                                />
-
-                                <Input
-                                    name="participantCount"
-                                    type="number"
-                                    placeholder="تعداد تقریبی شرکت‌کنندگان"
-                                />
-
-                                <select
-                                    value={selectedOrgCourse}
-                                    onChange={(event) =>
-                                        setSelectedOrgCourse(
-                                            event.target.value
-                                        )
-                                    }
-                                    className="
-                                        h-14
-                                        rounded-2xl
-                                        border
-                                        border-white/10
-                                        bg-[#0B2137]
-                                        px-4
-                                        text-xs
-                                        text-white
-                                        outline-none
-                                        focus:border-orange-400/40
-                                    "
+                                <form
+                                    onSubmit={submitOrganizationRequest}
+                                    className="mt-6 grid gap-3 sm:grid-cols-2"
                                 >
-                                    <option value="">
-                                        انتخاب دوره
-                                    </option>
+                                    <Input
+                                        name="organizationName"
+                                        placeholder="نام سازمان / شرکت *"
+                                        required
+                                    />
 
-                                    {completedOrganizationCourses.map(
-                                        (course) => (
-                                            <option
-                                                key={course.id}
-                                                value={course.title}
-                                            >
+                                    <Input
+                                        name="contactName"
+                                        placeholder="نام فرد رابط *"
+                                        required
+                                    />
+
+                                    <Input
+                                        name="phone"
+                                        placeholder="شماره تماس *"
+                                        required
+                                    />
+
+                                    <Input
+                                        name="city"
+                                        placeholder="شهر *"
+                                        required
+                                    />
+
+                                    <Input
+                                        name="industry"
+                                        placeholder="حوزه فعالیت سازمان"
+                                    />
+
+                                    <Input
+                                        name="participantCount"
+                                        type="number"
+                                        placeholder="تعداد تقریبی شرکت‌کنندگان"
+                                    />
+
+                                    <select
+                                        value={selectedOrgCourse}
+                                        onChange={(event) =>
+                                            setSelectedOrgCourse(event.target.value)
+                                        }
+                                        className="h-14 rounded-2xl border border-white/10 bg-[#0B2137] px-4 text-xs text-white outline-none focus:border-orange-400/40"
+                                    >
+                                        <option value="">انتخاب دوره</option>
+                                        {completedOrganizationCourses.map((course) => (
+                                            <option key={course.id} value={course.title}>
                                                 {course.title}
                                             </option>
-                                        )
+                                        ))}
+                                        <option value="آموزش اختصاصی جدید">
+                                            آموزش اختصاصی جدید
+                                        </option>
+                                    </select>
+
+                                    <select
+                                        name="trainingArea"
+                                        className="h-14 rounded-2xl border border-white/10 bg-[#0B2137] px-4 text-xs text-white outline-none focus:border-orange-400/40"
+                                    >
+                                        <option value="">حوزه آموزشی</option>
+                                        <option value="HSE و ایمنی">HSE و ایمنی</option>
+                                        <option value="آتش‌نشانی">آتش‌نشانی</option>
+                                        <option value="مواد خطرناک">مواد خطرناک</option>
+                                        <option value="امداد و نجات">امداد و نجات</option>
+                                        <option value="مدیریت بحران">مدیریت بحران</option>
+                                        <option value="سایر">سایر</option>
+                                    </select>
+
+                                    <select
+                                        name="preferredLocation"
+                                        className="h-14 rounded-2xl border border-white/10 bg-[#0B2137] px-4 text-xs text-white outline-none focus:border-orange-400/40 sm:col-span-2"
+                                    >
+                                        <option value="">محل پیشنهادی برگزاری</option>
+                                        <option value="organization">محل سازمان / شرکت</option>
+                                        <option value="academy">مجتمع آموزشی کاردو</option>
+                                        <option value="negotiable">قابل هماهنگی</option>
+                                    </select>
+
+                                    <textarea
+                                        name="notes"
+                                        placeholder="توضیحات تکمیلی، زمان پیشنهادی یا نیاز خاص مجموعه..."
+                                        className="min-h-[120px] rounded-2xl border border-white/10 bg-white/[0.04] p-4 text-xs text-white outline-none placeholder:text-slate-600 focus:border-orange-400/40 sm:col-span-2"
+                                    />
+
+                                    {error && (
+                                        <div className="rounded-2xl border border-red-300/10 bg-red-400/[0.08] p-4 text-xs text-red-200 sm:col-span-2">
+                                            {error}
+                                        </div>
                                     )}
 
-                                    <option value="آموزش اختصاصی جدید">
-                                        آموزش اختصاصی جدید
-                                    </option>
-                                </select>
-
-                                <select
-                                    name="trainingArea"
-                                    className="
-                                        h-14
-                                        rounded-2xl
-                                        border
-                                        border-white/10
-                                        bg-[#0B2137]
-                                        px-4
-                                        text-xs
-                                        text-white
-                                        outline-none
-                                        focus:border-orange-400/40
-                                    "
-                                >
-                                    <option value="">
-                                        حوزه آموزشی
-                                    </option>
-                                    <option value="HSE و ایمنی">
-                                        HSE و ایمنی
-                                    </option>
-                                    <option value="آتش‌نشانی">
-                                        آتش‌نشانی
-                                    </option>
-                                    <option value="مواد خطرناک">
-                                        مواد خطرناک
-                                    </option>
-                                    <option value="امداد و نجات">
-                                        امداد و نجات
-                                    </option>
-                                    <option value="مدیریت بحران">
-                                        مدیریت بحران
-                                    </option>
-                                    <option value="سایر">
-                                        سایر
-                                    </option>
-                                </select>
-
-                                <select
-                                    name="preferredLocation"
-                                    className="
-                                        h-14
-                                        rounded-2xl
-                                        border
-                                        border-white/10
-                                        bg-[#0B2137]
-                                        px-4
-                                        text-xs
-                                        text-white
-                                        outline-none
-                                        focus:border-orange-400/40
-                                        sm:col-span-2
-                                    "
-                                >
-                                    <option value="">
-                                        محل پیشنهادی برگزاری
-                                    </option>
-                                    <option value="organization">
-                                        محل سازمان / شرکت
-                                    </option>
-                                    <option value="academy">
-                                        مجتمع آموزشی کاردو
-                                    </option>
-                                    <option value="negotiable">
-                                        قابل هماهنگی
-                                    </option>
-                                </select>
-
-                                <textarea
-                                    name="notes"
-                                    placeholder="توضیحات تکمیلی، زمان پیشنهادی یا نیاز خاص مجموعه..."
-                                    className="
-                                        min-h-[120px]
-                                        rounded-2xl
-                                        border
-                                        border-white/10
-                                        bg-white/[0.04]
-                                        p-4
-                                        text-xs
-                                        text-white
-                                        outline-none
-                                        placeholder:text-slate-600
-                                        focus:border-orange-400/40
-                                        sm:col-span-2
-                                    "
-                                />
-
-                                {error && (
-                                    <div
-                                        className="
-                                            rounded-2xl
-                                            border
-                                            border-red-300/10
-                                            bg-red-400/[0.08]
-                                            p-4
-                                            text-xs
-                                            text-red-200
-                                            sm:col-span-2
-                                        "
+                                    <button
+                                        type="submit"
+                                        disabled={submitting}
+                                        className="flex min-h-14 items-center justify-center gap-3 rounded-2xl bg-orange-400 px-6 text-xs font-black text-[#06192E] transition hover:bg-orange-300 disabled:cursor-not-allowed disabled:opacity-50 sm:col-span-2 sm:rounded-full"
                                     >
-                                        {error}
-                                    </div>
-                                )}
+                                        {submitting
+                                            ? "در حال ثبت درخواست..."
+                                            : "ارسال درخواست سازمانی"}
+                                        {!submitting && <ArrowIcon />}
+                                    </button>
+                                </form>
+                            </div>
+                        ) : (
+                            <div className="py-6 text-center">
+                                <Success />
 
-                                <button
-                                    type="submit"
-                                    disabled={submitting}
-                                    className="
-                                        flex
-                                        min-h-14
-                                        items-center
-                                        justify-center
-                                        gap-3
-                                        rounded-2xl
-                                        bg-orange-400
-                                        px-6
-                                        text-xs
-                                        font-black
-                                        text-[#06192E]
-                                        transition
-                                        hover:bg-orange-300
-                                        disabled:cursor-not-allowed
-                                        disabled:opacity-50
-                                        sm:col-span-2
-                                        sm:rounded-full
-                                    "
-                                >
-                                    {submitting
-                                        ? "در حال ثبت درخواست..."
-                                        : "ارسال درخواست سازمانی"}
+                                <div className="mt-5 flex flex-col justify-center gap-2 sm:flex-row">
+                                    <button
+                                        type="button"
+                                        onClick={() => {
+                                            setSuccess(false);
+                                            setSelectedOrgCourse("");
+                                        }}
+                                        className="rounded-full border border-white/10 bg-white/[0.04] px-6 py-3 text-xs font-black text-slate-200"
+                                    >
+                                        ثبت درخواست جدید
+                                    </button>
 
-                                    {!submitting && <ArrowIcon />}
-                                </button>
-                            </form>
-                        </div>
-                    ) : (
-                        <div className="py-8">
-                            <Success />
-
-                            <button
-                                type="button"
-                                onClick={() => {
-                                    setSuccess(false);
-                                    setSelectedOrgCourse("");
-                                }}
-                                className="
-                                    mx-auto
-                                    mt-4
-                                    block
-                                    rounded-full
-                                    border
-                                    border-white/10
-                                    bg-white/[0.04]
-                                    px-6
-                                    py-3
-                                    text-xs
-                                    font-black
-                                    text-slate-200
-                                "
-                            >
-                                ثبت درخواست جدید
-                            </button>
-                        </div>
-                    )}
-                </div>
-            </section>
+                                    <button
+                                        type="button"
+                                        onClick={() => {
+                                            setOrgRequestOpen(false);
+                                            setSuccess(false);
+                                        }}
+                                        className="rounded-full bg-orange-400 px-6 py-3 text-xs font-black text-[#06192E]"
+                                    >
+                                        بستن
+                                    </button>
+                                </div>
+                            </div>
+                        )}
+                    </Modal>
+                )}
+            </AnimatePresence>
 
             {/* =====================================================
                 COURSE OUTLINE / SYLLABUS
