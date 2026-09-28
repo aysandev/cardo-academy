@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect, useMemo, useState } from "react";
+import { useState } from "react";
 
 type Certificate = {
     id: string;
@@ -32,34 +32,8 @@ const certificates: Certificate[] = [
 ];
 
 export default function CertificatesShowcase() {
-    const [activeIndex, setActiveIndex] = useState(0);
-    const [paused, setPaused] = useState(false);
-    const [open, setOpen] = useState(false);
-
-    const active = useMemo(
-        () => certificates[activeIndex],
-        [activeIndex]
-    );
-
-    useEffect(() => {
-        if (paused) return;
-
-        const timer = window.setInterval(() => {
-            setActiveIndex((current) => (current + 1) % certificates.length);
-        }, 3200);
-
-        return () => window.clearInterval(timer);
-    }, [paused]);
-
-    function next() {
-        setActiveIndex((current) => (current + 1) % certificates.length);
-    }
-
-    function previous() {
-        setActiveIndex((current) =>
-            current === 0 ? certificates.length - 1 : current - 1
-        );
-    }
+    const [openCertificate, setOpenCertificate] =
+        useState<Certificate | null>(null);
 
     return (
         <>
@@ -67,38 +41,67 @@ export default function CertificatesShowcase() {
                 id="certificates"
                 dir="rtl"
                 className="
-          bg-[#F7FBFD]
-          px-4
-          py-12
-
-          sm:px-6
-          sm:py-14
-
-          lg:px-10
-          lg:py-16
-        "
+                    relative
+                    w-full
+                    overflow-hidden
+                    bg-[#F7FBFD]
+                    px-4
+                    py-12
+                    sm:px-6
+                    sm:py-14
+                    lg:px-10
+                    lg:py-16
+                "
             >
-                <div className="mx-auto max-w-[1450px]">
+                {/* DECORATIVE BACKGROUND */}
+                <div
+                    className="
+                        pointer-events-none
+                        absolute
+                        -right-32
+                        top-20
+                        h-[350px]
+                        w-[350px]
+                        rounded-full
+                        bg-cyan-400/[0.05]
+                        blur-[120px]
+                    "
+                />
+
+                <div
+                    className="
+                        pointer-events-none
+                        absolute
+                        -left-32
+                        bottom-10
+                        h-[350px]
+                        w-[350px]
+                        rounded-full
+                        bg-orange-400/[0.05]
+                        blur-[120px]
+                    "
+                />
+
+                <div className="relative mx-auto w-full max-w-[1450px]">
                     {/* HEADER */}
                     <div className="mx-auto max-w-3xl text-center">
                         <span
                             className="
-                inline-flex
-                items-center
-                gap-2
-                rounded-full
-                border
-                border-cyan-500/15
-                bg-cyan-500/[0.06]
-                px-3.5
-                py-2
-                text-[9px]
-                font-black
-                tracking-[0.10em]
-                text-cyan-700
-
-                sm:text-[10px]
-              "
+                                inline-flex
+                                items-center
+                                gap-2
+                                rounded-full
+                                border
+                                border-cyan-500/15
+                                bg-cyan-500/[0.06]
+                                px-3.5
+                                py-2
+                                text-[9px]
+                                font-black
+                                tracking-[0.10em]
+                                text-cyan-700
+                                sm:text-[10px]
+                            "
                         >
                             <span className="h-1.5 w-1.5 rounded-full bg-orange-400" />
                             CERTIFICATES
@@ -106,404 +109,500 @@ export default function CertificatesShowcase() {
 
                         <h2
                             className="
-                mt-4
-                text-[28px]
-                font-black
-                leading-[1.6]
-                text-[#07192D]
-
-                sm:text-[36px]
-                lg:text-[42px]
-              "
+                                mt-4
+                                text-[28px]
+                                font-black
+                                leading-[1.6]
+                                text-[#07192D]
+                                sm:text-[36px]
+                                lg:text-[42px]
+                            "
                         >
                             نمونه گواهینامه‌های ارائه‌شده
                         </h2>
 
                         <p
                             className="
-                mx-auto
-                mt-3
-                max-w-2xl
-                text-[11px]
-                leading-7
-                text-slate-500
-
-                sm:text-sm
-                sm:leading-8
-              "
+                                mx-auto
+                                mt-3
+                                max-w-2xl
+                                text-[11px]
+                                leading-7
+                                text-slate-500
+                                sm:text-sm
+                                sm:leading-8
+                            "
                         >
-                            نمونه مدارک به‌صورت خودکار نمایش داده می‌شوند.
+                            نمونه مدارک قابل ارائه در دوره‌های آموزشی مجتمع
+                            آموزشی کاردو
                         </p>
                     </div>
 
-                    {/* THREE TITLES */}
+                    {/* ================================================= */}
+                    {/* THREE CERTIFICATES */}
+                    {/* ================================================= */}
+
                     <div
                         className="
-              mx-auto
-              mt-7
-              grid
-              max-w-5xl
-              gap-2
-
-              sm:grid-cols-3
-              sm:gap-3
-            "
+                            mx-auto
+                            mt-8
+                            grid
+                            w-full
+                            max-w-[1250px]
+                            grid-cols-1
+                            gap-5
+                            sm:mt-10
+                            md:grid-cols-3
+                            md:gap-4
+                            lg:gap-6
+                        "
                     >
                         {certificates.map((item, index) => (
-                            <button
+                            <div
                                 key={item.id}
-                                type="button"
-                                onClick={() => setActiveIndex(index)}
-                                className={`
-                  rounded-2xl
-                  border
-                  px-4
-                  py-3
-                  text-center
-                  text-[11px]
-                  font-black
-                  leading-6
-                  transition
-
-                  sm:text-xs
-
-                  ${activeIndex === index
-                                        ? "border-cyan-300 bg-cyan-50 text-cyan-800 shadow-sm"
-                                        : "border-slate-200 bg-white text-slate-500 hover:bg-slate-50"
-                                    }
-                `}
+                                className="
+                                    group
+                                    flex
+                                    min-w-0
+                                    flex-col
+                                "
                             >
-                                {item.title}
-                            </button>
+                                {/* TITLE ABOVE EACH CARD */}
+                                <div
+                                    className="
+                                        mb-3
+                                        flex
+                                        min-h-[64px]
+                                        items-center
+                                        justify-center
+                                        rounded-[18px]
+                                        border
+                                        border-slate-200
+                                        bg-white
+                                        px-4
+                                        py-3
+                                        text-center
+                                        shadow-[0_8px_25px_rgba(15,40,60,0.04)]
+                                        transition
+                                        duration-300
+                                        group-hover:border-cyan-300
+                                        group-hover:shadow-[0_10px_30px_rgba(15,100,130,0.08)]
+                                        sm:min-h-[70px]
+                                    "
+                                >
+                                    <div>
+                                        <span
+                                            className="
+                                                mb-1
+                                                block
+                                                text-[8px]
+                                                font-black
+                                                tracking-[0.16em]
+                                                text-orange-500
+                                            "
+                                        >
+                                            0{index + 1}
+                                        </span>
+
+                                        <h3
+                                            className="
+                                                text-[11px]
+                                                font-black
+                                                leading-6
+                                                text-[#07192D]
+                                                sm:text-xs
+                                                lg:text-sm
+                                            "
+                                        >
+                                            {item.title}
+                                        </h3>
+                                    </div>
+                                </div>
+
+                                {/* CERTIFICATE CARD */}
+                                <article
+                                    className="
+                                        relative
+                                        flex
+                                        h-full
+                                        flex-col
+                                        overflow-hidden
+                                        rounded-[24px]
+                                        border
+                                        border-slate-200
+                                        bg-white
+                                        shadow-[0_16px_45px_rgba(15,40,60,0.07)]
+                                        transition
+                                        duration-500
+                                        hover:-translate-y-1
+                                        hover:border-cyan-200
+                                        hover:shadow-[0_24px_60px_rgba(15,70,100,0.12)]
+                                        sm:rounded-[26px]
+                                        lg:rounded-[30px]
+                                    "
+                                >
+                                    {/* CARD HEADER */}
+                                    <div
+                                        className="
+                                            flex
+                                            items-center
+                                            justify-between
+                                            gap-2
+                                            border-b
+                                            border-slate-100
+                                            px-4
+                                            py-3
+                                            sm:px-5
+                                            sm:py-4
+                                        "
+                                    >
+                                        <span
+                                            className="
+                                                text-[8px]
+                                                font-black
+                                                tracking-[0.15em]
+                                                text-slate-400
+                                            "
+                                        >
+                                            CERTIFICATE
+                                        </span>
+
+                                        <span
+                                            className="
+                                                shrink-0
+                                                rounded-full
+                                                bg-emerald-50
+                                                px-2.5
+                                                py-1.5
+                                                text-[8px]
+                                                font-black
+                                                text-emerald-700
+                                                sm:px-3
+                                                sm:py-2
+                                                sm:text-[9px]
+                                            "
+                                        >
+                                            {item.badge}
+                                        </span>
+                                    </div>
+
+                                    {/* IMAGE */}
+                                    <button
+                                        type="button"
+                                        onClick={() =>
+                                            setOpenCertificate(item)
+                                        }
+                                        aria-label={`مشاهده ${item.title}`}
+                                        className="
+                                            group/image
+                                            relative
+                                            block
+                                            aspect-[4/3]
+                                            w-full
+                                            overflow-hidden
+                                            bg-[#F1F6F8]
+                                            md:aspect-[4/3.3]
+                                            xl:aspect-[4/3.1]
+                                        "
+                                    >
+                                        <Image
+                                            src={item.image}
+                                            alt={item.title}
+                                            fill
+                                            sizes="
+                                                (max-width: 767px) 100vw,
+                                                (max-width: 1200px) 33vw,
+                                                400px
+                                            "
+                                            className="
+                                                object-contain
+                                                p-3
+                                                transition
+                                                duration-700
+                                                ease-out
+                                                group-hover/image:scale-[1.025]
+                                                sm:p-4
+                                                lg:p-5
+                                            "
+                                        />
+
+                                        {/* OVERLAY */}
+                                        <div
+                                            className="
+                                                pointer-events-none
+                                                absolute
+                                                inset-0
+                                                bg-gradient-to-t
+                                                from-[#07192D]/20
+                                                via-transparent
+                                                to-transparent
+                                                opacity-60
+                                                transition
+                                                duration-500
+                                                group-hover/image:opacity-100
+                                            "
+                                        />
+
+                                        {/* VIEW BUTTON */}
+                                        <span
+                                            className="
+                                                absolute
+                                                bottom-3
+                                                left-1/2
+                                                -translate-x-1/2
+                                                whitespace-nowrap
+                                                rounded-full
+                                                border
+                                                border-white/60
+                                                bg-white/90
+                                                px-3
+                                                py-2
+                                                text-[9px]
+                                                font-black
+                                                text-[#07192D]
+                                                shadow-md
+                                                backdrop-blur-md
+                                                transition
+                                                duration-300
+                                                group-hover/image:-translate-y-1
+                                                sm:bottom-4
+                                                sm:px-4
+                                                sm:text-[10px]
+                                            "
+                                        >
+                                            مشاهده مدرک
+                                        </span>
+                                    </button>
+
+                                    {/* FOOTER */}
+                                    <div
+                                        className="
+                                            mt-auto
+                                            flex
+                                            items-center
+                                            justify-between
+                                            gap-3
+                                            px-4
+                                            py-4
+                                            sm:px-5
+                                        "
+                                    >
+                                        <div className="min-w-0">
+                                            <p
+                                                className="
+                                                    line-clamp-2
+                                                    text-[10px]
+                                                    font-black
+                                                    leading-6
+                                                    text-[#07192D]
+                                                    sm:text-[11px]
+                                                    lg:text-xs
+                                                "
+                                            >
+                                                {item.title}
+                                            </p>
+                                        </div>
+
+                                        <button
+                                            type="button"
+                                            onClick={() =>
+                                                setOpenCertificate(item)
+                                            }
+                                            aria-label={`باز کردن ${item.title}`}
+                                            className="
+                                                flex
+                                                h-9
+                                                w-9
+                                                shrink-0
+                                                items-center
+                                                justify-center
+                                                rounded-full
+                                                bg-[#07192D]
+                                                text-sm
+                                                text-white
+                                                transition
+                                                duration-300
+                                                hover:bg-orange-400
+                                                hover:text-[#07192D]
+                                                sm:h-10
+                                                sm:w-10
+                                            "
+                                        >
+                                            ↗
+                                        </button>
+                                    </div>
+                                </article>
+                            </div>
                         ))}
                     </div>
 
-                    {/* SINGLE CERTIFICATE CARD */}
+                    {/* SMALL NOTE */}
                     <div
                         className="
-              mx-auto
-              mt-6
-              max-w-5xl
-            "
+                            mx-auto
+                            mt-7
+                            flex
+                            max-w-3xl
+                            items-center
+                            justify-center
+                            gap-2
+                            text-center
+                            text-[9px]
+                            font-bold
+                            leading-6
+                            text-slate-400
+                            sm:mt-8
+                            sm:text-[10px]
+                        "
                     >
-                        <article
-                            onMouseEnter={() => setPaused(true)}
-                            onMouseLeave={() => setPaused(false)}
-                            className="
-                overflow-hidden
-                rounded-[30px]
-                border
-                border-slate-200
-                bg-white
-                shadow-[0_18px_60px_rgba(15,40,60,0.08)]
-              "
-                        >
-                            <div
-                                className="
-                  flex
-                  items-center
-                  justify-between
-                  gap-3
-                  border-b
-                  border-slate-100
-                  px-4
-                  py-4
-
-                  sm:px-6
-                "
-                            >
-                                <div>
-                                    <span className="text-[8px] font-black tracking-[0.15em] text-orange-500">
-                                        CERTIFICATE
-                                    </span>
-
-                                    <h3
-                                        className="
-                      mt-1
-                      text-sm
-                      font-black
-                      text-[#07192D]
-
-                      sm:text-base
-                    "
-                                    >
-                                        {active.title}
-                                    </h3>
-                                </div>
-
-                                <span
-                                    className="
-                    shrink-0
-                    rounded-full
-                    bg-emerald-50
-                    px-3
-                    py-2
-                    text-[9px]
-                    font-black
-                    text-emerald-700
-                  "
-                                >
-                                    {active.badge}
-                                </span>
-                            </div>
-
-                            <button
-                                type="button"
-                                onClick={() => setOpen(true)}
-                                className="
-                  group
-                  relative
-                  block
-                  h-[330px]
-                  w-full
-                  overflow-hidden
-                  bg-[#F2F7FA]
-
-                  sm:h-[420px]
-                  lg:h-[520px]
-                "
-                                aria-label={`مشاهده ${active.title}`}
-                            >
-                                <Image
-                                    key={active.id}
-                                    src={active.image}
-                                    alt={active.title}
-                                    fill
-                                    sizes="(max-width: 768px) 100vw, 1000px"
-                                    className="
-                    object-contain
-                    p-5
-                    transition
-                    duration-700
-                    group-hover:scale-[1.01]
-
-                    sm:p-7
-                    lg:p-8
-                  "
-                                />
-
-                                <div
-                                    className="
-                    pointer-events-none
-                    absolute
-                    inset-x-0
-                    bottom-0
-                    h-28
-                    bg-gradient-to-t
-                    from-[#07192D]/20
-                    to-transparent
-                  "
-                                />
-
-                                <span
-                                    className="
-                    absolute
-                    bottom-4
-                    left-1/2
-                    -translate-x-1/2
-                    rounded-full
-                    border
-                    border-white/50
-                    bg-white/90
-                    px-4
-                    py-2
-                    text-[10px]
-                    font-black
-                    text-[#07192D]
-                    shadow-sm
-                    backdrop-blur
-                  "
-                                >
-                                    مشاهده مدرک
-                                </span>
-                            </button>
-
-                            <div
-                                className="
-                  flex
-                  items-center
-                  justify-between
-                  gap-3
-                  px-4
-                  py-4
-
-                  sm:px-6
-                "
-                            >
-                                <button
-                                    type="button"
-                                    onClick={previous}
-                                    aria-label="مدرک قبلی"
-                                    className="
-                    flex
-                    h-10
-                    w-10
-                    items-center
-                    justify-center
-                    rounded-full
-                    border
-                    border-slate-200
-                    bg-white
-                    text-lg
-                    text-[#07192D]
-                    transition
-                    hover:bg-slate-50
-                  "
-                                >
-                                    →
-                                </button>
-
-                                <div className="flex items-center gap-2">
-                                    {certificates.map((item, index) => (
-                                        <button
-                                            key={item.id}
-                                            type="button"
-                                            onClick={() => setActiveIndex(index)}
-                                            aria-label={`نمایش ${item.title}`}
-                                            className={`
-                        h-2
-                        rounded-full
-                        transition-all
-                        ${activeIndex === index
-                                                    ? "w-7 bg-orange-400"
-                                                    : "w-2 bg-slate-300"
-                                                }
-                      `}
-                                        />
-                                    ))}
-                                </div>
-
-                                <button
-                                    type="button"
-                                    onClick={next}
-                                    aria-label="مدرک بعدی"
-                                    className="
-                    flex
-                    h-10
-                    w-10
-                    items-center
-                    justify-center
-                    rounded-full
-                    border
-                    border-slate-200
-                    bg-white
-                    text-lg
-                    text-[#07192D]
-                    transition
-                    hover:bg-slate-50
-                  "
-                                >
-                                    ←
-                                </button>
-                            </div>
-                        </article>
+                        <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-orange-400" />
+                        برای مشاهده هر گواهینامه در ابعاد بزرگ، روی تصویر آن کلیک
+                        کنید.
                     </div>
                 </div>
             </section>
 
-            {/* LARGE PREVIEW */}
-            {open && (
+            {/* ========================================================= */}
+            {/* LARGE PREVIEW MODAL */}
+            {/* ========================================================= */}
+
+            {openCertificate && (
                 <div
                     className="
-            fixed
-            inset-0
-            z-[200]
-            flex
-            items-center
-            justify-center
-            bg-[#03111F]/82
-            p-4
-            backdrop-blur-md
-          "
-                    onClick={() => setOpen(false)}
+                        fixed
+                        inset-0
+                        z-[200]
+                        flex
+                        items-center
+                        justify-center
+                        bg-[#03111F]/85
+                        p-3
+                        backdrop-blur-md
+                        sm:p-5
+                    "
+                    onClick={() => setOpenCertificate(null)}
                 >
                     <div
                         className="
-              relative
-              w-full
-              max-w-[980px]
-              overflow-hidden
-              rounded-[28px]
-              border
-              border-white/10
-              bg-white
-              shadow-[0_35px_120px_rgba(0,0,0,0.35)]
-            "
-                        onClick={(event) => event.stopPropagation()}
+                            relative
+                            flex
+                            max-h-[92vh]
+                            w-full
+                            max-w-[1000px]
+                            flex-col
+                            overflow-hidden
+                            rounded-[22px]
+                            border
+                            border-white/10
+                            bg-white
+                            shadow-[0_35px_120px_rgba(0,0,0,0.40)]
+                            sm:rounded-[28px]
+                        "
+                        onClick={(event) =>
+                            event.stopPropagation()
+                        }
                     >
+                        {/* CLOSE */}
                         <button
                             type="button"
-                            onClick={() => setOpen(false)}
+                            onClick={() =>
+                                setOpenCertificate(null)
+                            }
                             aria-label="بستن"
                             className="
-                absolute
-                left-4
-                top-4
-                z-30
-                flex
-                h-10
-                w-10
-                items-center
-                justify-center
-                rounded-full
-                border
-                border-slate-200
-                bg-white/95
-                text-xl
-                text-[#07192D]
-                shadow-md
-              "
+                                absolute
+                                left-3
+                                top-3
+                                z-30
+                                flex
+                                h-10
+                                w-10
+                                items-center
+                                justify-center
+                                rounded-full
+                                border
+                                border-slate-200
+                                bg-white/95
+                                text-xl
+                                text-[#07192D]
+                                shadow-md
+                                backdrop-blur
+                                transition
+                                hover:bg-slate-100
+                                sm:left-4
+                                sm:top-4
+                            "
                         >
                             ×
                         </button>
 
+                        {/* PREVIEW IMAGE */}
                         <div
                             className="
-                relative
-                h-[72vh]
-                min-h-[420px]
-                bg-[#EEF4F7]
-              "
+                                relative
+                                h-[68vh]
+                                min-h-[320px]
+                                w-full
+                                bg-[#EEF4F7]
+                                sm:min-h-[420px]
+                            "
                         >
                             <Image
-                                src={active.image}
-                                alt={active.title}
+                                src={openCertificate.image}
+                                alt={openCertificate.title}
                                 fill
                                 sizes="100vw"
-                                className="object-contain p-5 sm:p-8"
+                                className="
+                                    object-contain
+                                    p-4
+                                    sm:p-7
+                                    lg:p-9
+                                "
                                 priority
                             />
                         </div>
 
+                        {/* MODAL FOOTER */}
                         <div
+                            dir="rtl"
                             className="
-                flex
-                items-center
-                justify-between
-                gap-3
-                border-t
-                border-slate-200
-                bg-white
-                px-5
-                py-4
-              "
+                                flex
+                                items-center
+                                justify-between
+                                gap-3
+                                border-t
+                                border-slate-200
+                                bg-white
+                                px-4
+                                py-4
+                                sm:px-6
+                            "
                         >
-                            <h3 className="text-sm font-black text-[#07192D] sm:text-base">
-                                {active.title}
+                            <h3
+                                className="
+                                    text-xs
+                                    font-black
+                                    leading-6
+                                    text-[#07192D]
+                                    sm:text-base
+                                "
+                            >
+                                {openCertificate.title}
                             </h3>
 
                             <span
                                 className="
-                  rounded-full
-                  bg-emerald-50
-                  px-3
-                  py-2
-                  text-[9px]
-                  font-black
-                  text-emerald-700
-                "
+                                    shrink-0
+                                    rounded-full
+                                    bg-emerald-50
+                                    px-3
+                                    py-2
+                                    text-[9px]
+                                    font-black
+                                    text-emerald-700
+                                "
                             >
-                                {active.badge}
+                                {openCertificate.badge}
                             </span>
                         </div>
                     </div>
