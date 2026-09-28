@@ -33,13 +33,7 @@ const certificates: Certificate[] = [
         badge: "بین‌المللی",
         image: "/images/certificates/international-certificate.jpg",
     },
-    {
-        id: "attendance",
-        title: "گواهی حضور و پایان دوره",
-        issuer: "مجتمع آموزشی کاردو",
-        badge: "پایان دوره",
-        image: "/images/certificates/attendance-certificate.jpg",
-    },
+
 ];
 
 export default function CertificatesShowcase() {
@@ -97,7 +91,7 @@ export default function CertificatesShowcase() {
                 lg:text-[44px]
               "
                         >
-                            نمونه مدارک ارائه‌شده
+                            نمونه گواهی های  ارائه‌شده
                         </h2>
 
                         <p
