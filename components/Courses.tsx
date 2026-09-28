@@ -17,7 +17,7 @@ const categories = [
     {
         id: "international",
         number: "02",
-        title: "دوره‌های بین‌المللی",
+        title: "بین‌المللی",
         description:
             "دوره‌های تخصصی با رویکرد بین‌المللی برای توسعه مهارت‌ها و فرصت‌های حرفه‌ای.",
         href: "/courses?category=international",
@@ -28,7 +28,7 @@ const categories = [
     {
         id: "technical",
         number: "03",
-        title: "دوره‌های فنی و حرفه‌ای",
+        title: "فنی و حرفه‌ای",
         description:
             "دوره‌های مهارتی و کاربردی برای ارتقای توانمندی فردی و ورود حرفه‌ای‌تر به بازار کار.",
         href: "/courses?category=technical",

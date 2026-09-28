@@ -17,7 +17,6 @@ export default function Home() {
       "
     >
       {/* GLOBAL BACKGROUND */}
-
       <div
         className="
           fixed
@@ -31,7 +30,6 @@ export default function Home() {
       />
 
       {/* AMBIENT LIGHTS */}
-
       <div
         className="
           pointer-events-none
@@ -70,11 +68,14 @@ export default function Home() {
         <div
           className="
             pointer-events-none
-            h-20
+            h-6
             bg-gradient-to-b
             from-transparent
             via-[#14314A]/40
             to-[#14314A]
+
+            sm:h-8
+            lg:h-10
           "
         />
 
@@ -92,7 +93,6 @@ export default function Home() {
           {/* ============================================
               مشتریان ما
           ============================================= */}
-
           <div
             id="partners"
             className="scroll-mt-[120px]"

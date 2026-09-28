@@ -91,6 +91,32 @@ const heroSlides: HeroSlide[] = [
         href: "/courses?category=organization",
 
     },
+    {
+
+        id: 6,
+
+        title: "دوره آشنایی با تجهیزات و روش‌های اطفای حریق",
+
+        subtitle: "سازمان آتش نشانی ",
+
+        image: "/images/hero/s1.jpg",
+
+        href: "/courses?category=organization",
+
+    },
+    {
+
+        id: 7,
+
+        title: "دوره ایمنی حریق و کار با خاموش‌کننده‌ها",
+
+        subtitle: "سازمان آتش نشانی ",
+
+        image: "/images/hero/s2.jpg",
+
+        href: "/courses?category=organization",
+
+    },
 
 ];
 

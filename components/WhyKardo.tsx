@@ -47,6 +47,7 @@ const instructors: Instructor[] = [
         degree: "دکترای HSE",
         experience: "مدیر و مدرس حوزه HSE و ایمنی فرایند",
         bio: "متخصص HSE و ایمنی فرایند با سابقه مدیریت HSE پروژه‌های نفت و گاز، ایمنی راه‌اندازی، PSM، PSSR، HAZID/HIRA، MOC و ممیزی رفتاری.",
+        image: "/images/instructors/manoch.jpeg",
     },
     {
         id: "hoda-akhoundi",
@@ -184,10 +185,12 @@ export default function WhyKardo() {
         via-[#14314A]
         to-[#0B2239]
         px-4
-        py-20
+        py-10
         sm:px-6
+        sm:py-12
+        md:py-14
         lg:px-10
-        lg:py-28
+        lg:py-16
       "
         >
             <div
@@ -207,6 +210,7 @@ export default function WhyKardo() {
             <div
                 className="
           pointer-events-none
+          absolute
           -left-40
           bottom-10
           h-[500px]
@@ -283,7 +287,7 @@ export default function WhyKardo() {
                 {/* DESKTOP */}
                 <div
                     className="
-            mt-14
+            mt-8
             hidden
             grid-cols-[0.72fr_1fr_0.72fr]
             items-center
@@ -299,7 +303,7 @@ export default function WhyKardo() {
                         className="
               group
               relative
-              min-h-[430px]
+              min-h-[390px] xl:min-h-[430px]
               overflow-hidden
               rounded-[32px]
               border
@@ -508,7 +512,7 @@ export default function WhyKardo() {
                         className="
               group
               relative
-              min-h-[430px]
+              min-h-[390px] xl:min-h-[430px]
               overflow-hidden
               rounded-[32px]
               border
@@ -536,7 +540,7 @@ export default function WhyKardo() {
                 </div>
 
                 {/* MOBILE / TABLET */}
-                <div className="mt-10 lg:hidden">
+                <div className="mt-7 sm:mt-8 lg:hidden">
                     <div
                         className="
               overflow-hidden
@@ -733,8 +737,8 @@ function InstructorVisual({
         border-white/[0.08]
         bg-[#091D31]
         ${muted
-                    ? "h-[300px]"
-                    : "h-[330px] sm:h-[390px]"
+                    ? "h-[260px] xl:h-[300px]"
+                    : "h-[280px] sm:h-[330px] md:h-[360px] xl:h-[390px]"
                 }
       `}
         >
