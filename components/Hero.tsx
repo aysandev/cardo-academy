@@ -50,25 +50,22 @@ const heroSlides: HeroSlide[] = [
 
 const categories = [
     {
-        id: "technical",
-        title: "دوره‌های فنی و حرفه‌ای",
-        href: "/courses?category=technical",
-        icon: "⚙",
-        tone: "blue",
+        id: "organization",
+        title: "دوره‌های اختصاصی",
+        href: "/courses?category=organization",
+        accent: "orange",
     },
     {
         id: "international",
         title: "دوره‌های بین‌المللی",
         href: "/courses?category=international",
-        icon: "◎",
-        tone: "cyan",
+        accent: "cyan",
     },
     {
-        id: "organization",
-        title: "دوره‌های اختصاصی",
-        href: "/courses?category=organization",
-        icon: "♜",
-        tone: "orange",
+        id: "technical",
+        title: "دوره‌های فنی و حرفه‌ای",
+        href: "/courses?category=technical",
+        accent: "blue",
     },
 ] as const;
 
@@ -83,14 +80,11 @@ export default function Hero() {
 
     useEffect(() => {
         if (paused) return;
-
         const timer = window.setInterval(() => {
             setActive((prev) => (prev + 1) % heroSlides.length);
         }, 5000);
-
         return () => window.clearInterval(timer);
     }, [paused]);
-
 
     useEffect(() => {
         const reduceMotion = window.matchMedia(
@@ -109,7 +103,6 @@ export default function Hero() {
 
         const runTyping = () => {
             let index = 0;
-
             setTypedSlogan("");
             setTypingDone(false);
 
@@ -119,10 +112,7 @@ export default function Hero() {
                     setTypedSlogan(fullSlogan.slice(0, index));
 
                     if (index >= fullSlogan.length) {
-                        if (typingTimer) {
-                            window.clearInterval(typingTimer);
-                        }
-
+                        if (typingTimer) window.clearInterval(typingTimer);
                         setTypingDone(true);
                     }
                 }, 65);
@@ -130,10 +120,7 @@ export default function Hero() {
         };
 
         runTyping();
-
-        replayTimer = window.setInterval(() => {
-            runTyping();
-        }, 40000);
+        replayTimer = window.setInterval(runTyping, 40000);
 
         return () => {
             if (startTimer) window.clearTimeout(startTimer);
@@ -144,13 +131,11 @@ export default function Hero() {
 
     const current = heroSlides[active];
 
-    function nextSlide() {
+    const nextSlide = () =>
         setActive((prev) => (prev + 1) % heroSlides.length);
-    }
 
-    function prevSlide() {
+    const prevSlide = () =>
         setActive((prev) => (prev === 0 ? heroSlides.length - 1 : prev - 1));
-    }
 
     function handleTouchStart(event: TouchEvent<HTMLDivElement>) {
         touchStartX.current = event.touches[0]?.clientX ?? null;
@@ -158,481 +143,209 @@ export default function Hero() {
 
     function handleTouchEnd(event: TouchEvent<HTMLDivElement>) {
         if (touchStartX.current === null) return;
-
         const endX = event.changedTouches[0]?.clientX ?? touchStartX.current;
         const diff = endX - touchStartX.current;
 
         if (Math.abs(diff) > 45) {
-            if (diff > 0) {
-                prevSlide();
-            } else {
-                nextSlide();
-            }
+            diff > 0 ? prevSlide() : nextSlide();
         }
 
         touchStartX.current = null;
     }
 
-    return (
-        <section
-            dir="rtl"
-            className="
-        relative
-        overflow-hidden
-        bg-[#06192E]
-        px-3
-        py-4
-        sm:px-5
-        sm:py-6
-        lg:px-8
-        lg:py-8
-      "
+    const Slogan = () => (
+        <div className="relative">
+            <p className="text-right text-[23px] font-black leading-[1.8] tracking-[-0.03em] text-white min-[390px]:text-[26px] sm:text-[32px] lg:text-[34px] xl:text-[38px]">
+                <span className="bg-gradient-to-l from-white via-orange-100 to-orange-300 bg-clip-text text-transparent drop-shadow-[0_0_18px_rgba(251,146,60,0.26)]">
+                    {typedSlogan}
+                </span>
+                <span
+                    aria-hidden="true"
+                    className={`mr-1 inline-block h-[1em] w-[2px] translate-y-[0.14em] rounded-full bg-orange-300 ${typingDone ? "animate-pulse opacity-35" : "animate-pulse opacity-100"
+                        }`}
+                />
+            </p>
+            <div className="mt-2 h-[3px] w-[96px] rounded-full bg-gradient-to-l from-orange-400 via-orange-300 to-transparent sm:w-[120px]" />
+        </div>
+    );
+
+    const Slider = () => (
+        <div
+            className="relative overflow-hidden rounded-[24px] border border-cyan-300/20 bg-[#0B2239] shadow-[0_24px_70px_rgba(0,0,0,0.28)] sm:rounded-[30px]"
+            onMouseEnter={() => setPaused(true)}
+            onMouseLeave={() => setPaused(false)}
+            onTouchStart={handleTouchStart}
+            onTouchEnd={handleTouchEnd}
         >
-            {/* ambient glows */}
-            <div className="pointer-events-none absolute -right-44 -top-32 h-[460px] w-[460px] rounded-full bg-blue-500/10 blur-[150px]" />
-            <div className="pointer-events-none absolute -bottom-36 -left-40 h-[420px] w-[420px] rounded-full bg-orange-400/10 blur-[150px]" />
-
-            <div
-                className="
-          relative
-          mx-auto
-          max-w-[1820px]
-          overflow-hidden
-          rounded-[28px]
-          border
-          border-cyan-300/15
-          bg-[linear-gradient(135deg,#092D51_0%,#082944_42%,#0A2137_100%)]
-          shadow-[0_28px_90px_rgba(0,0,0,0.25)]
-          sm:rounded-[34px]
-          lg:rounded-[44px]
-        "
-            >
-                {/* decorative arcs */}
-                <div className="pointer-events-none absolute -right-16 -top-24 h-[260px] w-[260px] rounded-full border border-cyan-400/25" />
-                <div className="pointer-events-none absolute -right-7 -top-14 h-[200px] w-[200px] rounded-full border border-blue-500/20" />
-                <div className="pointer-events-none absolute -bottom-14 -left-14 h-[220px] w-[220px] rounded-full border border-orange-400/20" />
-
-                <div
-                    className="
-            grid
-            gap-6
-            p-4
-            sm:p-6
-            lg:grid-cols-[1.02fr_.98fr]
-            lg:gap-8
-            lg:p-10
-            xl:p-14
-          "
-                >
-                    {/* TEXT */}
+            <div className="relative h-[300px] min-[390px]:h-[330px] sm:h-[420px] lg:h-[520px] xl:h-[560px]">
+                {heroSlides.map((slide, index) => (
                     <div
-                        className="
-              order-1
-              flex
-              min-w-0
-              flex-col
-              justify-center
-              text-right
-              lg:pl-2
-            "
+                        key={slide.id}
+                        className={`absolute inset-0 transition-all duration-700 ${index === active
+                            ? "scale-100 opacity-100"
+                            : "pointer-events-none scale-[1.025] opacity-0"
+                            }`}
                     >
-                        <div className="relative">
-                            {/* dotted accent */}
-                            <div className="mb-4 grid w-fit grid-cols-5 gap-2 opacity-40 lg:mb-7">
-                                {Array.from({ length: 15 }).map((_, index) => (
-                                    <span
-                                        key={index}
-                                        className="h-1.5 w-1.5 rounded-full bg-cyan-400"
-                                    />
-                                ))}
-                            </div>
+                        <img
+                            src={slide.image}
+                            alt={slide.title}
+                            className="h-full w-full object-cover object-center"
+                        />
+                    </div>
+                ))}
 
-                            <h1
-                                className="
-                  text-[34px]
-                  font-black
-                  leading-[1.35]
-                  tracking-[-0.04em]
-                  text-white
-                  min-[420px]:text-[40px]
-                  sm:text-[50px]
-                  lg:text-[58px]
-                  xl:text-[66px]
-                "
-                            >
-                                آکادمی تخصصی
-                                <span
-                                    className="
-                    mt-1
-                    block
-                    bg-gradient-to-l
-                    from-[#FFB458]
-                    via-[#FF982D]
-                    to-[#FF7D14]
-                    bg-clip-text
-                    text-transparent
-                  "
-                                >
-                                    آتش‌نشانی و HSE
-                                </span>
-                            </h1>
+                <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-[#04121F]/92 via-[#06192E]/10 to-transparent" />
 
-                            <div
-                                className="
-                  relative
-                  mt-6
-                  overflow-hidden
-                  rounded-[24px]
-                  border
-                  border-orange-300/25
-                  bg-[linear-gradient(135deg,rgba(255,255,255,0.055),rgba(251,146,60,0.045),rgba(34,211,238,0.025))]
-                  px-4
-                  py-4
-                  shadow-[inset_0_0_32px_rgba(255,184,92,0.05),0_14px_40px_rgba(0,0,0,0.10)]
-                  backdrop-blur-xl
-                  sm:px-6
-                  sm:py-5
-                  lg:mt-8
-                  lg:rounded-[28px]
-                  lg:px-7
-                  lg:py-6
-                "
-                            >
-                                <div className="pointer-events-none absolute inset-x-10 top-0 h-px bg-gradient-to-r from-transparent via-orange-200/90 to-transparent" />
-                                <div className="pointer-events-none absolute inset-x-10 bottom-0 h-px bg-gradient-to-r from-transparent via-cyan-300/70 to-transparent" />
+                <button
+                    type="button"
+                    onClick={prevSlide}
+                    aria-label="اسلاید قبلی"
+                    className="absolute right-3 top-1/2 z-20 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full border border-white/10 bg-[#0B2239]/75 text-lg text-white backdrop-blur-md"
+                >
+                    →
+                </button>
 
-                                <p
-                                    className="
-                    text-[20px]
-                    font-black
-                    leading-[1.9]
-                    tracking-[-0.025em]
-                    text-white
-                    drop-shadow-[0_0_18px_rgba(255,205,128,.18)]
-                    min-[420px]:text-[24px]
-                    sm:text-[30px]
-                    lg:text-[32px]
-                    xl:text-[35px]
-                  "
-                                >
-                                    <span>{typedSlogan}</span>
-                                    <span
-                                        aria-hidden="true"
-                                        className={`mr-1 inline-block h-[1.05em] w-[2px] translate-y-[0.14em] rounded-full bg-orange-300 align-baseline ${typingDone ? "animate-pulse opacity-35" : "animate-pulse opacity-100"
-                                            }`}
-                                    />
-                                </p>
-                            </div>
+                <button
+                    type="button"
+                    onClick={nextSlide}
+                    aria-label="اسلاید بعدی"
+                    className="absolute left-3 top-1/2 z-20 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full border border-white/10 bg-[#0B2239]/75 text-lg text-white backdrop-blur-md"
+                >
+                    ←
+                </button>
+
+                <div className="absolute inset-x-0 bottom-0 z-10 p-4 sm:p-6">
+                    {current.subtitle && (
+                        <p className="mb-1.5 text-right text-[9px] font-bold leading-5 text-orange-200 sm:text-[10px]">
+                            {current.subtitle}
+                        </p>
+                    )}
+
+                    <h2 className="max-w-[90%] text-right text-[22px] font-black leading-[1.55] text-white min-[390px]:text-[25px] sm:text-[31px] lg:text-[34px]">
+                        {current.title}
+                    </h2>
+
+                    <div className="mt-4 flex items-center justify-between gap-3">
+                        <Link
+                            href={current.href}
+                            className="inline-flex min-h-[44px] items-center justify-center rounded-full border border-white/15 bg-white/10 px-5 text-[10px] font-black text-white backdrop-blur-md sm:text-[11px]"
+                        >
+                            مشاهده دوره‌ها ←
+                        </Link>
+
+                        <div className="flex items-center gap-1.5">
+                            {heroSlides.map((slide, index) => (
+                                <button
+                                    key={slide.id}
+                                    type="button"
+                                    onClick={() => setActive(index)}
+                                    aria-label={`نمایش اسلاید ${index + 1}`}
+                                    className={`h-2 rounded-full transition-all duration-300 ${index === active ? "w-7 bg-orange-400" : "w-2 bg-white/35"
+                                        }`}
+                                />
+                            ))}
                         </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    );
 
-                        {/* DESKTOP buttons */}
-                        <div className="mt-7 hidden grid-cols-3 gap-3 lg:grid xl:gap-4">
-                            {categories.map((item) => {
-                                const tone =
-                                    item.tone === "cyan"
-                                        ? "border-cyan-400/55 bg-cyan-400/[0.045] hover:bg-cyan-400/[0.09]"
-                                        : item.tone === "orange"
-                                            ? "border-orange-400/55 bg-orange-400/[0.045] hover:bg-orange-400/[0.09]"
-                                            : "border-blue-400/55 bg-blue-400/[0.045] hover:bg-blue-400/[0.09]";
+    return (
+        <section dir="rtl" className="relative overflow-hidden bg-[#06192E] px-3 py-4 sm:px-5 sm:py-6 lg:px-8 lg:py-8">
+            <div className="pointer-events-none absolute -right-40 top-0 h-[420px] w-[420px] rounded-full bg-cyan-400/[0.06] blur-[145px]" />
+            <div className="pointer-events-none absolute -bottom-40 -left-40 h-[420px] w-[420px] rounded-full bg-orange-400/[0.08] blur-[145px]" />
 
-                                const iconTone =
-                                    item.tone === "cyan"
-                                        ? "text-cyan-300"
-                                        : item.tone === "orange"
-                                            ? "text-orange-400"
-                                            : "text-blue-400";
+            <div className="relative mx-auto max-w-[1820px] overflow-hidden rounded-[28px] border border-cyan-300/15 bg-[linear-gradient(135deg,#092D51_0%,#082944_42%,#0A2137_100%)] shadow-[0_28px_90px_rgba(0,0,0,0.25)] sm:rounded-[34px] lg:rounded-[44px]">
 
-                                return (
-                                    <Link
-                                        key={item.id}
-                                        href={item.href}
-                                        className={`
-                      group
-                      flex
-                      min-h-[150px]
-                      flex-col
-                      items-center
-                      justify-center
-                      rounded-[26px]
-                      border
-                      px-4
-                      py-5
-                      text-center
-                      transition
-                      duration-300
-                      hover:-translate-y-1
-                      ${tone}
-                    `}
-                                    >
-                                        <span className={`text-4xl font-black ${iconTone}`}>
-                                            {item.icon}
-                                        </span>
+                {/* MOBILE + TABLET: exact requested order */}
+                <div className="lg:hidden p-4 sm:p-6">
+                    {/* 1. BOTH IMPORTANT MESSAGES FIRST */}
+                    <div className="text-right">
+                        <h1 className="text-[31px] font-black leading-[1.45] tracking-[-0.04em] text-white min-[390px]:text-[35px] sm:text-[44px]">
+                            آکادمی تخصصی
+                            <span className="mt-1 block bg-gradient-to-l from-[#FFB458] via-[#FF982D] to-[#FF7D14] bg-clip-text text-transparent">
+                                آتش‌نشانی و HSE
+                            </span>
+                        </h1>
 
-                                        <strong className="mt-4 text-[15px] font-black leading-7 text-white xl:text-base">
-                                            {item.title}
-                                        </strong>
-
-                                        <span
-                                            className={`
-                        mt-4
-                        flex
-                        h-8
-                        w-8
-                        items-center
-                        justify-center
-                        rounded-full
-                        text-sm
-                        font-black
-                        ${item.tone === "cyan"
-                                                    ? "bg-cyan-400 text-[#062039]"
-                                                    : item.tone === "orange"
-                                                        ? "bg-orange-400 text-[#062039]"
-                                                        : "bg-blue-500 text-white"
-                                                }
-                      `}
-                                        >
-                                            ←
-                                        </span>
-                                    </Link>
-                                );
-                            })}
+                        <div className="mt-5">
+                            <Slogan />
                         </div>
                     </div>
 
-                    {/* SLIDER */}
-                    <div
-                        className="
-              order-3
-              relative
-              min-w-0
-              overflow-hidden
-              rounded-[28px]
-              border
-              border-cyan-300/20
-              bg-[#0B2239]
-              shadow-[0_24px_70px_rgba(0,0,0,0.30)]
-              sm:rounded-[32px]
-              lg:min-h-[520px]
-            "
-                        onMouseEnter={() => setPaused(true)}
-                        onMouseLeave={() => setPaused(false)}
-                        onTouchStart={handleTouchStart}
-                        onTouchEnd={handleTouchEnd}
-                    >
-                        <div className="relative h-[330px] sm:h-[430px] lg:h-full lg:min-h-[520px] xl:min-h-[560px]">
-                            {heroSlides.map((slide, index) => (
-                                <div
-                                    key={slide.id}
-                                    className={`absolute inset-0 transition-all duration-700 ${index === active
-                                            ? "scale-100 opacity-100"
-                                            : "pointer-events-none scale-[1.025] opacity-0"
+                    {/* 2. COURSE TYPES */}
+                    <div className="mt-6 grid grid-cols-1 gap-3 min-[520px]:grid-cols-3">
+                        {categories.map((item) => (
+                            <Link
+                                key={item.id}
+                                href={item.href}
+                                className={`flex min-h-[68px] items-center justify-between rounded-[20px] border px-4 py-3 text-right ${item.accent === "cyan"
+                                    ? "border-cyan-400/45 bg-cyan-400/[0.05]"
+                                    : item.accent === "orange"
+                                        ? "border-orange-400/45 bg-orange-400/[0.05]"
+                                        : "border-blue-400/45 bg-blue-400/[0.05]"
+                                    }`}
+                            >
+                                <span className="text-[13px] font-black text-white sm:text-[14px]">
+                                    {item.title}
+                                </span>
+                                <span
+                                    className={`flex h-8 w-8 items-center justify-center rounded-full text-sm font-black ${item.accent === "cyan"
+                                        ? "bg-cyan-400 text-[#062039]"
+                                        : item.accent === "orange"
+                                            ? "bg-orange-400 text-[#062039]"
+                                            : "bg-blue-500 text-white"
                                         }`}
                                 >
-                                    <img
-                                        src={slide.image}
-                                        alt={slide.title}
-                                        className="h-full w-full object-cover object-center"
-                                    />
-                                </div>
-                            ))}
-
-                            <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-[#04121F]/90 via-[#06192E]/10 to-transparent" />
-
-                            <button
-                                type="button"
-                                onClick={prevSlide}
-                                aria-label="اسلاید قبلی"
-                                className="
-                  absolute
-                  right-3
-                  top-1/2
-                  z-20
-                  flex
-                  h-11
-                  w-11
-                  -translate-y-1/2
-                  items-center
-                  justify-center
-                  rounded-full
-                  border
-                  border-white/10
-                  bg-[#0B2239]/75
-                  text-lg
-                  text-white
-                  backdrop-blur-md
-                  transition
-                  hover:bg-[#153A5A]
-                  sm:right-4
-                  sm:h-12
-                  sm:w-12
-                "
-                            >
-                                →
-                            </button>
-
-                            <button
-                                type="button"
-                                onClick={nextSlide}
-                                aria-label="اسلاید بعدی"
-                                className="
-                  absolute
-                  left-3
-                  top-1/2
-                  z-20
-                  flex
-                  h-11
-                  w-11
-                  -translate-y-1/2
-                  items-center
-                  justify-center
-                  rounded-full
-                  border
-                  border-white/10
-                  bg-[#0B2239]/75
-                  text-lg
-                  text-white
-                  backdrop-blur-md
-                  transition
-                  hover:bg-[#153A5A]
-                  sm:left-4
-                  sm:h-12
-                  sm:w-12
-                "
-                            >
-                                ←
-                            </button>
-
-                            <div className="absolute inset-x-0 bottom-0 z-10 p-4 sm:p-6 lg:p-7">
-                                {current.subtitle && (
-                                    <p className="mb-2 text-[9px] font-bold leading-5 text-orange-200 sm:text-[10px]">
-                                        {current.subtitle}
-                                    </p>
-                                )}
-
-                                <h2
-                                    className="
-                    max-w-[92%]
-                    text-[22px]
-                    font-black
-                    leading-[1.5]
-                    text-white
-                    min-[420px]:text-[26px]
-                    sm:text-[30px]
-                    lg:text-[34px]
-                  "
-                                >
-                                    {current.title}
-                                </h2>
-
-                                <div className="mt-5 flex items-center justify-between gap-4">
-                                    <Link
-                                        href={current.href}
-                                        className="
-                      inline-flex
-                      min-h-[44px]
-                      items-center
-                      justify-center
-                      rounded-full
-                      border
-                      border-white/15
-                      bg-white/10
-                      px-5
-                      text-[10px]
-                      font-black
-                      text-white
-                      backdrop-blur-md
-                      transition
-                      hover:bg-white/15
-                      sm:min-h-[48px]
-                      sm:text-[11px]
-                    "
-                                    >
-                                        مشاهده دوره‌ها ←
-                                    </Link>
-
-                                    <div className="flex items-center gap-2">
-                                        {heroSlides.map((slide, index) => (
-                                            <button
-                                                key={slide.id}
-                                                type="button"
-                                                onClick={() => setActive(index)}
-                                                aria-label={`نمایش اسلاید ${index + 1}`}
-                                                className={`h-2 rounded-full transition-all duration-300 ${active === index
-                                                        ? "w-8 bg-orange-400"
-                                                        : "w-2 bg-white/35"
-                                                    }`}
-                                            />
-                                        ))}
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                                    ←
+                                </span>
+                            </Link>
+                        ))}
                     </div>
 
-                    {/* MOBILE buttons */}
-                    <div className="order-2 grid grid-cols-1 gap-3 min-[520px]:grid-cols-3 lg:hidden">
-                        {categories.map((item) => {
-                            const tone =
-                                item.tone === "cyan"
-                                    ? "border-cyan-400/55 bg-cyan-400/[0.045]"
-                                    : item.tone === "orange"
-                                        ? "border-orange-400/55 bg-orange-400/[0.045]"
-                                        : "border-blue-400/55 bg-blue-400/[0.045]";
+                    {/* 3. IMAGES LAST */}
+                    <div className="mt-6">
+                        <Slider />
+                    </div>
+                </div>
 
-                            const iconTone =
-                                item.tone === "cyan"
-                                    ? "text-cyan-300"
-                                    : item.tone === "orange"
-                                        ? "text-orange-400"
-                                        : "text-blue-400";
+                {/* DESKTOP */}
+                <div className="hidden grid-cols-[1.02fr_.98fr] gap-8 p-10 lg:grid xl:p-14">
+                    <div className="flex flex-col justify-center text-right">
+                        <h1 className="text-[58px] font-black leading-[1.25] tracking-[-0.04em] text-white xl:text-[68px]">
+                            آکادمی تخصصی
+                            <span className="mt-1 block bg-gradient-to-l from-[#FFB458] via-[#FF982D] to-[#FF7D14] bg-clip-text text-transparent">
+                                آتش‌نشانی و HSE
+                            </span>
+                        </h1>
 
-                            return (
+                        <div className="mt-7">
+                            <Slogan />
+                        </div>
+
+                        <div className="mt-8 grid grid-cols-3 gap-4">
+                            {categories.map((item) => (
                                 <Link
                                     key={item.id}
                                     href={item.href}
-                                    className={`
-                    flex
-                    min-h-[72px]
-                    items-center
-                    justify-between
-                    rounded-[20px]
-                    border
-                    px-4
-                    py-3
-                    ${tone}
-                  `}
+                                    className={`flex min-h-[120px] flex-col items-center justify-center rounded-[24px] border px-4 text-center transition hover:-translate-y-1 ${item.accent === "cyan"
+                                        ? "border-cyan-400/45 bg-cyan-400/[0.05]"
+                                        : item.accent === "orange"
+                                            ? "border-orange-400/45 bg-orange-400/[0.05]"
+                                            : "border-blue-400/45 bg-blue-400/[0.05]"
+                                        }`}
                                 >
-                                    <div className="flex items-center gap-3">
-                                        <span className={`text-2xl ${iconTone}`}>{item.icon}</span>
-                                        <strong className="text-[13px] font-black leading-6 text-white">
-                                            {item.title}
-                                        </strong>
-                                    </div>
-
-                                    <span
-                                        className={`
-                      flex
-                      h-8
-                      w-8
-                      items-center
-                      justify-center
-                      rounded-full
-                      text-sm
-                      font-black
-                      ${item.tone === "cyan"
-                                                ? "bg-cyan-400 text-[#062039]"
-                                                : item.tone === "orange"
-                                                    ? "bg-orange-400 text-[#062039]"
-                                                    : "bg-blue-500 text-white"
-                                            }
-                    `}
-                                    >
-                                        ←
+                                    <span className="text-[15px] font-black text-white xl:text-base">
+                                        {item.title}
                                     </span>
+                                    <span className="mt-4 text-xl text-white">←</span>
                                 </Link>
-                            );
-                        })}
+                            ))}
+                        </div>
                     </div>
+
+                    <Slider />
                 </div>
             </div>
         </section>
