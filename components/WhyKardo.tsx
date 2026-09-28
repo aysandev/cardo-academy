@@ -12,6 +12,8 @@ type Instructor = {
     image?: string;
 };
 
+const AUTO_PLAY_MS = 4500;
+
 const instructors: Instructor[] = [
     {
         id: "hashem-setareh",
@@ -94,14 +96,6 @@ const instructors: Instructor[] = [
         bio: "کارشناس رسمی دادگستری در رشته آتش‌سوزی، مؤلف، مشاور و مدرس علوم آتش‌نشانی با سوابق متعدد آموزشی و عملیاتی.",
         image: "/images/instructors/naser-rahbar.jpg",
     },
-    {
-        id: "amirhossein-khosravi",
-        name: "دکتر امیرحسین خسروی",
-        role: "مدرس امداد، نجات و مدیریت عملیات",
-        degree: "دکترای تخصصی مدیریت آموزشی",
-        experience: "۱۲ سال سابقه در جمعیت هلال احمر",
-        bio: "دارای سابقه اجرایی و آموزشی در امداد و نجات، جست‌وجوی شهری، مدیریت و فرماندهی عملیات، کمک‌های اولیه و آتش‌نشانی.",
-    },
 ];
 
 function initials(name: string) {
@@ -118,23 +112,32 @@ function initials(name: string) {
 export default function WhyKardo() {
     const [active, setActive] = useState(0);
     const [paused, setPaused] = useState(false);
+
     const teacherStripRef = useRef<HTMLDivElement>(null);
 
+    /*
+     * AUTO PLAY
+     * هر بار که اسلاید تغییر می‌کند تایمر از ابتدا شروع می‌شود.
+     * بنابراین بعد از کلیک دستی روی استاد قبلی/بعدی نیز
+     * فوراً اسلاید دیگری نمایش داده نمی‌شود.
+     */
     useEffect(() => {
         if (paused) return;
 
-        const timer = setInterval(() => {
-            setActive((prev) =>
-                prev === 0 ? instructors.length - 1 : prev - 1
-            );
-        }, 5000);
+        const timer = window.setTimeout(() => {
+            setActive((prev) => (prev + 1) % instructors.length);
+        }, AUTO_PLAY_MS);
 
-        return () => clearInterval(timer);
-    }, [paused]);
+        return () => window.clearTimeout(timer);
+    }, [active, paused]);
 
-
+    /*
+     * در موبایل، نام استاد فعال داخل لیست پایین
+     * به‌صورت خودکار وسط صفحه قرار می‌گیرد.
+     */
     useEffect(() => {
         const strip = teacherStripRef.current;
+
         if (!strip) return;
 
         const activeButton = strip.querySelector<HTMLButtonElement>(
@@ -178,67 +181,69 @@ export default function WhyKardo() {
         <section
             dir="rtl"
             className="
-        relative
-        overflow-hidden
-        bg-gradient-to-b
-        from-[#0B2239]
-        via-[#14314A]
-        to-[#0B2239]
-        px-4
-        py-10
-        sm:px-6
-        sm:py-12
-        md:py-14
-        lg:px-10
-        lg:py-16
-      "
+                relative
+                overflow-hidden
+                bg-gradient-to-b
+                from-[#0B2239]
+                via-[#14314A]
+                to-[#0B2239]
+                px-4
+                py-10
+                sm:px-6
+                sm:py-12
+                md:py-14
+                lg:px-10
+                lg:py-16
+            "
         >
+            {/* background glow */}
             <div
                 className="
-          pointer-events-none
-          absolute
-          -right-40
-          top-24
-          h-[500px]
-          w-[500px]
-          rounded-full
-          bg-cyan-300/[0.06]
-          blur-[160px]
-        "
+                    pointer-events-none
+                    absolute
+                    -right-40
+                    top-24
+                    h-[500px]
+                    w-[500px]
+                    rounded-full
+                    bg-cyan-300/[0.06]
+                    blur-[160px]
+                "
             />
 
             <div
                 className="
-          pointer-events-none
-          absolute
-          -left-40
-          bottom-10
-          h-[500px]
-          w-[500px]
-          rounded-full
-          bg-orange-400/[0.07]
-          blur-[160px]
-        "
+                    pointer-events-none
+                    absolute
+                    -left-40
+                    bottom-10
+                    h-[500px]
+                    w-[500px]
+                    rounded-full
+                    bg-orange-400/[0.07]
+                    blur-[160px]
+                "
             />
 
             <div className="relative mx-auto max-w-[1450px]">
+                {/* SECTION HEADER */}
                 <div className="mx-auto max-w-3xl text-center">
                     <span
                         className="
-              inline-flex
-              items-center
-              gap-2
-              rounded-full
-              border
-              border-cyan-300/20
-              bg-cyan-300/[0.06]
-              px-4
-              py-2
-              text-[10px]
-              font-black
-              text-cyan-200
-              sm:text-xs
-            "
+                            inline-flex
+                            items-center
+                            gap-2
+                            rounded-full
+                            border
+                            border-cyan-300/20
+                            bg-cyan-300/[0.06]
+                            px-4
+                            py-2
+                            text-[10px]
+                            font-black
+                            text-cyan-200
+                            sm:text-xs
+                        "
                     >
                         <span className="h-2 w-2 rounded-full bg-orange-400" />
                         اساتید مجتمع آموزشی کاردو
@@ -246,24 +251,24 @@ export default function WhyKardo() {
 
                     <h2
                         className="
-              mt-5
-              text-3xl
-              font-black
-              leading-[1.6]
-              text-white
-              sm:text-4xl
-              lg:text-5xl
-            "
+                            mt-5
+                            text-3xl
+                            font-black
+                            leading-[1.6]
+                            text-white
+                            sm:text-4xl
+                            lg:text-5xl
+                        "
                     >
                         تجربه‌ای که{" "}
                         <span
                             className="
-                bg-gradient-to-l
-                from-cyan-300
-                to-orange-300
-                bg-clip-text
-                text-transparent
-              "
+                                bg-gradient-to-l
+                                from-cyan-300
+                                to-orange-300
+                                bg-clip-text
+                                text-transparent
+                            "
                         >
                             به آموزش تبدیل می‌شود
                         </span>
@@ -271,54 +276,64 @@ export default function WhyKardo() {
 
                     <p
                         className="
-              mx-auto
-              mt-4
-              max-w-2xl
-              text-sm
-              leading-8
-              text-slate-400
-            "
+                            mx-auto
+                            mt-4
+                            max-w-2xl
+                            text-sm
+                            leading-8
+                            text-slate-400
+                        "
                     >
                         بخشی از تیم مدرسان و متخصصان کاردو در حوزه‌های HSE،
-                        آتش‌نشانی، سلامت، مدیریت بحران، امداد و نجات و خدمات حقوقی.
+                        آتش‌نشانی، سلامت، مدیریت بحران، امداد و نجات و خدمات
+                        حقوقی.
                     </p>
                 </div>
 
+                {/* ========================================================= */}
                 {/* DESKTOP */}
+                {/* ========================================================= */}
+
                 <div
                     className="
-            mt-8
-            hidden
-            grid-cols-[0.72fr_1fr_0.72fr]
-            items-center
-            gap-6
-            lg:grid
-          "
+                        mt-8
+                        hidden
+                        grid-cols-[0.72fr_1fr_0.72fr]
+                        items-center
+                        gap-6
+                        lg:grid
+                    "
                     onMouseEnter={() => setPaused(true)}
                     onMouseLeave={() => setPaused(false)}
                 >
+                    {/* PREVIOUS */}
                     <button
                         type="button"
                         onClick={() => setActive(previousIndex)}
                         className="
-              group
-              relative
-              min-h-[390px] xl:min-h-[430px]
-              overflow-hidden
-              rounded-[32px]
-              border
-              border-white/[0.07]
-              bg-white/[0.025]
-              p-5
-              text-right
-              opacity-55
-              transition
-              duration-500
-              hover:-translate-y-1
-              hover:opacity-90
-            "
+                            group
+                            relative
+                            min-h-[390px]
+                            overflow-hidden
+                            rounded-[32px]
+                            border
+                            border-white/[0.07]
+                            bg-white/[0.025]
+                            p-5
+                            text-right
+                            opacity-55
+                            transition
+                            duration-500
+                            hover:-translate-y-1
+                            hover:opacity-90
+                            xl:min-h-[430px]
+                        "
                     >
-                        <InstructorVisual key={`previous-${previous.id}`} instructor={previous} muted />
+                        <InstructorVisual
+                            key={`previous-${previous.id}`}
+                            instructor={previous}
+                            muted
+                        />
 
                         <h3 className="mt-5 text-xl font-black text-white">
                             {previous.name}
@@ -329,134 +344,147 @@ export default function WhyKardo() {
                         </p>
                     </button>
 
+                    {/* CURRENT */}
                     <article
+                        key={`current-card-${current.id}`}
                         className="
-              relative
-              overflow-hidden
-              rounded-[38px]
-              border
-              border-orange-300/20
-              bg-white/[0.045]
-              p-6
-              shadow-[0_35px_100px_rgba(0,0,0,0.22)]
-              backdrop-blur-xl
-              sm:p-8
-            "
+                            instructor-card-swap
+                            relative
+                            overflow-hidden
+                            rounded-[38px]
+                            border
+                            border-orange-300/20
+                            bg-white/[0.045]
+                            p-6
+                            shadow-[0_35px_100px_rgba(0,0,0,0.22)]
+                            backdrop-blur-xl
+                            sm:p-8
+                        "
                     >
+                        {/* COUNTER */}
                         <div
                             className="
-                absolute
-                left-6
-                top-6
-                text-xs
-                font-black
-                tracking-[0.25em]
-                text-orange-300
-              "
+                                absolute
+                                left-6
+                                top-6
+                                z-20
+                                text-xs
+                                font-black
+                                tracking-[0.25em]
+                                text-orange-300
+                            "
                         >
-                            {progress} / {String(instructors.length).padStart(2, "0")}
+                            {progress} /{" "}
+                            {String(instructors.length).padStart(2, "0")}
                         </div>
 
-                        <InstructorVisual key={`current-${current.id}`} instructor={current} />
+                        <InstructorVisual
+                            key={`current-${current.id}`}
+                            instructor={current}
+                        />
 
                         <div className="mt-7">
                             <span
                                 className="
-                  inline-flex
-                  rounded-full
-                  border
-                  border-cyan-300/15
-                  bg-cyan-300/[0.06]
-                  px-3
-                  py-1.5
-                  text-[10px]
-                  font-black
-                  text-cyan-200
-                "
+                                    inline-flex
+                                    rounded-full
+                                    border
+                                    border-cyan-300/15
+                                    bg-cyan-300/[0.06]
+                                    px-3
+                                    py-1.5
+                                    text-[10px]
+                                    font-black
+                                    text-cyan-200
+                                "
                             >
                                 {current.role}
                             </span>
 
                             <h3
                                 className="
-                  mt-4
-                  text-3xl
-                  font-black
-                  text-white
-                "
+                                    mt-4
+                                    text-3xl
+                                    font-black
+                                    text-white
+                                "
                             >
                                 {current.name}
                             </h3>
 
                             <p
                                 className="
-                  mt-2
-                  text-sm
-                  font-bold
-                  text-orange-200
-                "
+                                    mt-2
+                                    text-sm
+                                    font-bold
+                                    text-orange-200
+                                "
                             >
                                 {current.degree}
                             </p>
 
                             <div
                                 className="
-                  mt-5
-                  inline-flex
-                  rounded-full
-                  border
-                  border-white/[0.08]
-                  bg-white/[0.03]
-                  px-4
-                  py-2
-                  text-xs
-                  font-bold
-                  text-slate-300
-                "
+                                    mt-5
+                                    inline-flex
+                                    rounded-full
+                                    border
+                                    border-white/[0.08]
+                                    bg-white/[0.03]
+                                    px-4
+                                    py-2
+                                    text-xs
+                                    font-bold
+                                    text-slate-300
+                                "
                             >
                                 {current.experience}
                             </div>
 
                             <p
                                 className="
-                  mt-5
-                  text-sm
-                  leading-8
-                  text-slate-400
-                "
+                                    mt-5
+                                    text-sm
+                                    leading-8
+                                    text-slate-400
+                                "
                             >
                                 {current.bio}
                             </p>
                         </div>
 
+                        {/* NAVIGATION */}
                         <div
                             className="
-                mt-7
-                flex
-                items-center
-                justify-between
-                gap-3
-              "
+                                mt-7
+                                flex
+                                items-center
+                                justify-between
+                                gap-3
+                            "
                         >
                             <button
                                 type="button"
                                 onClick={goPrevious}
                                 aria-label="استاد قبلی"
                                 className="
-                  flex
-                  h-12
-                  w-12
-                  items-center
-                  justify-center
-                  rounded-full
-                  border
-                  border-white/10
-                  bg-white/[0.04]
-                  text-xl
-                  text-white
-                  transition
-                  hover:bg-white/[0.08]
-                "
+                                    flex
+                                    h-12
+                                    w-12
+                                    items-center
+                                    justify-center
+                                    rounded-full
+                                    border
+                                    border-white/10
+                                    bg-white/[0.04]
+                                    text-xl
+                                    text-white
+                                    transition
+                                    duration-300
+                                    hover:scale-105
+                                    hover:bg-white/[0.08]
+                                    active:scale-95
+                                "
                             >
                                 →
                             </button>
@@ -469,14 +497,15 @@ export default function WhyKardo() {
                                         onClick={() => setActive(index)}
                                         aria-label={`استاد ${index + 1}`}
                                         className={`
-                      h-2
-                      rounded-full
-                      transition-all
-                      ${active === index
+                                            h-2
+                                            rounded-full
+                                            transition-all
+                                            duration-300
+                                            ${active === index
                                                 ? "w-7 bg-orange-400"
-                                                : "w-2 bg-white/20"
+                                                : "w-2 bg-white/20 hover:bg-white/40"
                                             }
-                    `}
+                                        `}
                                     />
                                 ))}
                             </div>
@@ -486,48 +515,81 @@ export default function WhyKardo() {
                                 onClick={goNext}
                                 aria-label="استاد بعدی"
                                 className="
-                  flex
-                  h-12
-                  w-12
-                  items-center
-                  justify-center
-                  rounded-full
-                  border
-                  border-white/10
-                  bg-white/[0.04]
-                  text-xl
-                  text-white
-                  transition
-                  hover:bg-white/[0.08]
-                "
+                                    flex
+                                    h-12
+                                    w-12
+                                    items-center
+                                    justify-center
+                                    rounded-full
+                                    border
+                                    border-white/10
+                                    bg-white/[0.04]
+                                    text-xl
+                                    text-white
+                                    transition
+                                    duration-300
+                                    hover:scale-105
+                                    hover:bg-white/[0.08]
+                                    active:scale-95
+                                "
                             >
                                 ←
                             </button>
                         </div>
+
+                        {/* AUTO PLAY PROGRESS */}
+                        <div className="mt-5 h-[3px] overflow-hidden rounded-full bg-white/[0.06]">
+                            <span
+                                key={`desktop-timer-${current.id}`}
+                                className="
+                                    teacher-autoplay-progress
+                                    block
+                                    h-full
+                                    origin-right
+                                    rounded-full
+                                    bg-gradient-to-l
+                                    from-orange-400
+                                    via-orange-300
+                                    to-cyan-300
+                                "
+                                style={{
+                                    animationDuration: `${AUTO_PLAY_MS}ms`,
+                                    animationPlayState: paused
+                                        ? "paused"
+                                        : "running",
+                                }}
+                            />
+                        </div>
                     </article>
 
+                    {/* NEXT */}
                     <button
                         type="button"
                         onClick={() => setActive(nextIndex)}
                         className="
-              group
-              relative
-              min-h-[390px] xl:min-h-[430px]
-              overflow-hidden
-              rounded-[32px]
-              border
-              border-white/[0.07]
-              bg-white/[0.025]
-              p-5
-              text-right
-              opacity-55
-              transition
-              duration-500
-              hover:-translate-y-1
-              hover:opacity-90
-            "
+                            group
+                            relative
+                            min-h-[390px]
+                            overflow-hidden
+                            rounded-[32px]
+                            border
+                            border-white/[0.07]
+                            bg-white/[0.025]
+                            p-5
+                            text-right
+                            opacity-55
+                            transition
+                            duration-500
+                            hover:-translate-y-1
+                            hover:opacity-90
+                            xl:min-h-[430px]
+                        "
                     >
-                        <InstructorVisual key={`next-${next.id}`} instructor={next} muted />
+                        <InstructorVisual
+                            key={`next-${next.id}`}
+                            instructor={next}
+                            muted
+                        />
 
                         <h3 className="mt-5 text-xl font-black text-white">
                             {next.name}
@@ -539,55 +601,71 @@ export default function WhyKardo() {
                     </button>
                 </div>
 
-                {/* MOBILE / TABLET */}
-                <div className="mt-7 sm:mt-8 lg:hidden">
+                {/* ========================================================= */}
+                {/* MOBILE + TABLET */}
+                {/* ========================================================= */}
+
+                <div
+                    className="mt-7 sm:mt-8 lg:hidden"
+                    onTouchStart={() => setPaused(true)}
+                    onTouchEnd={() => setPaused(false)}
+                >
                     <div
+                        key={`mobile-card-${current.id}`}
                         className="
-              overflow-hidden
-              rounded-[28px]
-              border
-              border-white/[0.08]
-              bg-white/[0.035]
-              p-4
-              sm:p-6
-            "
+                            instructor-card-swap
+                            overflow-hidden
+                            rounded-[28px]
+                            border
+                            border-white/[0.08]
+                            bg-white/[0.035]
+                            p-4
+                            sm:p-6
+                        "
                     >
-                        <InstructorVisual key={`current-${current.id}`} instructor={current} />
+                        <InstructorVisual
+                            key={`mobile-current-${current.id}`}
+                            instructor={current}
+                        />
 
                         <div className="mt-5">
                             <div
                                 className="
-                  flex
-                  items-start
-                  justify-between
-                  gap-4
-                "
+                                    flex
+                                    items-start
+                                    justify-between
+                                    gap-4
+                                "
                             >
                                 <div>
                                     <span className="text-[9px] font-black text-orange-300">
-                                        {progress} / {String(instructors.length).padStart(2, "0")}
+                                        {progress} /{" "}
+                                        {String(instructors.length).padStart(
+                                            2,
+                                            "0"
+                                        )}
                                     </span>
 
                                     <h3
                                         className="
-                      mt-2
-                      text-xl
-                      font-black
-                      leading-8
-                      text-white
-                      sm:text-2xl
-                    "
+                                            mt-2
+                                            text-xl
+                                            font-black
+                                            leading-8
+                                            text-white
+                                            sm:text-2xl
+                                        "
                                     >
                                         {current.name}
                                     </h3>
 
                                     <p
                                         className="
-                      mt-1
-                      text-xs
-                      font-bold
-                      text-cyan-200
-                    "
+                                            mt-1
+                                            text-xs
+                                            font-bold
+                                            text-cyan-200
+                                        "
                                     >
                                         {current.role}
                                     </p>
@@ -595,15 +673,15 @@ export default function WhyKardo() {
 
                                 <span
                                     className="
-                    shrink-0
-                    rounded-full
-                    bg-orange-400/[0.10]
-                    px-3
-                    py-2
-                    text-[9px]
-                    font-black
-                    text-orange-200
-                  "
+                                        shrink-0
+                                        rounded-full
+                                        bg-orange-400/[0.10]
+                                        px-3
+                                        py-2
+                                        text-[9px]
+                                        font-black
+                                        text-orange-200
+                                    "
                                 >
                                     {current.experience}
                                 </span>
@@ -615,40 +693,44 @@ export default function WhyKardo() {
 
                             <p
                                 className="
-                  mt-4
-                  text-xs
-                  leading-7
-                  text-slate-400
-                  sm:text-sm
-                "
+                                    mt-4
+                                    text-xs
+                                    leading-7
+                                    text-slate-400
+                                    sm:text-sm
+                                "
                             >
                                 {current.bio}
                             </p>
                         </div>
 
+                        {/* MOBILE NAV */}
                         <div
                             className="
-                mt-6
-                flex
-                items-center
-                justify-between
-              "
+                                mt-6
+                                flex
+                                items-center
+                                justify-between
+                            "
                         >
                             <button
                                 type="button"
                                 onClick={goPrevious}
+                                aria-label="استاد قبلی"
                                 className="
-                  flex
-                  h-11
-                  w-11
-                  items-center
-                  justify-center
-                  rounded-full
-                  border
-                  border-white/10
-                  bg-white/[0.04]
-                  text-white
-                "
+                                    flex
+                                    h-11
+                                    w-11
+                                    items-center
+                                    justify-center
+                                    rounded-full
+                                    border
+                                    border-white/10
+                                    bg-white/[0.04]
+                                    text-white
+                                    transition
+                                    active:scale-95
+                                "
                             >
                                 →
                             </button>
@@ -660,34 +742,62 @@ export default function WhyKardo() {
                             <button
                                 type="button"
                                 onClick={goNext}
+                                aria-label="استاد بعدی"
                                 className="
-                  flex
-                  h-11
-                  w-11
-                  items-center
-                  justify-center
-                  rounded-full
-                  bg-orange-400
-                  text-[#07192D]
-                "
+                                    flex
+                                    h-11
+                                    w-11
+                                    items-center
+                                    justify-center
+                                    rounded-full
+                                    bg-orange-400
+                                    text-[#07192D]
+                                    transition
+                                    active:scale-95
+                                "
                             >
                                 ←
                             </button>
                         </div>
+
+                        {/* MOBILE AUTO PLAY PROGRESS */}
+                        <div className="mt-5 h-[3px] overflow-hidden rounded-full bg-white/[0.06]">
+                            <span
+                                key={`mobile-timer-${current.id}`}
+                                className="
+                                    teacher-autoplay-progress
+                                    block
+                                    h-full
+                                    origin-right
+                                    rounded-full
+                                    bg-gradient-to-l
+                                    from-orange-400
+                                    via-orange-300
+                                    to-cyan-300
+                                "
+                                style={{
+                                    animationDuration: `${AUTO_PLAY_MS}ms`,
+                                    animationPlayState: paused
+                                        ? "paused"
+                                        : "running",
+                                }}
+                            />
+                        </div>
                     </div>
 
+                    {/* MOBILE TEACHERS STRIP */}
                     <div
                         ref={teacherStripRef}
                         className="
-              mt-4
-              flex
-              gap-2
-              overflow-x-auto
-              scroll-smooth
-              pb-2
-              [scrollbar-width:none]
-              [&::-webkit-scrollbar]:hidden
-            "
+                            mt-4
+                            flex
+                            gap-2
+                            overflow-x-auto
+                            scroll-smooth
+                            pb-2
+                            [scrollbar-width:none]
+                            [&::-webkit-scrollbar]:hidden
+                        "
                     >
                         {instructors.map((teacher, index) => (
                             <button
@@ -696,19 +806,20 @@ export default function WhyKardo() {
                                 type="button"
                                 onClick={() => setActive(index)}
                                 className={`
-                  shrink-0
-                  rounded-full
-                  border
-                  px-3.5
-                  py-2.5
-                  text-[10px]
-                  font-black
-                  transition
-                  ${active === index
+                                    shrink-0
+                                    rounded-full
+                                    border
+                                    px-3.5
+                                    py-2.5
+                                    text-[10px]
+                                    font-black
+                                    transition
+                                    duration-300
+                                    ${active === index
                                         ? "border-orange-400 bg-orange-400 text-[#07192D]"
                                         : "border-white/10 bg-white/[0.03] text-slate-300"
                                     }
-                `}
+                                `}
                             >
                                 {teacher.name}
                             </button>
@@ -716,6 +827,60 @@ export default function WhyKardo() {
                     </div>
                 </div>
             </div>
+
+            {/* ========================================================= */}
+            {/* ANIMATIONS */}
+            {/* ========================================================= */}
+
+            <style jsx global>{`
+                @keyframes instructorCardSwap {
+                    0% {
+                        opacity: 0;
+                        transform: translateX(-30px) scale(0.985);
+                        filter: blur(3px);
+                    }
+
+                    45% {
+                        opacity: 0.8;
+                    }
+
+                    100% {
+                        opacity: 1;
+                        transform: translateX(0) scale(1);
+                        filter: blur(0);
+                    }
+                }
+
+                @keyframes teacherAutoplayProgress {
+                    from {
+                        transform: scaleX(0);
+                    }
+
+                    to {
+                        transform: scaleX(1);
+                    }
+                }
+
+                .instructor-card-swap {
+                    animation: instructorCardSwap
+                        650ms
+                        cubic-bezier(0.22, 1, 0.36, 1);
+                }
+
+                .teacher-autoplay-progress {
+                    width: 100%;
+                    animation-name: teacherAutoplayProgress;
+                    animation-timing-function: linear;
+                    animation-fill-mode: forwards;
+                }
+
+                @media (prefers-reduced-motion: reduce) {
+                    .instructor-card-swap,
+                    .teacher-autoplay-progress {
+                        animation: none !important;
+                    }
+                }
+            `}</style>
         </section>
     );
 }
@@ -730,17 +895,17 @@ function InstructorVisual({
     return (
         <div
             className={`
-        relative
-        overflow-hidden
-        rounded-[26px]
-        border
-        border-white/[0.08]
-        bg-[#091D31]
-        ${muted
+                relative
+                overflow-hidden
+                rounded-[26px]
+                border
+                border-white/[0.08]
+                bg-[#091D31]
+                ${muted
                     ? "h-[260px] xl:h-[300px]"
                     : "h-[280px] sm:h-[330px] md:h-[360px] xl:h-[390px]"
                 }
-      `}
+            `}
         >
             {instructor.image ? (
                 <img
@@ -748,79 +913,85 @@ function InstructorVisual({
                     src={instructor.image}
                     alt={instructor.name}
                     className={`
-            absolute
-            inset-0
-            h-full
-            w-full
-            object-cover
-            object-top
-            transition
-            duration-700
-            ${muted ? "grayscale-[35%]" : ""}
-          `}
+                        absolute
+                        inset-0
+                        h-full
+                        w-full
+                        object-cover
+                        object-top
+                        transition
+                        duration-700
+                        ${muted
+                            ? "grayscale-[35%] group-hover:grayscale-0"
+                            : ""
+                        }
+                    `}
                 />
             ) : (
                 <div
                     className="
-            absolute
-            inset-0
-            flex
-            items-center
-            justify-center
-            bg-gradient-to-br
-            from-[#102E49]
-            via-[#0B2239]
-            to-[#07192D]
-          "
+                        absolute
+                        inset-0
+                        flex
+                        items-center
+                        justify-center
+                        bg-gradient-to-br
+                        from-[#102E49]
+                        via-[#0B2239]
+                        to-[#07192D]
+                    "
                 >
                     <div
                         className="
-              flex
-              h-28
-              w-28
-              items-center
-              justify-center
-              rounded-full
-              border
-              border-orange-300/20
-              bg-orange-400/[0.08]
-              text-4xl
-              font-black
-              text-orange-200
-            "
+                            flex
+                            h-28
+                            w-28
+                            items-center
+                            justify-center
+                            rounded-full
+                            border
+                            border-orange-300/20
+                            bg-orange-400/[0.08]
+                            text-4xl
+                            font-black
+                            text-orange-200
+                        "
                     >
                         {initials(instructor.name)}
                     </div>
                 </div>
             )}
 
+            {/* DARK GRADIENT */}
             <div
                 className="
-          absolute
-          inset-0
-          bg-gradient-to-t
-          from-[#07192D]
-          via-transparent
-          to-transparent
-        "
+                    absolute
+                    inset-0
+                    bg-gradient-to-t
+                    from-[#07192D]
+                    via-transparent
+                    to-transparent
+                "
             />
 
+            {/* LABEL */}
             <div
                 className="
-          absolute
-          bottom-4
-          right-4
-          rounded-full
-          border
-          border-white/10
-          bg-[#07192D]/75
-          px-3
-          py-2
-          text-[9px]
-          font-black
-          text-white
-          backdrop-blur-lg
-        "
+                    absolute
+                    bottom-4
+                    right-4
+                    rounded-full
+                    border
+                    border-white/10
+                    bg-[#07192D]/75
+                    px-3
+                    py-2
+                    text-[9px]
+                    font-black
+                    tracking-[0.08em]
+                    text-white
+                    backdrop-blur-lg
+                "
             >
                 CARDO INSTRUCTOR
             </div>

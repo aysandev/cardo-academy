@@ -1,75 +1,177 @@
 "use client";
 
-import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import type { TouchEvent } from "react";
 
 type HeroSlide = {
     id: number;
     title: string;
-    subtitle: string;
+    subtitle?: string;
     image: string;
-    badge?: string;
+    href: string;
 };
 
-const slides: HeroSlide[] = [
+const heroSlides: HeroSlide[] = [
     {
         id: 1,
-        title: "آموزش نگهداری تجهیزات نجات",
-        subtitle: "جمعیت هلال احمر جمهوری اسلامی ایران",
-        image: "/images/hero/hero-rescue-equipment.jpg",
-        badge: "دوره تخصصی",
+        title: "دوره رفتارشناسی حریق",
+        image: "/images/hero/hero-fire-behavior.jpg",
+        href: "/courses?category=technical",
     },
     {
         id: 2,
-        title: "دوره رفتار حریق",
-        subtitle: "آموزش عملی و کاربردی برای شناخت رفتار آتش",
-        image: "/images/hero/hero-fire-behavior.jpg",
-        badge: "آموزش عملی",
+        title: "دوره آتش‌نشانی شهری",
+        image: "/images/hero/hero-urban-firefighting.jpg",
+        href: "/courses?category=technical",
     },
     {
         id: 3,
-        title: "آموزش اطفای حریق شهری",
-        subtitle: "آموزش میدانی، تجهیزات و سناریوهای واقعی",
-        image: "/images/hero/hero-urban-firefighting.jpg",
-        badge: "سناریوی واقعی",
+        title: "آموزش نگهداری تجهیزات نجات",
+        subtitle: "جمعیت هلال احمر جمهوری اسلامی ایران",
+        image: "/images/hero/hero-rescue-equipment.jpg",
+        href: "/courses?category=organization",
     },
     {
         id: 4,
-        title: "آموزش موتورسیکلت آتش‌نشانی",
-        subtitle: "آشنایی با تجهیزات سریع واکنش در عملیات",
-        image: "/images/hero/hero-fire-motorcycle.jpg",
-        badge: "عملیات سریع",
+        title: "آموزش تست و راه‌اندازی تشک‌های نجات و ست هیدرولیک",
+        subtitle: "ایران‌مال",
+        image: "/images/hero/hero-rescue-cushion-hydraulic.jpg",
+        href: "/courses?category=organization",
     },
     {
         id: 5,
-        title: "آموزش تجهیزات هیدرولیکی نجات",
-        subtitle: "کاربرد تجهیزات تخصصی در عملیات نجات",
-        image: "/images/hero/hero-rescue-cushion-hydraulic.jpg",
-        badge: "تجهیزات تخصصی",
+        title: "آموزش کار با موتورسیکلت آتش‌نشانی",
+        subtitle: "سازمان امداد و نجات جمعیت هلال احمر",
+        image: "/images/hero/hero-fire-motorcycle.jpg",
+        href: "/courses?category=organization",
     },
 ];
 
+const categories = [
+    {
+        id: "technical",
+        title: "دوره‌های فنی و حرفه‌ای",
+        href: "/courses?category=technical",
+        icon: "⚙",
+        tone: "blue",
+    },
+    {
+        id: "international",
+        title: "دوره‌های بین‌المللی",
+        href: "/courses?category=international",
+        icon: "◎",
+        tone: "cyan",
+    },
+    {
+        id: "organization",
+        title: "دوره‌های اختصاصی",
+        href: "/courses?category=organization",
+        icon: "♜",
+        tone: "orange",
+    },
+] as const;
+
 export default function Hero() {
     const [active, setActive] = useState(0);
+    const [paused, setPaused] = useState(false);
+    const [typedSlogan, setTypedSlogan] = useState("");
+    const [typingDone, setTypingDone] = useState(false);
+    const touchStartX = useRef<number | null>(null);
+
+    const fullSlogan = "قدرت واقعی با آموزش ظاهر می‌شود";
 
     useEffect(() => {
-        const timer = setInterval(() => {
-            setActive((prev) => (prev + 1) % slides.length);
+        if (paused) return;
+
+        const timer = window.setInterval(() => {
+            setActive((prev) => (prev + 1) % heroSlides.length);
         }, 5000);
 
-        return () => clearInterval(timer);
+        return () => window.clearInterval(timer);
+    }, [paused]);
+
+
+    useEffect(() => {
+        const reduceMotion = window.matchMedia(
+            "(prefers-reduced-motion: reduce)"
+        ).matches;
+
+        if (reduceMotion) {
+            setTypedSlogan(fullSlogan);
+            setTypingDone(true);
+            return;
+        }
+
+        let typingTimer: number | undefined;
+        let startTimer: number | undefined;
+        let replayTimer: number | undefined;
+
+        const runTyping = () => {
+            let index = 0;
+
+            setTypedSlogan("");
+            setTypingDone(false);
+
+            startTimer = window.setTimeout(() => {
+                typingTimer = window.setInterval(() => {
+                    index += 1;
+                    setTypedSlogan(fullSlogan.slice(0, index));
+
+                    if (index >= fullSlogan.length) {
+                        if (typingTimer) {
+                            window.clearInterval(typingTimer);
+                        }
+
+                        setTypingDone(true);
+                    }
+                }, 65);
+            }, 350);
+        };
+
+        runTyping();
+
+        replayTimer = window.setInterval(() => {
+            runTyping();
+        }, 40000);
+
+        return () => {
+            if (startTimer) window.clearTimeout(startTimer);
+            if (typingTimer) window.clearInterval(typingTimer);
+            if (replayTimer) window.clearInterval(replayTimer);
+        };
     }, []);
 
-    const currentSlide = slides[active];
+    const current = heroSlides[active];
 
-    const goNext = () => {
-        setActive((prev) => (prev + 1) % slides.length);
-    };
+    function nextSlide() {
+        setActive((prev) => (prev + 1) % heroSlides.length);
+    }
 
-    const goPrev = () => {
-        setActive((prev) => (prev === 0 ? slides.length - 1 : prev - 1));
-    };
+    function prevSlide() {
+        setActive((prev) => (prev === 0 ? heroSlides.length - 1 : prev - 1));
+    }
+
+    function handleTouchStart(event: TouchEvent<HTMLDivElement>) {
+        touchStartX.current = event.touches[0]?.clientX ?? null;
+    }
+
+    function handleTouchEnd(event: TouchEvent<HTMLDivElement>) {
+        if (touchStartX.current === null) return;
+
+        const endX = event.changedTouches[0]?.clientX ?? touchStartX.current;
+        const diff = endX - touchStartX.current;
+
+        if (Math.abs(diff) > 45) {
+            if (diff > 0) {
+                prevSlide();
+            } else {
+                nextSlide();
+            }
+        }
+
+        touchStartX.current = null;
+    }
 
     return (
         <section
@@ -77,521 +179,459 @@ export default function Hero() {
             className="
         relative
         overflow-hidden
-        px-4
-        pt-5
-        pb-8
-
-        sm:px-6
-        sm:pt-6
-        sm:pb-10
-
+        bg-[#06192E]
+        px-3
+        py-4
+        sm:px-5
+        sm:py-6
         lg:px-8
-        lg:pt-8
-        lg:pb-12
+        lg:py-8
       "
         >
-            {/* ambient glow */}
-            <div
-                className="
-          pointer-events-none
-          absolute
-          inset-0
-          -z-10
-          overflow-hidden
-        "
-            >
-                <div
-                    className="
-            absolute
-            right-[-120px]
-            top-[40px]
-            h-[320px]
-            w-[320px]
-            rounded-full
-            bg-cyan-300/10
-            blur-[120px]
-          "
-                />
-                <div
-                    className="
-            absolute
-            left-[-80px]
-            bottom-[-40px]
-            h-[260px]
-            w-[260px]
-            rounded-full
-            bg-orange-400/10
-            blur-[120px]
-          "
-                />
-            </div>
+            {/* ambient glows */}
+            <div className="pointer-events-none absolute -right-44 -top-32 h-[460px] w-[460px] rounded-full bg-blue-500/10 blur-[150px]" />
+            <div className="pointer-events-none absolute -bottom-36 -left-40 h-[420px] w-[420px] rounded-full bg-orange-400/10 blur-[150px]" />
 
             <div
                 className="
+          relative
           mx-auto
-          grid
-          max-w-[1800px]
-          gap-5
+          max-w-[1820px]
+          overflow-hidden
           rounded-[28px]
           border
-          border-white/8
-          bg-[linear-gradient(135deg,rgba(14,44,73,0.96),rgba(7,28,48,0.96))]
-          p-4
-          shadow-[0_30px_100px_rgba(0,0,0,0.18)]
-
-          sm:p-5
-          lg:grid-cols-[1.08fr_0.92fr]
-          lg:gap-7
-          lg:rounded-[34px]
-          lg:p-8
+          border-cyan-300/15
+          bg-[linear-gradient(135deg,#092D51_0%,#082944_42%,#0A2137_100%)]
+          shadow-[0_28px_90px_rgba(0,0,0,0.25)]
+          sm:rounded-[34px]
+          lg:rounded-[44px]
         "
             >
-                {/* CONTENT */}
+                {/* decorative arcs */}
+                <div className="pointer-events-none absolute -right-16 -top-24 h-[260px] w-[260px] rounded-full border border-cyan-400/25" />
+                <div className="pointer-events-none absolute -right-7 -top-14 h-[200px] w-[200px] rounded-full border border-blue-500/20" />
+                <div className="pointer-events-none absolute -bottom-14 -left-14 h-[220px] w-[220px] rounded-full border border-orange-400/20" />
+
                 <div
                     className="
-            order-2
-            flex
-            flex-col
-            justify-center
-            text-right
-
-            lg:order-1
-            lg:pr-2
+            grid
+            gap-6
+            p-4
+            sm:p-6
+            lg:grid-cols-[1.02fr_.98fr]
+            lg:gap-8
+            lg:p-10
+            xl:p-14
           "
                 >
-                    <div className="max-w-[720px] lg:max-w-[760px]">
-                        <div
-                            className="
-                inline-flex
-                items-center
-                gap-2
-                rounded-full
-                border
-                border-cyan-400/20
-                bg-cyan-400/8
-                px-3.5
-                py-2
-                text-[10px]
-                font-black
-                tracking-[0.04em]
-                text-cyan-200
+                    {/* TEXT */}
+                    <div
+                        className="
+              order-1
+              flex
+              min-w-0
+              flex-col
+              justify-center
+              text-right
+              lg:pl-2
+            "
+                    >
+                        <div className="relative">
+                            {/* dotted accent */}
+                            <div className="mb-4 grid w-fit grid-cols-5 gap-2 opacity-40 lg:mb-7">
+                                {Array.from({ length: 15 }).map((_, index) => (
+                                    <span
+                                        key={index}
+                                        className="h-1.5 w-1.5 rounded-full bg-cyan-400"
+                                    />
+                                ))}
+                            </div>
 
-                sm:text-[11px]
-              "
-                        >
-                            <span className="h-2 w-2 rounded-full bg-orange-400" />
-                            آکادمی تخصصی آموزش‌های ایمنی، آتش‌نشانی و HSE
-                        </div>
-
-                        <h1
-                            className="
-                mt-5
-                text-right
-                text-[34px]
-                font-black
-                leading-[1.28]
-                text-white
-
-                sm:text-[48px]
-                sm:leading-[1.24]
-
-                lg:text-[64px]
-                lg:leading-[1.18]
-              "
-                        >
-                            آکادمی تخصصی
-                            <span
+                            <h1
                                 className="
-                  mt-2
-                  block
-                  bg-gradient-to-l
-                  from-[#FFB65C]
-                  via-[#FFA337]
-                  to-[#FF8C1A]
-                  bg-clip-text
-                  text-transparent
-                  drop-shadow-[0_10px_30px_rgba(255,153,51,0.16)]
-                "
-                            >
-                                آتش‌نشانی و HSE
-                            </span>
-                        </h1>
-
-                        <div
-                            className="
-                mt-5
-                inline-flex
-                w-full
-                items-center
-                justify-center
-                rounded-[22px]
-                border
-                border-orange-300/20
-                bg-[linear-gradient(135deg,rgba(255,171,74,0.10),rgba(255,255,255,0.06))]
-                px-5
-                py-4
-                text-center
-                text-[15px]
-                font-black
-                leading-8
-                text-white
-                shadow-[0_15px_40px_rgba(0,0,0,0.10)]
-                backdrop-blur-md
-
-                sm:w-auto
-                sm:min-w-[420px]
-                sm:justify-start
-                sm:px-6
-                sm:text-[18px]
-
-                lg:text-[20px]
-              "
-                        >
-                            <span
-                                className="
-                  bg-gradient-to-l
-                  from-white
-                  to-orange-100
-                  bg-clip-text
-                  text-transparent
-                "
-                            >
-                                قدرت واقعی با آموزش ظاهر می‌شود
-                            </span>
-                        </div>
-
-                        <p
-                            className="
-                mt-5
-                max-w-[700px]
-                text-right
-                text-[13px]
-                leading-8
-                text-slate-300
-
-                sm:text-[15px]
-                sm:leading-8
-
-                lg:text-[17px]
-                lg:leading-9
-              "
-                        >
-                            کاردو با تکیه بر آموزش‌های تخصصی، عملی و مسئله‌محور در حوزه‌های
-                            آتش‌نشانی، HSE، امداد و نجات، مسیر یادگیری حرفه‌ای را برای
-                            سازمان‌ها و علاقه‌مندان فراهم می‌کند.
-                        </p>
-
-                        <div
-                            className="
-                mt-6
-                flex
-                flex-col
-                gap-3
-
-                sm:flex-row
-                sm:flex-wrap
-                sm:justify-start
-              "
-                        >
-                            <Link
-                                href="#courses"
-                                className="
-                  inline-flex
-                  items-center
-                  justify-center
-                  rounded-full
-                  bg-gradient-to-l
-                  from-[#FFAA3C]
-                  to-[#FF8B1F]
-                  px-6
-                  py-3.5
-                  text-sm
+                  text-[34px]
                   font-black
-                  text-[#08233C]
-                  shadow-[0_16px_35px_rgba(255,153,51,0.22)]
-                  transition
-                  hover:-translate-y-0.5
-                  hover:shadow-[0_20px_40px_rgba(255,153,51,0.28)]
+                  leading-[1.35]
+                  tracking-[-0.04em]
+                  text-white
+                  min-[420px]:text-[40px]
+                  sm:text-[50px]
+                  lg:text-[58px]
+                  xl:text-[66px]
                 "
                             >
-                                مشاهده دوره‌ها
-                            </Link>
+                                آکادمی تخصصی
+                                <span
+                                    className="
+                    mt-1
+                    block
+                    bg-gradient-to-l
+                    from-[#FFB458]
+                    via-[#FF982D]
+                    to-[#FF7D14]
+                    bg-clip-text
+                    text-transparent
+                  "
+                                >
+                                    آتش‌نشانی و HSE
+                                </span>
+                            </h1>
 
-                            <Link
-                                href="#partners"
+                            <div
                                 className="
-                  inline-flex
+                  relative
+                  mt-6
+                  overflow-hidden
+                  rounded-[24px]
+                  border
+                  border-orange-300/25
+                  bg-[linear-gradient(135deg,rgba(255,255,255,0.055),rgba(251,146,60,0.045),rgba(34,211,238,0.025))]
+                  px-4
+                  py-4
+                  shadow-[inset_0_0_32px_rgba(255,184,92,0.05),0_14px_40px_rgba(0,0,0,0.10)]
+                  backdrop-blur-xl
+                  sm:px-6
+                  sm:py-5
+                  lg:mt-8
+                  lg:rounded-[28px]
+                  lg:px-7
+                  lg:py-6
+                "
+                            >
+                                <div className="pointer-events-none absolute inset-x-10 top-0 h-px bg-gradient-to-r from-transparent via-orange-200/90 to-transparent" />
+                                <div className="pointer-events-none absolute inset-x-10 bottom-0 h-px bg-gradient-to-r from-transparent via-cyan-300/70 to-transparent" />
+
+                                <p
+                                    className="
+                    text-[20px]
+                    font-black
+                    leading-[1.9]
+                    tracking-[-0.025em]
+                    text-white
+                    drop-shadow-[0_0_18px_rgba(255,205,128,.18)]
+                    min-[420px]:text-[24px]
+                    sm:text-[30px]
+                    lg:text-[32px]
+                    xl:text-[35px]
+                  "
+                                >
+                                    <span>{typedSlogan}</span>
+                                    <span
+                                        aria-hidden="true"
+                                        className={`mr-1 inline-block h-[1.05em] w-[2px] translate-y-[0.14em] rounded-full bg-orange-300 align-baseline ${typingDone ? "animate-pulse opacity-35" : "animate-pulse opacity-100"
+                                            }`}
+                                    />
+                                </p>
+                            </div>
+                        </div>
+
+                        {/* DESKTOP buttons */}
+                        <div className="mt-7 hidden grid-cols-3 gap-3 lg:grid xl:gap-4">
+                            {categories.map((item) => {
+                                const tone =
+                                    item.tone === "cyan"
+                                        ? "border-cyan-400/55 bg-cyan-400/[0.045] hover:bg-cyan-400/[0.09]"
+                                        : item.tone === "orange"
+                                            ? "border-orange-400/55 bg-orange-400/[0.045] hover:bg-orange-400/[0.09]"
+                                            : "border-blue-400/55 bg-blue-400/[0.045] hover:bg-blue-400/[0.09]";
+
+                                const iconTone =
+                                    item.tone === "cyan"
+                                        ? "text-cyan-300"
+                                        : item.tone === "orange"
+                                            ? "text-orange-400"
+                                            : "text-blue-400";
+
+                                return (
+                                    <Link
+                                        key={item.id}
+                                        href={item.href}
+                                        className={`
+                      group
+                      flex
+                      min-h-[150px]
+                      flex-col
+                      items-center
+                      justify-center
+                      rounded-[26px]
+                      border
+                      px-4
+                      py-5
+                      text-center
+                      transition
+                      duration-300
+                      hover:-translate-y-1
+                      ${tone}
+                    `}
+                                    >
+                                        <span className={`text-4xl font-black ${iconTone}`}>
+                                            {item.icon}
+                                        </span>
+
+                                        <strong className="mt-4 text-[15px] font-black leading-7 text-white xl:text-base">
+                                            {item.title}
+                                        </strong>
+
+                                        <span
+                                            className={`
+                        mt-4
+                        flex
+                        h-8
+                        w-8
+                        items-center
+                        justify-center
+                        rounded-full
+                        text-sm
+                        font-black
+                        ${item.tone === "cyan"
+                                                    ? "bg-cyan-400 text-[#062039]"
+                                                    : item.tone === "orange"
+                                                        ? "bg-orange-400 text-[#062039]"
+                                                        : "bg-blue-500 text-white"
+                                                }
+                      `}
+                                        >
+                                            ←
+                                        </span>
+                                    </Link>
+                                );
+                            })}
+                        </div>
+                    </div>
+
+                    {/* SLIDER */}
+                    <div
+                        className="
+              order-3
+              relative
+              min-w-0
+              overflow-hidden
+              rounded-[28px]
+              border
+              border-cyan-300/20
+              bg-[#0B2239]
+              shadow-[0_24px_70px_rgba(0,0,0,0.30)]
+              sm:rounded-[32px]
+              lg:min-h-[520px]
+            "
+                        onMouseEnter={() => setPaused(true)}
+                        onMouseLeave={() => setPaused(false)}
+                        onTouchStart={handleTouchStart}
+                        onTouchEnd={handleTouchEnd}
+                    >
+                        <div className="relative h-[330px] sm:h-[430px] lg:h-full lg:min-h-[520px] xl:min-h-[560px]">
+                            {heroSlides.map((slide, index) => (
+                                <div
+                                    key={slide.id}
+                                    className={`absolute inset-0 transition-all duration-700 ${index === active
+                                            ? "scale-100 opacity-100"
+                                            : "pointer-events-none scale-[1.025] opacity-0"
+                                        }`}
+                                >
+                                    <img
+                                        src={slide.image}
+                                        alt={slide.title}
+                                        className="h-full w-full object-cover object-center"
+                                    />
+                                </div>
+                            ))}
+
+                            <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-[#04121F]/90 via-[#06192E]/10 to-transparent" />
+
+                            <button
+                                type="button"
+                                onClick={prevSlide}
+                                aria-label="اسلاید قبلی"
+                                className="
+                  absolute
+                  right-3
+                  top-1/2
+                  z-20
+                  flex
+                  h-11
+                  w-11
+                  -translate-y-1/2
                   items-center
                   justify-center
                   rounded-full
                   border
-                  border-white/14
-                  bg-white/5
-                  px-6
-                  py-3.5
-                  text-sm
-                  font-black
+                  border-white/10
+                  bg-[#0B2239]/75
+                  text-lg
                   text-white
-                  backdrop-blur-sm
+                  backdrop-blur-md
                   transition
-                  hover:bg-white/10
+                  hover:bg-[#153A5A]
+                  sm:right-4
+                  sm:h-12
+                  sm:w-12
                 "
                             >
-                                درخواست دوره سازمانی
-                            </Link>
-                        </div>
+                                →
+                            </button>
 
-                        <div
-                            className="
-                mt-6
-                grid
-                grid-cols-1
-                gap-3
-
-                sm:grid-cols-3
-              "
-                        >
-                            {[
-                                "دوره‌های فنی و حرفه‌ای",
-                                "دوره‌های بین‌المللی",
-                                "دوره‌های اختصاصی",
-                            ].map((item, index) => (
-                                <div
-                                    key={item}
-                                    className="
-                    flex
-                    items-center
-                    justify-between
-                    rounded-[20px]
-                    border
-                    border-white/10
-                    bg-white/4
-                    px-4
-                    py-4
-                    backdrop-blur-sm
-                    transition
-                    hover:bg-white/7
-                  "
-                                >
-                                    <span className="text-sm font-black text-white">
-                                        {item}
-                                    </span>
-
-                                    <div className="flex items-center gap-3">
-                                        <span
-                                            className={`h-2.5 w-2.5 rounded-full ${index === 1 ? "bg-cyan-300" : "bg-orange-400"
-                                                }`}
-                                        />
-                                        <span className="text-lg text-slate-300">←</span>
-                                    </div>
-                                </div>
-                            ))}
-                        </div>
-                    </div>
-                </div>
-
-                {/* SLIDER */}
-                <div className="order-1 lg:order-2">
-                    <div
-                        className="
-              relative
-              overflow-hidden
-              rounded-[28px]
-              border
-              border-white/10
-              bg-[#0C2741]
-              shadow-[0_24px_60px_rgba(0,0,0,0.18)]
-            "
-                    >
-                        <div
-                            className="
-                relative
-                h-[340px]
-                sm:h-[420px]
-                lg:h-[590px]
-              "
-                        >
-                            <Image
-                                key={currentSlide.id}
-                                src={currentSlide.image}
-                                alt={currentSlide.title}
-                                fill
-                                priority
-                                className="object-cover"
-                                sizes="(max-width: 1024px) 100vw, 45vw"
-                            />
-
-                            <div
+                            <button
+                                type="button"
+                                onClick={nextSlide}
+                                aria-label="اسلاید بعدی"
                                 className="
                   absolute
-                  inset-0
-                  bg-gradient-to-t
-                  from-[#061624]/85
-                  via-[#061624]/25
-                  to-transparent
-                "
-                            />
-
-                            <div
-                                className="
-                  absolute
-                  bottom-0
-                  left-0
-                  right-0
-                  p-4
-
-                  sm:p-6
-                  lg:p-8
+                  left-3
+                  top-1/2
+                  z-20
+                  flex
+                  h-11
+                  w-11
+                  -translate-y-1/2
+                  items-center
+                  justify-center
+                  rounded-full
+                  border
+                  border-white/10
+                  bg-[#0B2239]/75
+                  text-lg
+                  text-white
+                  backdrop-blur-md
+                  transition
+                  hover:bg-[#153A5A]
+                  sm:left-4
+                  sm:h-12
+                  sm:w-12
                 "
                             >
-                                {currentSlide.badge && (
-                                    <div
-                                        className="
-                      mb-3
-                      inline-flex
-                      items-center
-                      rounded-full
-                      border
-                      border-white/14
-                      bg-white/10
-                      px-3
-                      py-1.5
-                      text-[10px]
-                      font-black
-                      text-orange-200
-                      backdrop-blur-sm
-                    "
-                                    >
-                                        {currentSlide.badge}
-                                    </div>
+                                ←
+                            </button>
+
+                            <div className="absolute inset-x-0 bottom-0 z-10 p-4 sm:p-6 lg:p-7">
+                                {current.subtitle && (
+                                    <p className="mb-2 text-[9px] font-bold leading-5 text-orange-200 sm:text-[10px]">
+                                        {current.subtitle}
+                                    </p>
                                 )}
-
-                                <p
-                                    className="
-                    mb-2
-                    text-right
-                    text-[11px]
-                    font-bold
-                    text-orange-100/90
-
-                    sm:text-[12px]
-                  "
-                                >
-                                    {currentSlide.subtitle}
-                                </p>
 
                                 <h2
                                     className="
-                    max-w-[90%]
-                    text-right
-                    text-[28px]
+                    max-w-[92%]
+                    text-[22px]
                     font-black
-                    leading-[1.4]
+                    leading-[1.5]
                     text-white
-
-                    sm:text-[36px]
-                    lg:text-[48px]
+                    min-[420px]:text-[26px]
+                    sm:text-[30px]
+                    lg:text-[34px]
                   "
                                 >
-                                    {currentSlide.title}
+                                    {current.title}
                                 </h2>
 
-                                <div className="mt-5 flex items-center justify-between">
-                                    <button
-                                        type="button"
+                                <div className="mt-5 flex items-center justify-between gap-4">
+                                    <Link
+                                        href={current.href}
                                         className="
+                      inline-flex
+                      min-h-[44px]
+                      items-center
+                      justify-center
                       rounded-full
                       border
-                      border-white/14
+                      border-white/15
                       bg-white/10
                       px-5
-                      py-3
-                      text-sm
+                      text-[10px]
                       font-black
                       text-white
                       backdrop-blur-md
                       transition
                       hover:bg-white/15
+                      sm:min-h-[48px]
+                      sm:text-[11px]
                     "
                                     >
                                         مشاهده دوره‌ها ←
-                                    </button>
+                                    </Link>
 
                                     <div className="flex items-center gap-2">
-                                        {slides.map((slide, index) => (
+                                        {heroSlides.map((slide, index) => (
                                             <button
                                                 key={slide.id}
                                                 type="button"
                                                 onClick={() => setActive(index)}
-                                                className={`h-2.5 rounded-full transition-all ${active === index
+                                                aria-label={`نمایش اسلاید ${index + 1}`}
+                                                className={`h-2 rounded-full transition-all duration-300 ${active === index
                                                         ? "w-8 bg-orange-400"
-                                                        : "w-2.5 bg-white/45"
+                                                        : "w-2 bg-white/35"
                                                     }`}
-                                                aria-label={`go to slide ${index + 1}`}
                                             />
                                         ))}
                                     </div>
                                 </div>
                             </div>
-
-                            <button
-                                type="button"
-                                onClick={goPrev}
-                                className="
-                  absolute
-                  left-4
-                  top-1/2
-                  z-10
-                  flex
-                  h-12
-                  w-12
-                  -translate-y-1/2
-                  items-center
-                  justify-center
-                  rounded-full
-                  border
-                  border-white/12
-                  bg-[#102D4A]/80
-                  text-xl
-                  text-white
-                  backdrop-blur-md
-                  transition
-                  hover:bg-[#153957]
-                "
-                                aria-label="previous slide"
-                            >
-                                ←
-                            </button>
-
-                            <button
-                                type="button"
-                                onClick={goNext}
-                                className="
-                  absolute
-                  right-4
-                  top-1/2
-                  z-10
-                  flex
-                  h-12
-                  w-12
-                  -translate-y-1/2
-                  items-center
-                  justify-center
-                  rounded-full
-                  border
-                  border-white/12
-                  bg-[#102D4A]/80
-                  text-xl
-                  text-white
-                  backdrop-blur-md
-                  transition
-                  hover:bg-[#153957]
-                "
-                                aria-label="next slide"
-                            >
-                                →
-                            </button>
                         </div>
+                    </div>
+
+                    {/* MOBILE buttons */}
+                    <div className="order-2 grid grid-cols-1 gap-3 min-[520px]:grid-cols-3 lg:hidden">
+                        {categories.map((item) => {
+                            const tone =
+                                item.tone === "cyan"
+                                    ? "border-cyan-400/55 bg-cyan-400/[0.045]"
+                                    : item.tone === "orange"
+                                        ? "border-orange-400/55 bg-orange-400/[0.045]"
+                                        : "border-blue-400/55 bg-blue-400/[0.045]";
+
+                            const iconTone =
+                                item.tone === "cyan"
+                                    ? "text-cyan-300"
+                                    : item.tone === "orange"
+                                        ? "text-orange-400"
+                                        : "text-blue-400";
+
+                            return (
+                                <Link
+                                    key={item.id}
+                                    href={item.href}
+                                    className={`
+                    flex
+                    min-h-[72px]
+                    items-center
+                    justify-between
+                    rounded-[20px]
+                    border
+                    px-4
+                    py-3
+                    ${tone}
+                  `}
+                                >
+                                    <div className="flex items-center gap-3">
+                                        <span className={`text-2xl ${iconTone}`}>{item.icon}</span>
+                                        <strong className="text-[13px] font-black leading-6 text-white">
+                                            {item.title}
+                                        </strong>
+                                    </div>
+
+                                    <span
+                                        className={`
+                      flex
+                      h-8
+                      w-8
+                      items-center
+                      justify-center
+                      rounded-full
+                      text-sm
+                      font-black
+                      ${item.tone === "cyan"
+                                                ? "bg-cyan-400 text-[#062039]"
+                                                : item.tone === "orange"
+                                                    ? "bg-orange-400 text-[#062039]"
+                                                    : "bg-blue-500 text-white"
+                                            }
+                    `}
+                                    >
+                                        ←
+                                    </span>
+                                </Link>
+                            );
+                        })}
                     </div>
                 </div>
             </div>

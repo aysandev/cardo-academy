@@ -100,7 +100,7 @@ export default function Navbar() {
                         href="/licenses"
                         className="rounded-full px-3 py-2.5 text-[10px] font-black text-slate-300 transition hover:bg-white/[0.05] hover:text-white xl:px-4 xl:text-[11px]"
                     >
-                        مدارک
+                        گواهینامه ها
                     </Link>
 
                     <Link
