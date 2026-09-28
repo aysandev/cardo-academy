@@ -1,822 +1,613 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import Image from "next/image";
+import { useState } from "react";
 
-type Instructor = {
+type Certificate = {
     id: string;
-    name: string;
-    role: string;
-    degree: string;
-    experience: string;
-    bio: string;
-    image?: string;
+    title: string;
+    badge: string;
+    image: string;
 };
 
-const instructors: Instructor[] = [
+const certificates: Certificate[] = [
     {
-        id: "hashem-setareh",
-        name: "دکتر هاشم ستاره",
-        role: "رئیس دپارتمان HSE",
-        degree: "دکتری مدیریت محیط زیست",
-        experience: "بیش از دو دهه تجربه",
-        bio: "فعال در حوزه بهداشت حرفه‌ای، مدیریت محیط زیست و ایمنی؛ مدرس دانشگاه، مشاور ارشد پروژه‌های صنعتی و نظامی و نویسنده و مترجم آثار تخصصی.",
-        image: "/images/instructors/hashem-setareh.png",
+        id: "tvet",
+        title: "گواهینامه دوره‌های فنی و حرفه‌ای",
+        badge: "رسمی",
+        image: "/images/certificates/tvet-certificate.jpg",
     },
     {
-        id: "saleh-salehi",
-        name: "صالح صالحی",
-        role: "رئیس دپارتمان حقوقی",
-        degree: "کارشناسی ارشد حقوق تجارت بین‌الملل",
-        experience: "بیش از ۲۲ سال سابقه",
-        bio: "مؤسس مجتمع آموزشی کاردو و رئیس هیئت‌مدیره گروه دانش‌بنیان ایمن سپهر؛ فعال در حوزه ایمنی و آتش‌نشانی و مدرس قراردادهای بین‌المللی، کارآفرینی و HSE.",
-        image: "/images/instructors/saleh-salehi.jpeg",
+        id: "organization",
+        title: "گواهینامه دوره‌های اختصاصی",
+        badge: "اختصاصی",
+        image: "/images/certificates/organization-certificate.jpg",
     },
     {
-        id: "hamidreza-faraji",
-        name: "حمیدرضا فرجی",
-        role: "رئیس دپارتمان آتش‌نشانی",
-        degree: "مدرس تخصصی آتش‌نشانی",
-        experience: "۱۵ سال سابقه حرفه‌ای",
-        bio: "آتش‌نشان حرفه‌ای با سابقه فعالیت در سازمان آتش‌نشانی تهران و مدرس دوره‌های آتش‌نشانی سازمان آموزش فنی و حرفه‌ای کشور.",
-        image: "/images/instructors/hamidreza-faraji.jpeg",
+        id: "international",
+        title: "گواهینامه دوره‌های بین‌الملل",
+        badge: "بین‌الملل",
+        image: "/images/certificates/international-certificate.jpg",
     },
-    {
-        id: "manouchehr-ahanj",
-        name: "مهندس منوچهر آهنج",
-        role: "مدرس و متخصص HSE و ایمنی فرایند",
-        degree: "دکترای HSE",
-        experience: "مدیر و مدرس حوزه HSE و ایمنی فرایند",
-        bio: "متخصص HSE و ایمنی فرایند با سابقه مدیریت HSE پروژه‌های نفت و گاز، ایمنی راه‌اندازی، PSM، PSSR، HAZID/HIRA، MOC و ممیزی رفتاری.",
-        image: "/images/instructors/manoch.jpeg",
-    },
-    {
-        id: "hoda-akhoundi",
-        name: "دکتر هدی آخوندی",
-        role: "رئیس دپارتمان سلامت",
-        degree: "دکترای حرفه‌ای پزشکی",
-        experience: "مدرس و مدیر حوزه سلامت",
-        bio: "پزشک، مدرس و رئیس دپارتمان سلامت و مدیر کلینیک پوست و زیبایی بیمارستان نیکان.",
-        image: "/images/instructors/hoda-akhoundi.jpeg",
-    },
-    {
-        id: "majid-aliyari",
-        name: "مجید علیاری",
-        role: "مدرس و مشاور HSE",
-        degree: "کارشناسی ارشد HSE",
-        experience: "بیش از یک دهه تجربه",
-        bio: "فعال در صنایع نفت، گاز، خودرو، فولاد و معادن و دارای تجربه در مدیریت ریسک، سیستم‌های مدیریتی، مشاوره، تدریس و سرممیزی.",
-        image: "/images/instructors/majid-aliyari.jpeg",
-    },
-    {
-        id: "mohammad-shams",
-        name: "دکتر محمد شمس",
-        role: "مدرس و مشاور بهداشت و ایمنی",
-        degree: "دکتری بهداشت و ایمنی",
-        experience: "بیش از ۲۰ سال تجربه",
-        bio: "دارای تجربه در صنایع نفت، گاز و پتروشیمی و سابقه فعالیت در حوزه ایمنی، آتش‌نشانی و تجهیزات تخصصی امداد و نجات.",
-        image: "/images/instructors/mohammad-shams.jpg",
-    },
-    {
-        id: "ahmad-akrami",
-        name: "دکتر احمد اکرمی",
-        role: "مدرس HSE و مدیریت بحران",
-        degree: "دکتری شیمی",
-        experience: "مدرس، مشاور و سرممیز",
-        bio: "متخصص حوزه‌های HSE، پدافند غیرعامل و مدیریت بحران؛ دارای سابقه تدریس دانشگاهی و تألیف و ترجمه آثار تخصصی.",
-        image: "/images/instructors/ahmad-akrami.jpeg",
-    },
-    {
-        id: "naser-rahbar",
-        name: "ناصر رهبر",
-        role: "کارشناس رسمی و مدرس علوم آتش‌نشانی",
-        degree: "کارشناس ارشد HSE",
-        experience: "۲۰ سال سابقه تدریس",
-        bio: "کارشناس رسمی دادگستری در رشته آتش‌سوزی، مؤلف، مشاور و مدرس علوم آتش‌نشانی با سوابق متعدد آموزشی و عملیاتی.",
-        image: "/images/instructors/naser-rahbar.jpg",
-    },
-
 ];
 
-function initials(name: string) {
-    return name
-        .replace("دکتر", "")
-        .replace("مهندس", "")
-        .trim()
-        .split(" ")
-        .slice(0, 2)
-        .map((part) => part[0])
-        .join("");
-}
-
-export default function WhyKardo() {
-    const [active, setActive] = useState(0);
-    const [paused, setPaused] = useState(false);
-    const teacherStripRef = useRef<HTMLDivElement>(null);
-
-    useEffect(() => {
-        if (paused) return;
-
-        const timer = setInterval(() => {
-            setActive((prev) =>
-                prev === 0 ? instructors.length - 1 : prev - 1
-            );
-        }, 5000);
-
-        return () => clearInterval(timer);
-    }, [paused]);
-
-
-    useEffect(() => {
-        const strip = teacherStripRef.current;
-        if (!strip) return;
-
-        const activeButton = strip.querySelector<HTMLButtonElement>(
-            `[data-teacher-index="${active}"]`
-        );
-
-        activeButton?.scrollIntoView({
-            behavior: "smooth",
-            block: "nearest",
-            inline: "center",
-        });
-    }, [active]);
-
-    const current = instructors[active];
-
-    const previousIndex =
-        active === 0 ? instructors.length - 1 : active - 1;
-
-    const nextIndex =
-        active === instructors.length - 1 ? 0 : active + 1;
-
-    const previous = instructors[previousIndex];
-    const next = instructors[nextIndex];
-
-    const goNext = () => {
-        setActive((prev) => (prev + 1) % instructors.length);
-    };
-
-    const goPrevious = () => {
-        setActive((prev) =>
-            prev === 0 ? instructors.length - 1 : prev - 1
-        );
-    };
-
-    const progress = useMemo(
-        () => `${active + 1}`.padStart(2, "0"),
-        [active]
-    );
+export default function CertificatesShowcase() {
+    const [openCertificate, setOpenCertificate] =
+        useState<Certificate | null>(null);
 
     return (
-        <section
-            dir="rtl"
-            className="
-        relative
-        overflow-hidden
-        bg-gradient-to-b
-        from-[#0B2239]
-        via-[#14314A]
-        to-[#0B2239]
-        px-4
-        py-10
-        sm:px-6
-        sm:py-12
-        md:py-14
-        lg:px-10
-        lg:py-16
-      "
-        >
-            <div
+        <>
+            <section
+                id="certificates"
+                dir="rtl"
                 className="
-          pointer-events-none
-          absolute
-          -right-40
-          top-24
-          h-[500px]
-          w-[500px]
-          rounded-full
-          bg-cyan-300/[0.06]
-          blur-[160px]
-        "
-            />
+                    relative
+                    w-full
+                    overflow-hidden
+                    bg-[#F7FBFD]
+                    px-4
+                    py-12
+                    sm:px-6
+                    sm:py-14
+                    lg:px-10
+                    lg:py-16
+                "
+            >
+                {/* DECORATIVE BACKGROUND */}
+                <div
+                    className="
+                        pointer-events-none
+                        absolute
+                        -right-32
+                        top-20
+                        h-[350px]
+                        w-[350px]
+                        rounded-full
+                        bg-cyan-400/[0.05]
+                        blur-[120px]
+                    "
+                />
 
-            <div
-                className="
-          pointer-events-none
-          absolute
-          -left-40
-          bottom-10
-          h-[500px]
-          w-[500px]
-          rounded-full
-          bg-orange-400/[0.07]
-          blur-[160px]
-        "
-            />
+                <div
+                    className="
+                        pointer-events-none
+                        absolute
+                        -left-32
+                        bottom-10
+                        h-[350px]
+                        w-[350px]
+                        rounded-full
+                        bg-orange-400/[0.05]
+                        blur-[120px]
+                    "
+                />
 
-            <div className="relative mx-auto max-w-[1450px]">
-                <div className="mx-auto max-w-3xl text-center">
-                    <span
-                        className="
-              inline-flex
-              items-center
-              gap-2
-              rounded-full
-              border
-              border-cyan-300/20
-              bg-cyan-300/[0.06]
-              px-4
-              py-2
-              text-[10px]
-              font-black
-              text-cyan-200
-              sm:text-xs
-            "
-                    >
-                        <span className="h-2 w-2 rounded-full bg-orange-400" />
-                        اساتید مجتمع آموزشی کاردو
-                    </span>
-
-                    <h2
-                        className="
-              mt-5
-              text-3xl
-              font-black
-              leading-[1.6]
-              text-white
-              sm:text-4xl
-              lg:text-5xl
-            "
-                    >
-                        تجربه‌ای که{" "}
+                <div className="relative mx-auto w-full max-w-[1450px]">
+                    {/* HEADER */}
+                    <div className="mx-auto max-w-3xl text-center">
                         <span
                             className="
-                bg-gradient-to-l
-                from-cyan-300
-                to-orange-300
-                bg-clip-text
-                text-transparent
-              "
+                                inline-flex
+                                items-center
+                                gap-2
+                                rounded-full
+                                border
+                                border-cyan-500/15
+                                bg-cyan-500/[0.06]
+                                px-3.5
+                                py-2
+                                text-[9px]
+                                font-black
+                                tracking-[0.10em]
+                                text-cyan-700
+                                sm:text-[10px]
+                            "
                         >
-                            به آموزش تبدیل می‌شود
+                            <span className="h-1.5 w-1.5 rounded-full bg-orange-400" />
+                            CERTIFICATES
                         </span>
-                    </h2>
 
-                    <p
-                        className="
-              mx-auto
-              mt-4
-              max-w-2xl
-              text-sm
-              leading-8
-              text-slate-400
-            "
-                    >
-                        بخشی از تیم مدرسان و متخصصان کاردو در حوزه‌های HSE،
-                        آتش‌نشانی، سلامت، مدیریت بحران، امداد و نجات و خدمات حقوقی.
-                    </p>
-                </div>
-
-                {/* DESKTOP */}
-                <div
-                    className="
-            mt-8
-            hidden
-            grid-cols-[0.72fr_1fr_0.72fr]
-            items-center
-            gap-6
-            lg:grid
-          "
-                    onMouseEnter={() => setPaused(true)}
-                    onMouseLeave={() => setPaused(false)}
-                >
-                    <button
-                        type="button"
-                        onClick={() => setActive(previousIndex)}
-                        className="
-              group
-              relative
-              min-h-[390px] xl:min-h-[430px]
-              overflow-hidden
-              rounded-[32px]
-              border
-              border-white/[0.07]
-              bg-white/[0.025]
-              p-5
-              text-right
-              opacity-55
-              transition
-              duration-500
-              hover:-translate-y-1
-              hover:opacity-90
-            "
-                    >
-                        <InstructorVisual key={`previous-${previous.id}`} instructor={previous} muted />
-
-                        <h3 className="mt-5 text-xl font-black text-white">
-                            {previous.name}
-                        </h3>
-
-                        <p className="mt-2 text-xs text-cyan-200">
-                            {previous.role}
-                        </p>
-                    </button>
-
-                    <article
-                        className="
-              relative
-              overflow-hidden
-              rounded-[38px]
-              border
-              border-orange-300/20
-              bg-white/[0.045]
-              p-6
-              shadow-[0_35px_100px_rgba(0,0,0,0.22)]
-              backdrop-blur-xl
-              sm:p-8
-            "
-                    >
-                        <div
+                        <h2
                             className="
-                absolute
-                left-6
-                top-6
-                text-xs
-                font-black
-                tracking-[0.25em]
-                text-orange-300
-              "
+                                mt-4
+                                text-[28px]
+                                font-black
+                                leading-[1.6]
+                                text-[#07192D]
+                                sm:text-[36px]
+                                lg:text-[42px]
+                            "
                         >
-                            {progress} / {String(instructors.length).padStart(2, "0")}
-                        </div>
+                            نمونه گواهینامه‌های ارائه‌شده
+                        </h2>
 
-                        <InstructorVisual key={`current-${current.id}`} instructor={current} />
-
-                        <div className="mt-7">
-                            <span
-                                className="
-                  inline-flex
-                  rounded-full
-                  border
-                  border-cyan-300/15
-                  bg-cyan-300/[0.06]
-                  px-3
-                  py-1.5
-                  text-[10px]
-                  font-black
-                  text-cyan-200
-                "
-                            >
-                                {current.role}
-                            </span>
-
-                            <h3
-                                className="
-                  mt-4
-                  text-3xl
-                  font-black
-                  text-white
-                "
-                            >
-                                {current.name}
-                            </h3>
-
-                            <p
-                                className="
-                  mt-2
-                  text-sm
-                  font-bold
-                  text-orange-200
-                "
-                            >
-                                {current.degree}
-                            </p>
-
-                            <div
-                                className="
-                  mt-5
-                  inline-flex
-                  rounded-full
-                  border
-                  border-white/[0.08]
-                  bg-white/[0.03]
-                  px-4
-                  py-2
-                  text-xs
-                  font-bold
-                  text-slate-300
-                "
-                            >
-                                {current.experience}
-                            </div>
-
-                            <p
-                                className="
-                  mt-5
-                  text-sm
-                  leading-8
-                  text-slate-400
-                "
-                            >
-                                {current.bio}
-                            </p>
-                        </div>
-
-                        <div
+                        <p
                             className="
-                mt-7
-                flex
-                items-center
-                justify-between
-                gap-3
-              "
+                                mx-auto
+                                mt-3
+                                max-w-2xl
+                                text-[11px]
+                                leading-7
+                                text-slate-500
+                                sm:text-sm
+                                sm:leading-8
+                            "
                         >
-                            <button
-                                type="button"
-                                onClick={goPrevious}
-                                aria-label="استاد قبلی"
-                                className="
-                  flex
-                  h-12
-                  w-12
-                  items-center
-                  justify-center
-                  rounded-full
-                  border
-                  border-white/10
-                  bg-white/[0.04]
-                  text-xl
-                  text-white
-                  transition
-                  hover:bg-white/[0.08]
-                "
-                            >
-                                →
-                            </button>
-
-                            <div className="flex flex-wrap justify-center gap-1.5">
-                                {instructors.map((_, index) => (
-                                    <button
-                                        key={index}
-                                        type="button"
-                                        onClick={() => setActive(index)}
-                                        aria-label={`استاد ${index + 1}`}
-                                        className={`
-                      h-2
-                      rounded-full
-                      transition-all
-                      ${active === index
-                                                ? "w-7 bg-orange-400"
-                                                : "w-2 bg-white/20"
-                                            }
-                    `}
-                                    />
-                                ))}
-                            </div>
-
-                            <button
-                                type="button"
-                                onClick={goNext}
-                                aria-label="استاد بعدی"
-                                className="
-                  flex
-                  h-12
-                  w-12
-                  items-center
-                  justify-center
-                  rounded-full
-                  border
-                  border-white/10
-                  bg-white/[0.04]
-                  text-xl
-                  text-white
-                  transition
-                  hover:bg-white/[0.08]
-                "
-                            >
-                                ←
-                            </button>
-                        </div>
-                    </article>
-
-                    <button
-                        type="button"
-                        onClick={() => setActive(nextIndex)}
-                        className="
-              group
-              relative
-              min-h-[390px] xl:min-h-[430px]
-              overflow-hidden
-              rounded-[32px]
-              border
-              border-white/[0.07]
-              bg-white/[0.025]
-              p-5
-              text-right
-              opacity-55
-              transition
-              duration-500
-              hover:-translate-y-1
-              hover:opacity-90
-            "
-                    >
-                        <InstructorVisual key={`next-${next.id}`} instructor={next} muted />
-
-                        <h3 className="mt-5 text-xl font-black text-white">
-                            {next.name}
-                        </h3>
-
-                        <p className="mt-2 text-xs text-cyan-200">
-                            {next.role}
+                            نمونه مدارک قابل ارائه در دوره‌های آموزشی مجتمع
+                            آموزشی کاردو
                         </p>
-                    </button>
-                </div>
+                    </div>
 
-                {/* MOBILE / TABLET */}
-                <div className="mt-7 sm:mt-8 lg:hidden">
+                    {/* ================================================= */}
+                    {/* THREE CERTIFICATES */}
+                    {/* ================================================= */}
+
                     <div
                         className="
-              overflow-hidden
-              rounded-[28px]
-              border
-              border-white/[0.08]
-              bg-white/[0.035]
-              p-4
-              sm:p-6
-            "
+                            mx-auto
+                            mt-8
+                            grid
+                            w-full
+                            max-w-[1250px]
+                            grid-cols-1
+                            gap-5
+                            sm:mt-10
+                            md:grid-cols-3
+                            md:gap-4
+                            lg:gap-6
+                        "
                     >
-                        <InstructorVisual key={`current-${current.id}`} instructor={current} />
-
-                        <div className="mt-5">
+                        {certificates.map((item, index) => (
                             <div
+                                key={item.id}
                                 className="
-                  flex
-                  items-start
-                  justify-between
-                  gap-4
-                "
+                                    group
+                                    flex
+                                    min-w-0
+                                    flex-col
+                                "
                             >
-                                <div>
-                                    <span className="text-[9px] font-black text-orange-300">
-                                        {progress} / {String(instructors.length).padStart(2, "0")}
-                                    </span>
+                                {/* TITLE ABOVE EACH CARD */}
+                                <div
+                                    className="
+                                        mb-3
+                                        flex
+                                        min-h-[64px]
+                                        items-center
+                                        justify-center
+                                        rounded-[18px]
+                                        border
+                                        border-slate-200
+                                        bg-white
+                                        px-4
+                                        py-3
+                                        text-center
+                                        shadow-[0_8px_25px_rgba(15,40,60,0.04)]
+                                        transition
+                                        duration-300
+                                        group-hover:border-cyan-300
+                                        group-hover:shadow-[0_10px_30px_rgba(15,100,130,0.08)]
+                                        sm:min-h-[70px]
+                                    "
+                                >
+                                    <div>
+                                        <span
+                                            className="
+                                                mb-1
+                                                block
+                                                text-[8px]
+                                                font-black
+                                                tracking-[0.16em]
+                                                text-orange-500
+                                            "
+                                        >
+                                            0{index + 1}
+                                        </span>
 
-                                    <h3
-                                        className="
-                      mt-2
-                      text-xl
-                      font-black
-                      leading-8
-                      text-white
-                      sm:text-2xl
-                    "
-                                    >
-                                        {current.name}
-                                    </h3>
-
-                                    <p
-                                        className="
-                      mt-1
-                      text-xs
-                      font-bold
-                      text-cyan-200
-                    "
-                                    >
-                                        {current.role}
-                                    </p>
+                                        <h3
+                                            className="
+                                                text-[11px]
+                                                font-black
+                                                leading-6
+                                                text-[#07192D]
+                                                sm:text-xs
+                                                lg:text-sm
+                                            "
+                                        >
+                                            {item.title}
+                                        </h3>
+                                    </div>
                                 </div>
 
-                                <span
+                                {/* CERTIFICATE CARD */}
+                                <article
                                     className="
-                    shrink-0
-                    rounded-full
-                    bg-orange-400/[0.10]
-                    px-3
-                    py-2
-                    text-[9px]
-                    font-black
-                    text-orange-200
-                  "
+                                        relative
+                                        flex
+                                        h-full
+                                        flex-col
+                                        overflow-hidden
+                                        rounded-[24px]
+                                        border
+                                        border-slate-200
+                                        bg-white
+                                        shadow-[0_16px_45px_rgba(15,40,60,0.07)]
+                                        transition
+                                        duration-500
+                                        hover:-translate-y-1
+                                        hover:border-cyan-200
+                                        hover:shadow-[0_24px_60px_rgba(15,70,100,0.12)]
+                                        sm:rounded-[26px]
+                                        lg:rounded-[30px]
+                                    "
                                 >
-                                    {current.experience}
-                                </span>
+                                    {/* CARD HEADER */}
+                                    <div
+                                        className="
+                                            flex
+                                            items-center
+                                            justify-between
+                                            gap-2
+                                            border-b
+                                            border-slate-100
+                                            px-4
+                                            py-3
+                                            sm:px-5
+                                            sm:py-4
+                                        "
+                                    >
+                                        <span
+                                            className="
+                                                text-[8px]
+                                                font-black
+                                                tracking-[0.15em]
+                                                text-slate-400
+                                            "
+                                        >
+                                            CERTIFICATE
+                                        </span>
+
+                                        <span
+                                            className="
+                                                shrink-0
+                                                rounded-full
+                                                bg-emerald-50
+                                                px-2.5
+                                                py-1.5
+                                                text-[8px]
+                                                font-black
+                                                text-emerald-700
+                                                sm:px-3
+                                                sm:py-2
+                                                sm:text-[9px]
+                                            "
+                                        >
+                                            {item.badge}
+                                        </span>
+                                    </div>
+
+                                    {/* IMAGE */}
+                                    <button
+                                        type="button"
+                                        onClick={() =>
+                                            setOpenCertificate(item)
+                                        }
+                                        aria-label={`مشاهده ${item.title}`}
+                                        className="
+                                            group/image
+                                            relative
+                                            block
+                                            aspect-[4/3]
+                                            w-full
+                                            overflow-hidden
+                                            bg-[#F1F6F8]
+                                            md:aspect-[4/3.3]
+                                            xl:aspect-[4/3.1]
+                                        "
+                                    >
+                                        <Image
+                                            src={item.image}
+                                            alt={item.title}
+                                            fill
+                                            sizes="
+                                                (max-width: 767px) 100vw,
+                                                (max-width: 1200px) 33vw,
+                                                400px
+                                            "
+                                            className="
+                                                object-contain
+                                                p-3
+                                                transition
+                                                duration-700
+                                                ease-out
+                                                group-hover/image:scale-[1.025]
+                                                sm:p-4
+                                                lg:p-5
+                                            "
+                                        />
+
+                                        {/* OVERLAY */}
+                                        <div
+                                            className="
+                                                pointer-events-none
+                                                absolute
+                                                inset-0
+                                                bg-gradient-to-t
+                                                from-[#07192D]/20
+                                                via-transparent
+                                                to-transparent
+                                                opacity-60
+                                                transition
+                                                duration-500
+                                                group-hover/image:opacity-100
+                                            "
+                                        />
+
+                                        {/* VIEW BUTTON */}
+                                        <span
+                                            className="
+                                                absolute
+                                                bottom-3
+                                                left-1/2
+                                                -translate-x-1/2
+                                                whitespace-nowrap
+                                                rounded-full
+                                                border
+                                                border-white/60
+                                                bg-white/90
+                                                px-3
+                                                py-2
+                                                text-[9px]
+                                                font-black
+                                                text-[#07192D]
+                                                shadow-md
+                                                backdrop-blur-md
+                                                transition
+                                                duration-300
+                                                group-hover/image:-translate-y-1
+                                                sm:bottom-4
+                                                sm:px-4
+                                                sm:text-[10px]
+                                            "
+                                        >
+                                            مشاهده مدرک
+                                        </span>
+                                    </button>
+
+                                    {/* FOOTER */}
+                                    <div
+                                        className="
+                                            mt-auto
+                                            flex
+                                            items-center
+                                            justify-between
+                                            gap-3
+                                            px-4
+                                            py-4
+                                            sm:px-5
+                                        "
+                                    >
+                                        <div className="min-w-0">
+                                            <p
+                                                className="
+                                                    line-clamp-2
+                                                    text-[10px]
+                                                    font-black
+                                                    leading-6
+                                                    text-[#07192D]
+                                                    sm:text-[11px]
+                                                    lg:text-xs
+                                                "
+                                            >
+                                                {item.title}
+                                            </p>
+                                        </div>
+
+                                        <button
+                                            type="button"
+                                            onClick={() =>
+                                                setOpenCertificate(item)
+                                            }
+                                            aria-label={`باز کردن ${item.title}`}
+                                            className="
+                                                flex
+                                                h-9
+                                                w-9
+                                                shrink-0
+                                                items-center
+                                                justify-center
+                                                rounded-full
+                                                bg-[#07192D]
+                                                text-sm
+                                                text-white
+                                                transition
+                                                duration-300
+                                                hover:bg-orange-400
+                                                hover:text-[#07192D]
+                                                sm:h-10
+                                                sm:w-10
+                                            "
+                                        >
+                                            ↗
+                                        </button>
+                                    </div>
+                                </article>
                             </div>
-
-                            <p className="mt-4 text-xs font-bold text-orange-200">
-                                {current.degree}
-                            </p>
-
-                            <p
-                                className="
-                  mt-4
-                  text-xs
-                  leading-7
-                  text-slate-400
-                  sm:text-sm
-                "
-                            >
-                                {current.bio}
-                            </p>
-                        </div>
-
-                        <div
-                            className="
-                mt-6
-                flex
-                items-center
-                justify-between
-              "
-                        >
-                            <button
-                                type="button"
-                                onClick={goPrevious}
-                                className="
-                  flex
-                  h-11
-                  w-11
-                  items-center
-                  justify-center
-                  rounded-full
-                  border
-                  border-white/10
-                  bg-white/[0.04]
-                  text-white
-                "
-                            >
-                                →
-                            </button>
-
-                            <div className="text-[10px] font-bold text-slate-500">
-                                برای مشاهده اساتید ورق بزنید
-                            </div>
-
-                            <button
-                                type="button"
-                                onClick={goNext}
-                                className="
-                  flex
-                  h-11
-                  w-11
-                  items-center
-                  justify-center
-                  rounded-full
-                  bg-orange-400
-                  text-[#07192D]
-                "
-                            >
-                                ←
-                            </button>
-                        </div>
-                    </div>
-
-                    <div
-                        ref={teacherStripRef}
-                        className="
-              mt-4
-              flex
-              gap-2
-              overflow-x-auto
-              scroll-smooth
-              pb-2
-              [scrollbar-width:none]
-              [&::-webkit-scrollbar]:hidden
-            "
-                    >
-                        {instructors.map((teacher, index) => (
-                            <button
-                                key={teacher.id}
-                                data-teacher-index={index}
-                                type="button"
-                                onClick={() => setActive(index)}
-                                className={`
-                  shrink-0
-                  rounded-full
-                  border
-                  px-3.5
-                  py-2.5
-                  text-[10px]
-                  font-black
-                  transition
-                  ${active === index
-                                        ? "border-orange-400 bg-orange-400 text-[#07192D]"
-                                        : "border-white/10 bg-white/[0.03] text-slate-300"
-                                    }
-                `}
-                            >
-                                {teacher.name}
-                            </button>
                         ))}
                     </div>
-                </div>
-            </div>
-        </section>
-    );
-}
 
-function InstructorVisual({
-    instructor,
-    muted = false,
-}: {
-    instructor: Instructor;
-    muted?: boolean;
-}) {
-    return (
-        <div
-            className={`
-        relative
-        overflow-hidden
-        rounded-[26px]
-        border
-        border-white/[0.08]
-        bg-[#091D31]
-        ${muted
-                    ? "h-[260px] xl:h-[300px]"
-                    : "h-[280px] sm:h-[330px] md:h-[360px] xl:h-[390px]"
-                }
-      `}
-        >
-            {instructor.image ? (
-                <img
-                    key={`${instructor.id}-${muted ? "muted" : "main"}`}
-                    src={instructor.image}
-                    alt={instructor.name}
-                    className={`
-            absolute
-            inset-0
-            h-full
-            w-full
-            object-cover
-            object-top
-            transition
-            duration-700
-            ${muted ? "grayscale-[35%]" : ""}
-          `}
-                />
-            ) : (
+                    {/* SMALL NOTE */}
+                    <div
+                        className="
+                            mx-auto
+                            mt-7
+                            flex
+                            max-w-3xl
+                            items-center
+                            justify-center
+                            gap-2
+                            text-center
+                            text-[9px]
+                            font-bold
+                            leading-6
+                            text-slate-400
+                            sm:mt-8
+                            sm:text-[10px]
+                        "
+                    >
+                        <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-orange-400" />
+                        برای مشاهده هر گواهینامه در ابعاد بزرگ، روی تصویر آن کلیک
+                        کنید.
+                    </div>
+                </div>
+            </section>
+
+            {/* ========================================================= */}
+            {/* LARGE PREVIEW MODAL */}
+            {/* ========================================================= */}
+
+            {openCertificate && (
                 <div
                     className="
-            absolute
-            inset-0
-            flex
-            items-center
-            justify-center
-            bg-gradient-to-br
-            from-[#102E49]
-            via-[#0B2239]
-            to-[#07192D]
-          "
+                        fixed
+                        inset-0
+                        z-[200]
+                        flex
+                        items-center
+                        justify-center
+                        bg-[#03111F]/85
+                        p-3
+                        backdrop-blur-md
+                        sm:p-5
+                    "
+                    onClick={() => setOpenCertificate(null)}
                 >
                     <div
                         className="
-              flex
-              h-28
-              w-28
-              items-center
-              justify-center
-              rounded-full
-              border
-              border-orange-300/20
-              bg-orange-400/[0.08]
-              text-4xl
-              font-black
-              text-orange-200
-            "
+                            relative
+                            flex
+                            max-h-[92vh]
+                            w-full
+                            max-w-[1000px]
+                            flex-col
+                            overflow-hidden
+                            rounded-[22px]
+                            border
+                            border-white/10
+                            bg-white
+                            shadow-[0_35px_120px_rgba(0,0,0,0.40)]
+                            sm:rounded-[28px]
+                        "
+                        onClick={(event) =>
+                            event.stopPropagation()
+                        }
                     >
-                        {initials(instructor.name)}
+                        {/* CLOSE */}
+                        <button
+                            type="button"
+                            onClick={() =>
+                                setOpenCertificate(null)
+                            }
+                            aria-label="بستن"
+                            className="
+                                absolute
+                                left-3
+                                top-3
+                                z-30
+                                flex
+                                h-10
+                                w-10
+                                items-center
+                                justify-center
+                                rounded-full
+                                border
+                                border-slate-200
+                                bg-white/95
+                                text-xl
+                                text-[#07192D]
+                                shadow-md
+                                backdrop-blur
+                                transition
+                                hover:bg-slate-100
+                                sm:left-4
+                                sm:top-4
+                            "
+                        >
+                            ×
+                        </button>
+
+                        {/* PREVIEW IMAGE */}
+                        <div
+                            className="
+                                relative
+                                h-[68vh]
+                                min-h-[320px]
+                                w-full
+                                bg-[#EEF4F7]
+                                sm:min-h-[420px]
+                            "
+                        >
+                            <Image
+                                src={openCertificate.image}
+                                alt={openCertificate.title}
+                                fill
+                                sizes="100vw"
+                                className="
+                                    object-contain
+                                    p-4
+                                    sm:p-7
+                                    lg:p-9
+                                "
+                                priority
+                            />
+                        </div>
+
+                        {/* MODAL FOOTER */}
+                        <div
+                            dir="rtl"
+                            className="
+                                flex
+                                items-center
+                                justify-between
+                                gap-3
+                                border-t
+                                border-slate-200
+                                bg-white
+                                px-4
+                                py-4
+                                sm:px-6
+                            "
+                        >
+                            <h3
+                                className="
+                                    text-xs
+                                    font-black
+                                    leading-6
+                                    text-[#07192D]
+                                    sm:text-base
+                                "
+                            >
+                                {openCertificate.title}
+                            </h3>
+
+                            <span
+                                className="
+                                    shrink-0
+                                    rounded-full
+                                    bg-emerald-50
+                                    px-3
+                                    py-2
+                                    text-[9px]
+                                    font-black
+                                    text-emerald-700
+                                "
+                            >
+                                {openCertificate.badge}
+                            </span>
+                        </div>
                     </div>
                 </div>
             )}
-
-            <div
-                className="
-          absolute
-          inset-0
-          bg-gradient-to-t
-          from-[#07192D]
-          via-transparent
-          to-transparent
-        "
-            />
-
-            <div
-                className="
-          absolute
-          bottom-4
-          right-4
-          rounded-full
-          border
-          border-white/10
-          bg-[#07192D]/75
-          px-3
-          py-2
-          text-[9px]
-          font-black
-          text-white
-          backdrop-blur-lg
-        "
-            >
-                CARDO INSTRUCTOR
-            </div>
-        </div>
+        </>
     );
 }
