@@ -13,39 +13,47 @@ type HeroSlide = {
 };
 
 const heroSlides: HeroSlide[] = [
+
     {
         id: 1,
-        title: "دوره رفتارشناسی حریق",
+        title: "PIP",
+        subtitle: "Pre Incident Plan | طرح‌ریزی پیش از رویداد",
         image: "/images/hero/hero-fire-behavior.jpg",
-        href: "/courses?category=technical",
+        href: "/courses?category=organization",
     },
+
     {
         id: 2,
-        title: "دوره آتش‌نشانی شهری",
-        image: "/images/hero/hero-urban-firefighting.jpg",
-        href: "/courses?category=technical",
+        title: "فرماندهی عملیات اطفاء حریق",
+        subtitle: "Pre Start-Up Safety Review | بازبینی ایمنی پیش از راه‌اندازی",
+        image: "/images/hero/s2.jpg",
+        href: "/courses?category=organization",
     },
+
     {
         id: 3,
-        title: "آموزش نگهداری تجهیزات نجات",
-        subtitle: "جمعیت هلال احمر جمهوری اسلامی ایران",
-        image: "/images/hero/hero-rescue-equipment.jpg",
+        title: "مدیریت ریسک‌های بهداشت، ایمنی و محیط زیست",
+        subtitle: "Risk Management",
+        image: "images/hero/hero-urban-firefighting.jpg ",
         href: "/courses?category=organization",
     },
+
     {
         id: 4,
-        title: "آموزش تست و راه‌اندازی تشک‌های نجات و ست هیدرولیک",
-        subtitle: "ایران‌مال",
-        image: "/images/hero/hero-rescue-cushion-hydraulic.jpg",
-        href: "/courses?category=organization",
+        title: "آموزش عملی اطفاء حریق در میدان",
+        subtitle: "بررسی میدانی، ارزیابی مخاطرات و تاکتیک‌های عملیات اطفاء حریق",
+        image: "/images/hero/hero-fire-motorcycle.jpg",
+        href: "/images/hero/hero-fire-motorcycle.jpg",
     },
+
     {
         id: 5,
-        title: "آموزش کار با موتورسیکلت آتش‌نشانی",
-        subtitle: "سازمان امداد و نجات جمعیت هلال احمر",
-        image: "/images/hero/hero-fire-motorcycle.jpg",
+        title: "جستجو و عملیات نجات",
+        subtitle: "مقدماتی و پیشرفته",
+        image: "/images/hero/s1.jpg",
         href: "/courses?category=organization",
     },
+
 ];
 
 const categories = [
@@ -76,15 +84,20 @@ export default function Hero() {
     const [typingDone, setTypingDone] = useState(false);
     const touchStartX = useRef<number | null>(null);
 
-    const fullSlogan = "قدرت واقعی با آموزش ظاهر می‌شود";
-
+    const slogans = [
+        "قدرت واقعی با آموزش ظاهر می‌شود",
+        "ایمنی از آموزش شروع می‌شود",
+        "متخصص امروز، ایمنی فردا را می‌سازد",
+        "آموزش درست، از حادثه پیشگیری می‌کند",
+        "دانش ایمنی، سرمایه‌ای برای آینده است",
+    ];
     useEffect(() => {
-        if (paused) return;
         const timer = window.setInterval(() => {
             setActive((prev) => (prev + 1) % heroSlides.length);
         }, 5000);
+
         return () => window.clearInterval(timer);
-    }, [paused]);
+    }, []);
 
     useEffect(() => {
         const reduceMotion = window.matchMedia(
@@ -92,43 +105,59 @@ export default function Hero() {
         ).matches;
 
         if (reduceMotion) {
-            setTypedSlogan(fullSlogan);
+            setTypedSlogan(slogans[0]);
             setTypingDone(true);
             return;
         }
 
         let typingTimer: number | undefined;
-        let startTimer: number | undefined;
-        let replayTimer: number | undefined;
+        let pauseTimer: number | undefined;
+        let sloganIndex = 0;
 
-        const runTyping = () => {
-            let index = 0;
+        const typeSlogan = () => {
+            const currentSlogan = slogans[sloganIndex];
+
+            let charIndex = 0;
+
             setTypedSlogan("");
             setTypingDone(false);
 
-            startTimer = window.setTimeout(() => {
-                typingTimer = window.setInterval(() => {
-                    index += 1;
-                    setTypedSlogan(fullSlogan.slice(0, index));
+            typingTimer = window.setInterval(() => {
+                charIndex += 1;
 
-                    if (index >= fullSlogan.length) {
-                        if (typingTimer) window.clearInterval(typingTimer);
-                        setTypingDone(true);
+                setTypedSlogan(
+                    currentSlogan.slice(0, charIndex)
+                );
+
+                if (charIndex >= currentSlogan.length) {
+                    if (typingTimer) {
+                        window.clearInterval(typingTimer);
                     }
-                }, 65);
-            }, 350);
+
+                    setTypingDone(true);
+
+                    pauseTimer = window.setTimeout(() => {
+                        sloganIndex =
+                            (sloganIndex + 1) % slogans.length;
+
+                        typeSlogan();
+                    }, 3500);
+                }
+            }, 65);
         };
 
-        runTyping();
-        replayTimer = window.setInterval(runTyping, 40000);
+        typeSlogan();
 
         return () => {
-            if (startTimer) window.clearTimeout(startTimer);
-            if (typingTimer) window.clearInterval(typingTimer);
-            if (replayTimer) window.clearInterval(replayTimer);
+            if (typingTimer) {
+                window.clearInterval(typingTimer);
+            }
+
+            if (pauseTimer) {
+                window.clearTimeout(pauseTimer);
+            }
         };
     }, []);
-
     const current = heroSlides[active];
 
     const nextSlide = () =>
@@ -230,7 +259,7 @@ export default function Hero() {
                             href={current.href}
                             className="inline-flex min-h-[44px] items-center justify-center rounded-full border border-white/15 bg-white/10 px-5 text-[10px] font-black text-white backdrop-blur-md sm:text-[11px]"
                         >
-                            مشاهده دوره‌ها ←
+                            مشاهده دوره‌ها
                         </Link>
 
                         <div className="flex items-center gap-1.5">

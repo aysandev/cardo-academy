@@ -221,6 +221,148 @@ export default function Courses() {
                     >
                         از بین سه مسیر اصلی، دسته مناسب خود را انتخاب کنید.
                     </p>
+
+                </div>
+                {/* =========================================================
+    CERTIFICATIONS / STANDARDS
+========================================================= */}
+
+                <div className="mt-8 sm:mt-10">
+
+                    <div className="mb-4 text-center">
+                        <span className="
+    text-[8px]
+    font-black
+    tracking-[0.18em]
+    text-slate-500
+    sm:text-[9px]
+  ">
+                            استانداردها و مراجع آموزشی
+                        </span>
+                    </div>
+
+                    <div
+                        dir="ltr"
+                        className="
+    mx-auto
+    flex
+    max-w-[850px]
+    items-center
+    justify-center
+    gap-3
+    overflow-x-auto
+    px-2
+    pb-2
+    sm:gap-5
+    [scrollbar-width:none]
+    [&::-webkit-scrollbar]:hidden
+  "
+                    >
+
+                        {[
+                            {
+                                name: "IFSAC",
+                                image: "/images/certificates/ifsac.png",
+                            },
+                            {
+                                name: "NEBOSH",
+                                image: "/images/certificates/nebosh.png",
+                            },
+                            {
+                                name: "IOSH",
+                                image: "/images/certificates/iosh.png",
+                            },
+                            {
+                                name: "NFPA",
+                                image: "/images/certificates/nfpa.png",
+                            },
+                            {
+                                name: "فنی و حرفه‌ای",
+                                image: "/images/certificates/tvto.png",
+                            },
+                        ].map((item) => (
+                            <div
+                                key={item.name}
+                                className="
+        group
+        flex
+        shrink-0
+        flex-col
+        items-center
+        gap-2
+      "
+                            >
+
+                                {/* LOGO CIRCLE */}
+
+                                <div
+                                    className="
+          relative
+          flex
+          h-[66px]
+          w-[66px]
+          items-center
+          justify-center
+          overflow-hidden
+          rounded-full
+          border
+          border-white/[0.10]
+          bg-white/[0.06]
+          p-2
+          shadow-[0_10px_30px_rgba(0,0,0,0.12)]
+          backdrop-blur-xl
+          transition-all
+          duration-300
+          group-hover:-translate-y-1
+          group-hover:border-orange-300/30
+          group-hover:bg-white/[0.10]
+          group-hover:shadow-[0_14px_35px_rgba(0,0,0,0.20)]
+          sm:h-[76px]
+          sm:w-[76px]
+          sm:p-2.5
+        "
+                                >
+
+                                    <img
+                                        src={item.image}
+                                        alt={item.name}
+                                        className="
+            h-full
+            w-full
+            rounded-full
+            object-contain
+          "
+                                        onError={(event) => {
+                                            event.currentTarget.style.display = "none";
+                                        }}
+                                    />
+
+                                </div>
+
+                                {/* NAME */}
+
+                                <span
+                                    dir={item.name === "فنی و حرفه‌ای" ? "rtl" : "ltr"}
+                                    className="
+          max-w-[90px]
+          text-center
+          text-[8px]
+          font-black
+          text-slate-500
+          transition
+          duration-300
+          group-hover:text-orange-200
+          sm:text-[9px]
+        "
+                                >
+                                    {item.name}
+                                </span>
+
+                            </div>
+                        ))}
+
+                    </div>
+
                 </div>
 
                 {/* STACKED CATEGORY CARDS */}
