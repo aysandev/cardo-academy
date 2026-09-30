@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useMemo, useState } from "react";
 
 type Instructor = {
     id: string;
@@ -12,9 +12,17 @@ type Instructor = {
     image?: string;
 };
 
-const AUTO_PLAY_MS = 2500;
-
 const instructors: Instructor[] = [
+    {
+        id: "saleh-salehi",
+        name: "صالح صالحی",
+        role: "مؤسس آکادمی کاردو",
+        degree: "کارشناسی ارشد حقوق تجارت بین‌الملل",
+        experience: "بیش از ۲۲ سال سابقه",
+        bio: "مؤسس مجتمع آموزشی کاردو و رئیس هیئت‌مدیره گروه دانش‌بنیان ایمن سپهر؛ فعال در حوزه ایمنی و آتش‌نشانی و مدرس قراردادهای بین‌المللی، کارآفرینی و HSE.",
+        image: "/images/instructors/saleh-salehi.jpeg",
+    },
+
     {
         id: "hashem-setareh",
         name: "دکتر هاشم ستاره",
@@ -24,33 +32,7 @@ const instructors: Instructor[] = [
         bio: "فعال در حوزه بهداشت حرفه‌ای، مدیریت محیط زیست و ایمنی؛ مدرس دانشگاه، مشاور ارشد پروژه‌های صنعتی و نظامی و نویسنده و مترجم آثار تخصصی.",
         image: "/images/instructors/hashem-setareh.png",
     },
-    {
-        id: "saleh-salehi",
-        name: "صالح صالحی",
-        role: "  موئسس آکادمی",
-        degree: "کارشناسی ارشد حقوق تجارت بین‌الملل",
-        experience: "بیش از ۲۲ سال سابقه",
-        bio: "مؤسس مجتمع آموزشی کاردو و رئیس هیئت‌مدیره گروه دانش‌بنیان ایمن سپهر؛ فعال در حوزه ایمنی و آتش‌نشانی و مدرس قراردادهای بین‌المللی، کارآفرینی و HSE.",
-        image: "/images/instructors/saleh-salehi.jpeg",
-    },
-    {
-        id: "hamidreza-faraji",
-        name: "حمیدرضا فرجی",
-        role: "رئیس دپارتمان آتش‌نشانی",
-        degree: "مدرس تخصصی آتش‌نشانی",
-        experience: "۱۵ سال سابقه حرفه‌ای",
-        bio: "آتش‌نشان حرفه‌ای با سابقه فعالیت در سازمان آتش‌نشانی تهران و مدرس دوره‌های آتش‌نشانی سازمان آموزش فنی و حرفه‌ای کشور.",
-        image: "/images/instructors/hamidreza-faraji.jpeg",
-    },
-    {
-        id: "manouchehr-ahanj",
-        name: "مهندس منوچهر آهنج",
-        role: "مدرس و متخصص HSE و ایمنی فرایند",
-        degree: "دکترای HSE",
-        experience: "مدیر و مدرس حوزه HSE و ایمنی فرایند",
-        bio: "متخصص HSE و ایمنی فرایند با سابقه مدیریت HSE پروژه‌های نفت و گاز، ایمنی راه‌اندازی، PSM، PSSR، HAZID/HIRA، MOC و ممیزی رفتاری.",
-        image: "/images/instructors/manoch.jpeg",
-    },
+
     {
         id: "hoda-akhoundi",
         name: "دکتر هدی آخوندی",
@@ -60,6 +42,36 @@ const instructors: Instructor[] = [
         bio: "پزشک، مدرس و رئیس دپارتمان سلامت و مدیر کلینیک پوست و زیبایی بیمارستان نیکان.",
         image: "/images/instructors/hoda-akhoundi.jpeg",
     },
+
+    {
+        id: "hamidreza-faraji",
+        name: "حمیدرضا فرجی",
+        role: "رئیس دپارتمان آتش‌نشانی",
+        degree: "مدرس تخصصی آتش‌نشانی",
+        experience: "۱۵ سال سابقه حرفه‌ای",
+        bio: "آتش‌نشان حرفه‌ای با سابقه فعالیت در سازمان آتش‌نشانی تهران و مدرس دوره‌های آتش‌نشانی سازمان آموزش فنی و حرفه‌ای کشور.",
+        image: "/images/instructors/hamidreza-faraji.jpeg",
+    },
+
+    {
+        id: "afshin",
+        name: "افشین",
+        role: "مدرس آکادمی کاردو",
+        degree: "اطلاعات تکمیلی در حال ثبت",
+        experience: "مدرس تخصصی",
+        bio: "اطلاعات تکمیلی این مدرس پس از دریافت رزومه و مشخصات رسمی به این بخش اضافه می‌شود.",
+    },
+
+    {
+        id: "manouchehr-ahanj",
+        name: "مهندس منوچهر آهنج",
+        role: "مدرس و متخصص HSE و ایمنی فرایند",
+        degree: "دکترای HSE",
+        experience: "مدیر و مدرس حوزه HSE و ایمنی فرایند",
+        bio: "متخصص HSE و ایمنی فرایند با سابقه مدیریت HSE پروژه‌های نفت و گاز، ایمنی راه‌اندازی، PSM، PSSR، HAZID/HIRA، MOC و ممیزی رفتاری.",
+        image: "/images/instructors/manoch.jpeg",
+    },
+
     {
         id: "majid-aliyari",
         name: "مجید علیاری",
@@ -69,6 +81,7 @@ const instructors: Instructor[] = [
         bio: "فعال در صنایع نفت، گاز، خودرو، فولاد و معادن و دارای تجربه در مدیریت ریسک، سیستم‌های مدیریتی، مشاوره، تدریس و سرممیزی.",
         image: "/images/instructors/majid-aliyari.jpeg",
     },
+
     {
         id: "mohammad-shams",
         name: "دکتر محمد شمس",
@@ -78,6 +91,7 @@ const instructors: Instructor[] = [
         bio: "دارای تجربه در صنایع نفت، گاز و پتروشیمی و سابقه فعالیت در حوزه ایمنی، آتش‌نشانی و تجهیزات تخصصی امداد و نجات.",
         image: "/images/instructors/mohammad-shams.jpg",
     },
+
     {
         id: "ahmad-akrami",
         name: "دکتر احمد اکرمی",
@@ -87,6 +101,7 @@ const instructors: Instructor[] = [
         bio: "متخصص حوزه‌های HSE، پدافند غیرعامل و مدیریت بحران؛ دارای سابقه تدریس دانشگاهی و تألیف و ترجمه آثار تخصصی.",
         image: "/images/instructors/ahmad-akrami.jpeg",
     },
+
     {
         id: "naser-rahbar",
         name: "ناصر رهبر",
@@ -98,38 +113,33 @@ const instructors: Instructor[] = [
     },
 ];
 
+const DESKTOP_PAGE_SIZE = 4;
+
 export default function WhyKardo() {
-    const [active, setActive] = useState(0);
-    const [paused, setPaused] = useState(false);
+    const [page, setPage] = useState(0);
 
-    useEffect(() => {
-        if (paused) return;
+    const totalPages = Math.ceil(
+        instructors.length / DESKTOP_PAGE_SIZE
+    );
 
-        const timer = window.setInterval(() => {
-            setActive((prev) => (prev + 1) % instructors.length);
-        }, AUTO_PLAY_MS);
+    const visibleInstructors = useMemo(() => {
+        const start = page * DESKTOP_PAGE_SIZE;
 
-        return () => window.clearInterval(timer);
-    }, [paused]);
-
-    const current = instructors[active];
-
-    const previousIndex =
-        active === 0 ? instructors.length - 1 : active - 1;
-
-    const nextIndex =
-        active === instructors.length - 1 ? 0 : active + 1;
-
-    const previous = instructors[previousIndex];
-    const next = instructors[nextIndex];
+        return instructors.slice(
+            start,
+            start + DESKTOP_PAGE_SIZE
+        );
+    }, [page]);
 
     const goNext = () => {
-        setActive((prev) => (prev + 1) % instructors.length);
+        setPage((prev) =>
+            prev >= totalPages - 1 ? 0 : prev + 1
+        );
     };
 
     const goPrevious = () => {
-        setActive((prev) =>
-            prev === 0 ? instructors.length - 1 : prev - 1
+        setPage((prev) =>
+            prev <= 0 ? totalPages - 1 : prev - 1
         );
     };
 
@@ -145,25 +155,26 @@ export default function WhyKardo() {
         via-[#14314A]
         to-[#0B2239]
         px-4
-        py-10
+        py-12
         sm:px-6
-        sm:py-12
+        sm:py-14
         lg:px-10
         lg:py-16
       "
         >
-            {/* BACKGROUND */}
+            {/* BACKGROUND LIGHTS */}
+
             <div
                 className="
           pointer-events-none
           absolute
           -right-40
-          top-24
-          h-[500px]
-          w-[500px]
+          top-20
+          h-[460px]
+          w-[460px]
           rounded-full
           bg-cyan-300/[0.06]
-          blur-[160px]
+          blur-[150px]
         "
             />
 
@@ -172,17 +183,18 @@ export default function WhyKardo() {
           pointer-events-none
           absolute
           -left-40
-          bottom-10
-          h-[500px]
-          w-[500px]
+          bottom-0
+          h-[460px]
+          w-[460px]
           rounded-full
           bg-orange-400/[0.07]
-          blur-[160px]
+          blur-[150px]
         "
             />
 
             <div className="relative mx-auto w-full max-w-[1450px]">
                 {/* HEADER */}
+
                 <div className="mx-auto max-w-3xl text-center">
                     <span
                         className="
@@ -236,471 +248,466 @@ export default function WhyKardo() {
               mx-auto
               mt-4
               max-w-2xl
-              text-sm
-              leading-8
+              text-xs
+              leading-7
               text-slate-400
+              sm:text-sm
+              sm:leading-8
             "
                     >
-                        بخشی از تیم مدرسان و متخصصان کاردو در حوزه‌های HSE،
-                        آتش‌نشانی، سلامت، مدیریت بحران، امداد و نجات و خدمات حقوقی.
+                        تیمی از مدرسان و متخصصان با تجربه در حوزه‌های
+                        HSE، آتش‌نشانی، سلامت، مدیریت بحران، امداد و نجات
+                        و آموزش‌های تخصصی.
                     </p>
                 </div>
 
-                {/* ================================================= */}
-                {/* DESKTOP */}
-                {/* ================================================= */}
+                {/* PAGE INFO */}
 
                 <div
                     className="
-            mt-8
-            hidden
-            grid-cols-[0.72fr_1fr_0.72fr]
+            mt-10
+            flex
             items-center
-            gap-6
-            lg:grid
+            justify-between
+            gap-4
           "
-                    onMouseEnter={() => setPaused(true)}
-                    onMouseLeave={() => setPaused(false)}
                 >
-                    {/* PREVIOUS */}
-                    <button
-                        type="button"
-                        onClick={() => setActive(previousIndex)}
-                        className="
-              group
-              relative
-              min-w-0
-              overflow-hidden
-              rounded-[32px]
-              border
-              border-white/[0.07]
-              bg-white/[0.025]
-              p-5
-              text-right
-              opacity-55
-              transition
-              duration-500
-              hover:-translate-y-1
-              hover:opacity-90
-            "
-                    >
-                        <InstructorVisual instructor={previous} muted />
-
-                        <h3 className="mt-5 truncate text-xl font-black text-white">
-                            {previous.name}
-                        </h3>
-
-                        <p className="mt-2 truncate text-xs text-cyan-200">
-                            {previous.role}
-                        </p>
-                    </button>
-
-                    {/* CURRENT */}
-                    <article
-                        key={current.id}
-                        className="
-              relative
-              min-w-0
-              overflow-hidden
-              rounded-[38px]
-              border
-              border-orange-300/20
-              bg-white/[0.045]
-              p-6
-              shadow-[0_35px_100px_rgba(0,0,0,0.22)]
-              backdrop-blur-xl
-              sm:p-8
-            "
-                    >
-                        <div
+                    <div className="text-right">
+                        <span
                             className="
-                absolute
-                left-6
-                top-6
-                z-20
-                text-xs
+                text-[10px]
                 font-black
+                tracking-[0.16em]
                 text-orange-300
               "
                         >
-                            {String(active + 1).padStart(2, "0")} /{" "}
-                            {String(instructors.length).padStart(2, "0")}
-                        </div>
+                            INSTRUCTORS
+                        </span>
 
-                        <InstructorVisual instructor={current} />
-
-                        <div className="mt-7">
-                            <span
-                                className="
-                  inline-flex
-                  rounded-full
-                  border
-                  border-cyan-300/15
-                  bg-cyan-300/[0.06]
-                  px-3
-                  py-1.5
-                  text-[10px]
-                  font-black
-                  text-cyan-200
-                "
-                            >
-                                {current.role}
-                            </span>
-
-                            <h3 className="mt-4 text-3xl font-black text-white">
-                                {current.name}
-                            </h3>
-
-                            <p className="mt-2 text-sm font-bold text-orange-200">
-                                {current.degree}
-                            </p>
-
-                            <div
-                                className="
-                  mt-5
-                  inline-flex
-                  rounded-full
-                  border
-                  border-white/[0.08]
-                  bg-white/[0.03]
-                  px-4
-                  py-2
-                  text-xs
-                  font-bold
-                  text-slate-300
-                "
-                            >
-                                {current.experience}
-                            </div>
-
-                            <p className="mt-5 text-sm leading-8 text-slate-400">
-                                {current.bio}
-                            </p>
-                        </div>
-
-                        <Navigation
-                            active={active}
-                            goPrevious={goPrevious}
-                            goNext={goNext}
-                            setActive={setActive}
-                        />
-                    </article>
-
-                    {/* NEXT */}
-                    <button
-                        type="button"
-                        onClick={() => setActive(nextIndex)}
-                        className="
-              group
-              relative
-              min-w-0
-              overflow-hidden
-              rounded-[32px]
-              border
-              border-white/[0.07]
-              bg-white/[0.025]
-              p-5
-              text-right
-              opacity-55
-              transition
-              duration-500
-              hover:-translate-y-1
-              hover:opacity-90
-            "
-                    >
-                        <InstructorVisual instructor={next} muted />
-
-                        <h3 className="mt-5 truncate text-xl font-black text-white">
-                            {next.name}
-                        </h3>
-
-                        <p className="mt-2 truncate text-xs text-cyan-200">
-                            {next.role}
+                        <p
+                            className="
+                mt-1
+                text-[11px]
+                text-slate-400
+                sm:text-xs
+              "
+                        >
+                            صفحه {page + 1} از {totalPages}
                         </p>
-                    </button>
+                    </div>
+
+                    {/* DESKTOP NAV */}
+
+                    <div className="hidden items-center gap-2 sm:flex">
+                        <button
+                            type="button"
+                            onClick={goPrevious}
+                            aria-label="اساتید قبلی"
+                            className="
+                flex
+                h-11
+                w-11
+                items-center
+                justify-center
+                rounded-full
+                border
+                border-white/10
+                bg-white/[0.04]
+                text-lg
+                text-white
+                transition
+                hover:bg-white/[0.09]
+              "
+                        >
+                            →
+                        </button>
+
+                        <button
+                            type="button"
+                            onClick={goNext}
+                            aria-label="اساتید بعدی"
+                            className="
+                flex
+                h-11
+                w-11
+                items-center
+                justify-center
+                rounded-full
+                bg-orange-400
+                text-lg
+                font-black
+                text-[#07192D]
+                transition
+                hover:bg-orange-300
+              "
+                        >
+                            ←
+                        </button>
+                    </div>
                 </div>
 
-                {/* ================================================= */}
-                {/* MOBILE / TABLET */}
-                {/* ================================================= */}
+                {/* INSTRUCTORS GRID */}
+
+                <div
+                    key={page}
+                    className="
+            mt-5
+            grid
+            grid-cols-1
+            gap-5
+
+            sm:grid-cols-2
+
+            lg:grid-cols-4
+            lg:gap-5
+
+            xl:gap-6
+          "
+                >
+                    {visibleInstructors.map((instructor, index) => (
+                        <InstructorCard
+                            key={instructor.id}
+                            instructor={instructor}
+                            number={
+                                page * DESKTOP_PAGE_SIZE +
+                                index +
+                                1
+                            }
+                        />
+                    ))}
+                </div>
+
+                {/* MOBILE NAV */}
 
                 <div
                     className="
-            mx-auto
             mt-7
-            w-full
-            max-w-[720px]
-            lg:hidden
+            flex
+            items-center
+            justify-between
+            gap-3
+            sm:hidden
           "
                 >
-                    <article
-                        key={`mobile-${current.id}`}
+                    <button
+                        type="button"
+                        onClick={goPrevious}
                         className="
-              w-full
-              overflow-hidden
-              rounded-[28px]
+              flex
+              h-12
+              flex-1
+              items-center
+              justify-center
+              gap-2
+              rounded-[16px]
               border
-              border-white/[0.08]
-              bg-white/[0.035]
-              p-4
-              sm:p-6
+              border-white/10
+              bg-white/[0.04]
+              text-xs
+              font-black
+              text-white
             "
                     >
-                        <InstructorVisual instructor={current} />
+                        <span>→</span>
+                        قبلی
+                    </button>
 
-                        <div className="mt-5">
-                            <span className="text-[9px] font-black text-orange-300">
-                                {String(active + 1).padStart(2, "0")} /{" "}
-                                {String(instructors.length).padStart(2, "0")}
-                            </span>
+                    <span
+                        className="
+              min-w-[52px]
+              text-center
+              text-[10px]
+              font-black
+              text-slate-400
+            "
+                    >
+                        {page + 1} / {totalPages}
+                    </span>
 
-                            <h3
-                                className="
-                  mt-2
-                  text-xl
-                  font-black
-                  leading-8
-                  text-white
-                  sm:text-2xl
-                "
-                            >
-                                {current.name}
-                            </h3>
+                    <button
+                        type="button"
+                        onClick={goNext}
+                        className="
+              flex
+              h-12
+              flex-1
+              items-center
+              justify-center
+              gap-2
+              rounded-[16px]
+              bg-orange-400
+              text-xs
+              font-black
+              text-[#07192D]
+            "
+                    >
+                        بعدی
+                        <span>←</span>
+                    </button>
+                </div>
 
-                            <p className="mt-1 text-xs font-bold text-cyan-200">
-                                {current.role}
-                            </p>
+                {/* DOTS */}
 
-                            <p className="mt-4 text-xs font-bold text-orange-200">
-                                {current.degree}
-                            </p>
-
-                            <span
-                                className="
-                  mt-4
-                  inline-flex
+                <div
+                    className="
+            mt-7
+            hidden
+            items-center
+            justify-center
+            gap-2
+            sm:flex
+          "
+                >
+                    {Array.from({ length: totalPages }).map(
+                        (_, index) => (
+                            <button
+                                key={index}
+                                type="button"
+                                onClick={() => setPage(index)}
+                                aria-label={`صفحه ${index + 1}`}
+                                className={`
+                  h-2
                   rounded-full
-                  bg-orange-400/[0.10]
-                  px-3
-                  py-2
-                  text-[9px]
-                  font-black
-                  text-orange-200
-                "
-                            >
-                                {current.experience}
-                            </span>
-
-                            <p
-                                className="
-                  mt-4
-                  text-xs
-                  leading-7
-                  text-slate-400
-                  sm:text-sm
-                "
-                            >
-                                {current.bio}
-                            </p>
-                        </div>
-
-                        <Navigation
-                            active={active}
-                            goPrevious={goPrevious}
-                            goNext={goNext}
-                            setActive={setActive}
-                            compact
-                        />
-                    </article>
+                  transition-all
+                  duration-300
+                  ${page === index
+                                        ? "w-8 bg-orange-400"
+                                        : "w-2 bg-white/20 hover:bg-white/40"
+                                    }
+                `}
+                            />
+                        )
+                    )}
                 </div>
             </div>
         </section>
     );
 }
 
-function Navigation({
-    active,
-    goPrevious,
-    goNext,
-    setActive,
-    compact = false,
-}: {
-    active: number;
-    goPrevious: () => void;
-    goNext: () => void;
-    setActive: (index: number) => void;
-    compact?: boolean;
-}) {
-    return (
-        <div
-            className={`
-        flex
-        items-center
-        justify-between
-        gap-3
-        ${compact ? "mt-6" : "mt-7"}
-      `}
-        >
-            <button
-                type="button"
-                onClick={goPrevious}
-                aria-label="استاد قبلی"
-                className={`
-          flex
-          shrink-0
-          items-center
-          justify-center
-          rounded-full
-          border
-          border-white/10
-          bg-white/[0.04]
-          text-white
-          transition
-          hover:bg-white/[0.08]
-          ${compact
-                        ? "h-10 w-10"
-                        : "h-12 w-12 text-xl"
-                    }
-        `}
-            >
-                →
-            </button>
-
-            <div className="flex flex-wrap justify-center gap-1.5">
-                {instructors.map((teacher, index) => (
-                    <button
-                        key={teacher.id}
-                        type="button"
-                        onClick={() => setActive(index)}
-                        aria-label={`نمایش ${teacher.name}`}
-                        className={`
-              h-2
-              rounded-full
-              transition-all
-              ${active === index
-                                ? "w-7 bg-orange-400"
-                                : "w-2 bg-white/20"
-                            }
-            `}
-                    />
-                ))}
-            </div>
-
-            <button
-                type="button"
-                onClick={goNext}
-                aria-label="استاد بعدی"
-                className={`
-          flex
-          shrink-0
-          items-center
-          justify-center
-          rounded-full
-          bg-orange-400
-          text-[#07192D]
-          transition
-          hover:bg-orange-300
-          ${compact
-                        ? "h-10 w-10"
-                        : "h-12 w-12 text-xl"
-                    }
-        `}
-            >
-                ←
-            </button>
-        </div>
-    );
-}
-
-function InstructorVisual({
+function InstructorCard({
     instructor,
-    muted = false,
+    number,
 }: {
     instructor: Instructor;
-    muted?: boolean;
+    number: number;
 }) {
     return (
-        <div
-            className={`
-        relative
-        w-full
+        <article
+            className="
+        group
+        min-w-0
         overflow-hidden
-        rounded-[26px]
+        rounded-[28px]
         border
         border-white/[0.08]
-        bg-[#091D31]
-        ${muted
-                    ? "h-[260px] xl:h-[300px]"
-                    : "h-[280px] sm:h-[330px] md:h-[360px] xl:h-[390px]"
-                }
-      `}
+        bg-white/[0.035]
+        transition
+        duration-500
+
+        hover:-translate-y-1
+        hover:border-white/[0.13]
+        hover:bg-white/[0.05]
+        hover:shadow-[0_24px_70px_rgba(0,0,0,0.18)]
+      "
         >
-            {instructor.image ? (
-                <img
-                    src={instructor.image}
-                    alt={instructor.name}
-                    className={`
+            {/* IMAGE */}
+
+            <div
+                className="
+          relative
+          aspect-[4/4.4]
+          w-full
+          overflow-hidden
+          bg-[#091D31]
+
+          sm:aspect-[4/4.2]
+
+          lg:aspect-[4/4.6]
+        "
+            >
+                {instructor.image ? (
+                    <img
+                        src={instructor.image}
+                        alt={instructor.name}
+                        loading="lazy"
+                        className="
+              absolute
+              inset-0
+              h-full
+              w-full
+              object-cover
+              object-top
+              transition
+              duration-700
+              group-hover:scale-[1.025]
+            "
+                    />
+                ) : (
+                    <div
+                        className="
+              absolute
+              inset-0
+              flex
+              items-center
+              justify-center
+              bg-gradient-to-br
+              from-[#173953]
+              via-[#102B43]
+              to-[#07192D]
+            "
+                    >
+                        <div
+                            className="
+                flex
+                h-24
+                w-24
+                items-center
+                justify-center
+                rounded-full
+                border
+                border-orange-300/20
+                bg-orange-400/[0.08]
+              "
+                        >
+                            <span
+                                className="
+                  text-3xl
+                  font-black
+                  text-orange-200
+                "
+                            >
+                                {instructor.name.charAt(0)}
+                            </span>
+                        </div>
+                    </div>
+                )}
+
+                {/* IMAGE OVERLAY */}
+
+                <div
+                    className="
+            pointer-events-none
             absolute
             inset-0
-            h-full
-            w-full
-            object-cover
-            object-top
-            transition
-            duration-700
-            ${muted ? "grayscale-[35%]" : ""}
-          `}
+            bg-gradient-to-t
+            from-[#07192D]/90
+            via-transparent
+            to-transparent
+          "
                 />
-            ) : (
+
+                {/* NUMBER */}
+
                 <div
                     className="
             absolute
-            inset-0
-            flex
-            items-center
-            justify-center
-            bg-gradient-to-br
-            from-[#102E49]
-            via-[#0B2239]
-            to-[#07192D]
+            left-4
+            top-4
+            rounded-full
+            border
+            border-white/10
+            bg-[#07192D]/65
+            px-3
+            py-1.5
+            text-[9px]
+            font-black
+            tracking-[0.14em]
+            text-white
+            backdrop-blur-md
           "
                 >
-                    <span className="text-4xl font-black text-orange-200">
-                        {instructor.name.charAt(0)}
+                    {String(number).padStart(2, "0")}
+                </div>
+
+                {/* ROLE */}
+
+                <div
+                    className="
+            absolute
+            bottom-4
+            right-4
+            left-4
+          "
+                >
+                    <span
+                        className="
+              inline-flex
+              max-w-full
+              rounded-full
+              border
+              border-white/10
+              bg-[#07192D]/70
+              px-3
+              py-2
+              text-[9px]
+              font-black
+              leading-5
+              text-cyan-100
+              backdrop-blur-lg
+            "
+                    >
+                        {instructor.role}
                     </span>
                 </div>
-            )}
-
-            <div
-                className="
-          absolute
-          inset-0
-          bg-gradient-to-t
-          from-[#07192D]
-          via-transparent
-          to-transparent
-        "
-            />
-
-            <div
-                className="
-          absolute
-          bottom-4
-          right-4
-          rounded-full
-          border
-          border-white/10
-          bg-[#07192D]/75
-          px-3
-          py-2
-          text-[9px]
-          font-black
-          text-white
-          backdrop-blur-lg
-        "
-            >
-                CARDO INSTRUCTOR
             </div>
-        </div>
+
+            {/* CONTENT */}
+
+            <div className="p-5">
+                <h3
+                    className="
+            text-[20px]
+            font-black
+            leading-8
+            text-white
+          "
+                >
+                    {instructor.name}
+                </h3>
+
+                <p
+                    className="
+            mt-2
+            text-[11px]
+            font-bold
+            leading-6
+            text-orange-200
+          "
+                >
+                    {instructor.degree}
+                </p>
+
+                <div
+                    className="
+            mt-4
+            inline-flex
+            rounded-full
+            border
+            border-white/[0.07]
+            bg-white/[0.035]
+            px-3
+            py-1.5
+            text-[9px]
+            font-bold
+            text-slate-300
+          "
+                >
+                    {instructor.experience}
+                </div>
+
+                <p
+                    className="
+            mt-4
+            line-clamp-4
+            min-h-[96px]
+            text-[11px]
+            leading-6
+            text-slate-400
+          "
+                >
+                    {instructor.bio}
+                </p>
+            </div>
+        </article>
     );
 }
