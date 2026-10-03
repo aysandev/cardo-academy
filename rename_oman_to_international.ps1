@@ -1,49 +1,99 @@
-# Run from the project root.
-# This changes USER-FACING Persian "عمان" wording to "بین‌الملل".
-# It intentionally keeps internal keys/routes such as:
-#   category=oman
-#   requestType: "oman"
-#   lib/omanCourses.ts
-# so existing routing and backend requests do not break.
+import fs from "node:fs";
+import path from "node:path";
 
-$roots = @("app", "components", "lib")
-$extensions = @("*.ts", "*.tsx")
+const projectRoot = process.cwd();
+const roots = ["app", "components", "lib"];
+const allowedExtensions = new Set([".ts", ".tsx", ".js", ".jsx"]);
 
-$files = foreach ($root in $roots) {
-    if (Test-Path $root) {
-        Get-ChildItem -Path $root -Recurse -File -Include $extensions |
-            Where-Object {
-                # Arabic page is updated separately to proper Arabic wording.
-                $_.FullName -notmatch "[\\/]app[\\/]ar[\\/]"
-            }
+const persianReplacements = [
+  ["فرصت‌های آموزشی عمان", "فرصت‌های آموزشی بین‌المللی"],
+  ["فرصت هاي آموزشي عمان", "فرصت‌های آموزشی بین‌المللی"],
+  ["بازار عمان و فرصت‌های بین‌المللی", "بازارهای بین‌المللی و فرصت‌های حرفه‌ای"],
+  ["بازار عمان", "بازارهای بین‌المللی"],
+  ["دوره‌های عمان", "دوره‌های بین‌الملل"],
+  ["دوره هاي عمان", "دوره‌های بین‌الملل"],
+  ["برنامه‌های عمان", "برنامه‌های بین‌الملل"],
+  ["برنامه هاي عمان", "برنامه‌های بین‌الملل"],
+  ["عمان", "بین‌الملل"],
+];
+
+const arabicReplacements = [
+  ["برامج كاردو المرتبطة بعُمان", "برامج كاردو الدولية"],
+  ["برامج كاردو المتعلقة بعُمان", "برامج كاردو الدولية"],
+  ["برامج عُمان", "البرامج الدولية"],
+  ["برامج عمان", "البرامج الدولية"],
+  ["الاستفسار عن برامج عُمان", "الاستفسار عن البرامج الدولية"],
+  ["الاستفسار عن برامج عمان", "الاستفسار عن البرامج الدولية"],
+  ["إرسال طلب برامج عُمان", "إرسال طلب البرامج الدولية"],
+  ["إرسال طلب برامج عمان", "إرسال طلب البرامج الدولية"],
+  ["اكتب ما الذي تريد معرفته عن برامج عُمان...", "اكتب ما الذي تريد معرفته عن البرامج الدولية..."],
+  ["اكتب ما الذي تريد معرفته عن برامج عمان...", "اكتب ما الذي تريد معرفته عن البرامج الدولية..."],
+  ["التدريب المؤسسي المتخصص وبرامج عُمان", "التدريب المؤسسي المتخصص والبرامج الدولية"],
+  ["التدريب المؤسسي المتخصص وبرامج عمان", "التدريب المؤسسي المتخصص والبرامج الدولية"],
+  ["للمؤسسات وبرامج عُمان", "للمؤسسات والبرامج الدولية"],
+  ["للمؤسسات وبرامج عمان", "للمؤسسات والبرامج الدولية"],
+  ["CARDO / OMAN", "CARDO / INTERNATIONAL"],
+];
+
+function getFiles(dir) {
+  if (!fs.existsSync(dir)) return [];
+
+  const entries = fs.readdirSync(dir, { withFileTypes: true });
+  const files = [];
+
+  for (const entry of entries) {
+    const fullPath = path.join(dir, entry.name);
+
+    if (entry.isDirectory()) {
+      files.push(...getFiles(fullPath));
+      continue;
     }
+
+    if (allowedExtensions.has(path.extname(entry.name))) {
+      files.push(fullPath);
+    }
+  }
+
+  return files;
 }
 
-foreach ($file in $files) {
-    $content = Get-Content -LiteralPath $file.FullName -Raw -Encoding UTF8
-    $original = $content
+function applyAll(content, replacements) {
+  let result = content;
 
-    # More natural phrase-level replacements first
-    $content = $content.Replace("دوره‌های عمان", "دوره‌های بین‌الملل")
-    $content = $content.Replace("دوره های عمان", "دوره‌های بین‌الملل")
-    $content = $content.Replace("برنامه‌های عمان", "برنامه‌های بین‌الملل")
-    $content = $content.Replace("برنامه هاي عمان", "برنامه‌های بین‌الملل")
-    $content = $content.Replace("فرصت‌های آموزشی عمان", "فرصت‌های آموزشی بین‌المللی")
-    $content = $content.Replace("فرصت هاي آموزشي عمان", "فرصت‌های آموزشی بین‌المللی")
-    $content = $content.Replace("بازار عمان و فرصت‌های بین‌المللی", "بازارهای بین‌المللی و فرصت‌های حرفه‌ای")
-    $content = $content.Replace("بازار عمان", "بازارهای بین‌المللی")
+  for (const [from, to] of replacements) {
+    result = result.split(from).join(to);
+  }
 
-    # Any remaining visible Persian occurrence
-    $content = $content.Replace("عمان", "بین‌الملل")
-
-    if ($content -ne $original) {
-        Set-Content -LiteralPath $file.FullName -Value $content -Encoding UTF8
-        Write-Host "Updated: $($file.FullName)"
-    }
+  return result;
 }
 
-Write-Host ""
-Write-Host "Done."
-Write-Host "Internal Latin identifiers like 'oman' were intentionally kept unchanged."
-Write-Host "Now search the project for: عمان"
-Write-Host "Then run: npm run dev"
+const files = roots.flatMap((root) => getFiles(path.join(projectRoot, root)));
+
+let changed = 0;
+
+for (const file of files) {
+  const relative = path.relative(projectRoot, file).replaceAll("\\", "/");
+  const original = fs.readFileSync(file, "utf8");
+
+  let updated = original;
+
+  if (relative.startsWith("app/ar/")) {
+    updated = applyAll(updated, arabicReplacements);
+  } else {
+    updated = applyAll(updated, persianReplacements);
+  }
+
+  if (updated !== original) {
+    fs.writeFileSync(file, updated, "utf8");
+    changed += 1;
+    console.log(`Updated: ${relative}`);
+  }
+}
+
+console.log("");
+console.log(`Done. ${changed} file(s) updated.`);
+console.log("");
+console.log("Important:");
+console.log("- Internal identifiers such as category=oman, requestType='oman', and lib/omanCourses.ts are NOT changed.");
+console.log("- Search the project for the visible word عمان after this script finishes.");
+console.log("- Then run: npm run dev");
