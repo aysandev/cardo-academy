@@ -1446,8 +1446,8 @@ const completedOrganizationCourses = [
         title: "PIP",
         subtitle: "Pre Incident Plan | طرح‌ریزی پیش از رویداد",
         instructor: "استعلام",
-        duration: "استعلام",
-        format: "اختصاصی",
+        duration: "20 ساعت",
+        format: "نظری/آنلاین",
         image: "/images/organization/pip.jpg",
         group: "HSE و ایمنی",
     },
@@ -1457,7 +1457,7 @@ const completedOrganizationCourses = [
         subtitle: "Pre Start-Up Safety Review | بازبینی ایمنی پیش از راه‌اندازی",
         instructor: "دکتر هاشم ستاره",
         duration: "۱ روز",
-        format: "نظری",
+        format: "نظری /آنلاین",
         image: "/images/organization/pssr.jpg",
         group: "HSE و ایمنی",
     },
@@ -1467,7 +1467,7 @@ const completedOrganizationCourses = [
         subtitle: "Risk Management",
         instructor: "دکتر هاشم ستاره",
         duration: "۲۴ ساعت",
-        format: "نظری",
+        format: "نظری /آنلاین",
         image: "/images/organization/hse-risk.jpg",
         group: "HSE و ایمنی",
     },
@@ -1487,7 +1487,7 @@ const completedOrganizationCourses = [
         subtitle: "مقدماتی و پیشرفته",
         instructor: "دکتر هاشم ستاره",
         duration: "۱۶ ساعت",
-        format: "نظری",
+        format: "نظری /آنلاین",
         image: "/images/organization/hazmat.jpg",
         group: "مواد خطرناک",
     },
@@ -1497,7 +1497,7 @@ const completedOrganizationCourses = [
         subtitle: "مدیریت و ارزیابی ریسک حریق حرفه‌ای",
         instructor: "دکتر هاشم ستاره",
         duration: "۱۶ ساعت",
-        format: "نظری",
+        format: "نظری /آنلاین",
         image: "/images/organization/fire-risk.jpg",
         group: "HSE و ایمنی",
     },
@@ -1507,7 +1507,7 @@ const completedOrganizationCourses = [
         subtitle: "مدیریت و فرماندهی عملیات حریق",
         instructor: "دکتر هاشم ستاره",
         duration: "۱۶ ساعت",
-        format: "نظری",
+        format: "نظری /آنلاین",
         image: "/images/organization/incident-command.jpg",
         group: "آتش‌نشانی",
     },
@@ -1517,7 +1517,7 @@ const completedOrganizationCourses = [
         subtitle: "اصول، تکنیک‌ها و مدیریت رفتار حریق",
         instructor: "مهندس حمیدرضا فرجی",
         duration: "۲ روز",
-        format: "نظری و عملی",
+        format: "نظری /آنلاین و عملی",
         image: "/images/organization/fire-behavior.jpg",
         group: "آتش‌نشانی",
     },
@@ -1527,7 +1527,7 @@ const completedOrganizationCourses = [
         subtitle: "اصول و تکنیک‌های مدیریت رله و عملیات آبرسانی",
         instructor: "مهندس حمیدرضا فرجی",
         duration: "۲ روز",
-        format: "نظری و عملی",
+        format: "نظری /آنلاین و عملی",
         image: "/images/organization/relay-water-supply.jpg",
         group: "آتش‌نشانی",
     },
@@ -1537,7 +1537,7 @@ const completedOrganizationCourses = [
         subtitle: "اصول، تکنیک‌ها و مدیریت عملیات جستجو و نجات",
         instructor: "مهندس حمیدرضا فرجی",
         duration: "۲ روز",
-        format: "نظری و عملی",
+        format: "نظری /آنلاین و عملی",
         image: "/images/organization/search-rescue.jpg",
         group: "امداد و نجات",
     },
@@ -1547,7 +1547,7 @@ const completedOrganizationCourses = [
         subtitle: "اصول و تکنیک‌های مدیریت عملیات با نازل آتش‌نشانی",
         instructor: "مهندس حمیدرضا فرجی",
         duration: "۲ روز",
-        format: "نظری و عملی",
+        format: "نظری /آنلاین و عملی",
         image: "/images/organization/nozzle-technique.jpg",
         group: "آتش‌نشانی",
     },
@@ -1557,7 +1557,7 @@ const completedOrganizationCourses = [
         subtitle: "تجزیه و تحلیل رویدادها",
         instructor: "دکتر هاشم ستاره",
         duration: "۲۴ ساعت",
-        format: "نظری",
+        format: "نظری /آنلاین",
         image: "/images/organization/incident-investigation.jpg",
         group: "HSE و ایمنی",
     },
@@ -1567,7 +1567,7 @@ const completedOrganizationCourses = [
         subtitle: "مدیریت عملیات آتش‌نشانی در محیط‌های صنعتی",
         instructor: "مهندس حمیدرضا فرجی",
         duration: "۲ روز",
-        format: "نظری و عملی",
+        format: "نظری /آنلاین و عملی",
         image: "/images/organization/industrial-firefighter.jpg",
         group: "آتش‌نشانی",
     },
@@ -2127,188 +2127,363 @@ function OrganizationPage() {
                                             مشاهده پوستر
                                         </span>
                                     </button>
-
                                     {/* COURSE INFO */}
 
-                                    <div className="p-4">
+                                    <div className="p-4 sm:p-5">
+
+                                        {/* ==============================
+    TOP INFO
+============================== */}
+
                                         <div
                                             className="
-                                                flex
-                                                items-start
-                                                justify-between
-                                                gap-3
-                                            "
+        flex
+        items-start
+        justify-between
+        gap-3
+    "
                                         >
-                                            <div className="min-w-0">
+                                            <div
+                                                className="
+            min-w-0
+            flex-1
+            overflow-hidden
+        "
+                                            >
+
+                                                {/* CATEGORY */}
                                                 <span
                                                     className="
-                                                        inline-flex
-                                                        rounded-full
-                                                        border
-                                                        border-cyan-300/15
-                                                        bg-cyan-300/[0.06]
-                                                        px-2.5
-                                                        py-1.5
-                                                        text-[8px]
-                                                        font-black
-                                                        text-cyan-200
-                                                    "
+                inline-flex
+                max-w-full
+                items-center
+
+                whitespace-nowrap
+
+                rounded-full
+
+                border
+                border-cyan-300/20
+
+                bg-cyan-300/[0.07]
+
+                px-3
+                py-1.5
+
+                text-[10px]
+                font-black
+                leading-none
+
+                text-cyan-100
+
+                sm:text-[11px]
+            "
                                                 >
                                                     {course.group}
                                                 </span>
 
+
+                                                {/* TITLE */}
                                                 <h3
+                                                    title={course.title}
                                                     className="
-                                                        mt-2
-                                                        text-base
-                                                        font-black
-                                                        leading-7
-                                                        text-white
-                                                        sm:text-lg
-                                                    "
+                mt-3
+
+                w-full
+
+                overflow-hidden
+                text-ellipsis
+                whitespace-nowrap
+
+                text-[clamp(14px,3.8vw,19px)]
+                font-black
+                leading-none
+
+                tracking-[-0.02em]
+
+                text-white
+
+                sm:text-[clamp(15px,2.2vw,20px)]
+
+                xl:text-[clamp(16px,1.35vw,21px)]
+            "
                                                 >
                                                     {course.title}
                                                 </h3>
 
+
+                                                {/* SUBTITLE */}
                                                 <p
+                                                    title={course.subtitle}
                                                     className="
-                                                        mt-1
-                                                        line-clamp-2
-                                                        text-[10px]
-                                                        leading-6
-                                                        text-slate-400
-                                                    "
+                mt-3
+
+                w-full
+
+                overflow-hidden
+                text-ellipsis
+                whitespace-nowrap
+
+                text-[12px]
+                font-semibold
+                leading-none
+
+                text-slate-300
+
+                sm:text-[13px]
+            "
                                                 >
                                                     {course.subtitle}
                                                 </p>
+
                                             </div>
 
+
+                                            {/* STATUS */}
                                             <span
                                                 className="
-                                                    shrink-0
-                                                    rounded-full
-                                                    bg-emerald-300/[0.08]
-                                                    px-2.5
-                                                    py-1.5
-                                                    text-[8px]
-                                                    font-black
-                                                    text-emerald-200
-                                                "
+            shrink-0
+
+            whitespace-nowrap
+
+            rounded-full
+
+            border
+            border-emerald-300/15
+
+            bg-emerald-300/[0.08]
+
+            px-2.5
+            py-1.5
+
+            text-[9px]
+            font-black
+            leading-none
+
+            text-emerald-200
+
+            sm:text-[10px]
+        "
                                             >
                                                 برگزارشده
                                             </span>
+
                                         </div>
+
+
+                                        {/* ==============================
+    COURSE DETAILS
+============================== */}
 
                                         <div
                                             className="
-                                                mt-4
-                                                grid
-                                                grid-cols-2
-                                                gap-2
-                                            "
+        mt-5
+
+        grid
+        grid-cols-1
+        gap-2.5
+
+        sm:grid-cols-2
+    "
                                         >
+
+                                            {/* INSTRUCTOR */}
                                             <div
                                                 className="
-                                                    rounded-[14px]
-                                                    bg-white/[0.025]
-                                                    px-3
-                                                    py-2.5
-                                                "
+            min-w-0
+
+            rounded-[15px]
+
+            border
+            border-white/[0.06]
+
+            bg-white/[0.035]
+
+            px-3.5
+            py-3
+        "
                                             >
                                                 <span
                                                     className="
-                                                        block
-                                                        text-[8px]
-                                                        text-slate-600
-                                                    "
+                block
+
+                whitespace-nowrap
+
+                text-[10px]
+                font-bold
+                leading-none
+
+                text-slate-400
+
+                sm:text-[11px]
+            "
                                                 >
                                                     مدرس
                                                 </span>
 
                                                 <strong
+                                                    title={course.instructor}
                                                     className="
-                                                        mt-1
-                                                        block
-                                                        truncate
-                                                        text-[10px]
-                                                        font-black
-                                                        text-slate-200
-                                                    "
+                mt-2
+                block
+                w-full
+
+                overflow-hidden
+                text-ellipsis
+                whitespace-nowrap
+
+                text-[12px]
+                font-black
+                leading-none
+
+                text-white
+
+                sm:text-[13px]
+            "
                                                 >
                                                     {course.instructor}
                                                 </strong>
                                             </div>
 
+
+                                            {/* DURATION */}
                                             <div
                                                 className="
-                                                    rounded-[14px]
-                                                    bg-white/[0.025]
-                                                    px-3
-                                                    py-2.5
-                                                "
+            min-w-0
+
+            rounded-[15px]
+
+            border
+            border-white/[0.06]
+
+            bg-white/[0.035]
+
+            px-3.5
+            py-3
+        "
                                             >
                                                 <span
                                                     className="
-                                                        block
-                                                        text-[8px]
-                                                        text-slate-600
-                                                    "
+                block
+
+                whitespace-nowrap
+
+                text-[10px]
+                font-bold
+                leading-none
+
+                text-slate-400
+
+                sm:text-[11px]
+            "
                                                 >
                                                     مدت / شیوه
                                                 </span>
 
                                                 <strong
+                                                    title={`${course.duration} · ${course.format}`}
                                                     className="
-                                                        mt-1
-                                                        block
-                                                        text-[10px]
-                                                        font-black
-                                                        text-slate-200
-                                                    "
+                mt-2
+                block
+                w-full
+
+                overflow-hidden
+                text-ellipsis
+                whitespace-nowrap
+
+                text-[12px]
+                font-black
+                leading-none
+
+                text-white
+
+                sm:text-[13px]
+            "
                                                 >
                                                     {course.duration}
                                                     {" · "}
                                                     {course.format}
                                                 </strong>
                                             </div>
+
                                         </div>
+
+
+                                        {/* ==============================
+    ACTION BUTTONS
+============================== */}
 
                                         <div
                                             className="
-                                                mt-3
-                                                grid
-                                                grid-cols-[0.85fr_1.15fr]
-                                                gap-2
-                                            "
+        mt-4
+
+        grid
+        grid-cols-[0.85fr_1.15fr]
+        gap-2.5
+    "
                                         >
+
+                                            {/* TOPICS */}
                                             <button
                                                 type="button"
                                                 onClick={() =>
                                                     setOutlineCourse(course)
                                                 }
                                                 className="
-                                                    flex
-                                                    min-h-[46px]
-                                                    items-center
-                                                    justify-center
-                                                    gap-2
-                                                    rounded-[15px]
-                                                    border
-                                                    border-white/10
-                                                    bg-white/[0.04]
-                                                    px-3
-                                                    text-[10px]
-                                                    font-black
-                                                    text-slate-200
-                                                    transition
-                                                    hover:bg-white/[0.08]
-                                                    sm:text-[11px]
-                                                "
+            flex
+
+            min-h-[48px]
+
+            min-w-0
+
+            items-center
+            justify-center
+            gap-2
+
+            whitespace-nowrap
+
+            rounded-[15px]
+
+            border
+            border-white/10
+
+            bg-white/[0.04]
+
+            px-3
+
+            text-[12px]
+            font-black
+            leading-none
+
+            text-white
+
+            transition-all
+            duration-300
+
+            hover:border-white/20
+            hover:bg-white/[0.08]
+
+            sm:text-[13px]
+        "
                                             >
-                                                سرفصل‌ها
-                                                <span className="text-orange-300">≡</span>
+                                                <span className="whitespace-nowrap">
+                                                    سرفصل‌ها
+                                                </span>
+
+                                                <span
+                                                    className="
+                shrink-0
+                text-[16px]
+                font-black
+                text-orange-300
+            "
+                                                >
+                                                    ≡
+                                                </span>
                                             </button>
 
+
+                                            {/* REQUEST */}
                                             <button
                                                 type="button"
                                                 onClick={() =>
@@ -2317,27 +2492,53 @@ function OrganizationPage() {
                                                     )
                                                 }
                                                 className="
-                                                    flex
-                                                    min-h-[46px]
-                                                    items-center
-                                                    justify-center
-                                                    gap-2
-                                                    rounded-[15px]
-                                                    bg-orange-400
-                                                    px-3
-                                                    text-[10px]
-                                                    font-black
-                                                    text-[#06192E]
-                                                    transition
-                                                    hover:bg-orange-300
-                                                    sm:text-[11px]
-                                                "
+            flex
+
+            min-h-[48px]
+
+            min-w-0
+
+            items-center
+            justify-center
+            gap-2
+
+            whitespace-nowrap
+
+            rounded-[15px]
+
+            bg-orange-400
+
+            px-3
+
+            text-[12px]
+            font-black
+            leading-none
+
+            text-[#06192E]
+
+            shadow-[0_8px_22px_rgba(251,146,60,0.13)]
+
+            transition-all
+            duration-300
+
+            hover:bg-orange-300
+
+            sm:text-[13px]
+        "
                                             >
-                                                درخواست برگزاری
-                                                <ArrowIcon />
+                                                <span className="whitespace-nowrap">
+                                                    درخواست برگزاری
+                                                </span>
+
+                                                <span className="shrink-0">
+                                                    <ArrowIcon />
+                                                </span>
                                             </button>
+
                                         </div>
+
                                     </div>
+
                                 </motion.article>
                             )
                         )}
